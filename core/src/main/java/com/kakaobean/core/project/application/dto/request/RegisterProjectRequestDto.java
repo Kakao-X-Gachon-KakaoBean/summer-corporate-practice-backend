@@ -1,5 +1,6 @@
 package com.kakaobean.core.project.application.dto.request;
 
+import com.kakaobean.core.common.domain.BaseStatus;
 import com.kakaobean.core.project.domain.Project;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,9 +19,11 @@ public class RegisterProjectRequestDto {
     }
 
     public Project toEntity(){
-        return new Project(
+        return new
+                Project(
                 title,
-                content
+                content,
+                BaseStatus.ACTIVE
         );
     }
 }
