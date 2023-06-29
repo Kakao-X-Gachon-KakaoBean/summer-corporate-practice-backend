@@ -1,0 +1,13 @@
+= 로컬 회원 가입
+
+== 요청
+
+include::{snippets}/register_member/http-request.adoc[]
+
+include::{snippets}/register_member/request-fields.adoc[]
+
+== 응답
+경
+include::{snippets}/register_member/http-response.adoc[]
+
+include::{snippets}/register_member/response-fields.adoc[]

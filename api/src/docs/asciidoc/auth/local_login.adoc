@@ -1,0 +1,13 @@
+= 로컬 로그인
+
+== 요청
+
+include::{snippets}/local_login/http-request.adoc[]
+
+include::{snippets}/local_login/request-fields.adoc[]
+
+== 응답
+
+include::{snippets}/local_login/http-response.adoc[]
+
+include::{snippets}/local_login/response-fields.adoc[]

@@ -1,0 +1,9 @@
+rootProject.name = 'backend'
+
+include 'core'
+include 'api'
+include 'common'
+include 'independently-system'
+
+
+

@@ -1,0 +1,13 @@
+= 로컬 로그인
+
+== 요청
+
+include::{snippets}/find_email/http-request.adoc[]
+
+include::{snippets}/find_email/request-fields.adoc[]
+
+== 응답
+
+include::{snippets}/find_email/http-response.adoc[]
+
+include::{snippets}/find_email/response-fields.adoc[]

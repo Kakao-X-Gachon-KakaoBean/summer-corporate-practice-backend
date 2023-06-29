@@ -1,0 +1,14 @@
+= 멤버 정보 찾기
+
+**로그인한 유저만 사용할 수 있다.**
+
+== 요청
+
+include::{snippets}/find_member_info/http-request.adoc[]
+
+
+== 응답
+
+include::{snippets}/find_member_info/http-response.adoc[]
+
+include::{snippets}/find_member_info/response-fields.adoc[]

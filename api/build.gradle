@@ -1,0 +1,73 @@
+plugins {
+    id "org.asciidoctor.jvm.convert" version "3.3.2"
+}
+
+configurations {
+    asciidoctorExt
+}
+
+ext {
+    snippetsDir = file('build/generated-snippets')
+    asciidocVersion = "2.0.6.RELEASE"
+}
+
+dependencies {
+    implementation project(':core')
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation "org.springframework.restdocs:spring-restdocs-mockmvc:${asciidocVersion}"
+    asciidoctorExt "org.springframework.restdocs:spring-restdocs-asciidoctor:${asciidocVersion}"
+
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
+    runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+
+    testImplementation 'org.springframework.restdocs:spring-restdocs-restassured'
+
+    //로깅
+    //implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    //implementation 'ch.qos.logback:logback-classic:1.2.3'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+
+}
+
+test {
+    outputs.dir snippetsDir
+}
+
+asciidoctor {
+    inputs.dir snippetsDir
+    configurations 'asciidoctorExt'
+    dependsOn test
+}
+
+bootJar {
+    dependsOn asciidoctor
+//	from ("${asciidoctor.outputDir}") {
+//		println ">>>>" + asciidoctor.outputDir //build 파일에 생성된다. static으로 옮겨야함.
+//		into 'static/docs'
+//	}
+    copy { //파일을 복사하는 방법 중 기본적으로 제공되는 Copy 태스크를 이용
+        from asciidoctor.outputDir
+        into 'src/main/resources/static/docs'
+    }
+}
+
+clean {
+    delete file('src/main/generated')
+}
+
+jar{
+    enabled(false) //plain.jar 생성을 막음.
+}

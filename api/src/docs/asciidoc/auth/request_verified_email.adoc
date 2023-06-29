@@ -1,0 +1,13 @@
+= 로컬 로그인
+
+== 요청
+
+include::{snippets}/send_verified_email/http-request.adoc[]
+
+include::{snippets}/send_verified_email/request-fields.adoc[]
+
+== 응답
+
+include::{snippets}/send_verified_email/http-response.adoc[]
+
+include::{snippets}/send_verified_email/response-fields.adoc[]
