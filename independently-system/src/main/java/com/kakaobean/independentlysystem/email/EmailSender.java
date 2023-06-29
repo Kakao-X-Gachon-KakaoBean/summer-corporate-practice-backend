@@ -2,15 +2,18 @@ package com.kakaobean.independentlysystem.email;
 
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.simpleemail.model.SendEmailResult;
+import com.kakaobean.common.RandomUtils;
 import com.kakaobean.independentlysystem.email.dto.SesServiceRequest;
+import com.kakaobean.independentlysystem.utils.ValidationEmailUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.el.util.Validation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static com.kakaobean.independentlysystem.config.ses.AwsSesUtils.*;
+import static com.kakaobean.independentlysystem.utils.ValidationEmailUtils.*;
 
 @Slf4j
 @Component
@@ -22,24 +25,32 @@ public class EmailSender {
 
     private final AmazonSimpleEmailService amazonSimpleEmailService;
 
-    public String  sendVerificationEmail(String receiveEmail) {
-        String authKey = createAuthKey();
-        SesServiceRequest emailSenderDto = makeEmailSenderDto(receiveEmail, authKey);
+    public String sendVerificationEmail(String receiveEmail) {
+        String authKey = RandomUtils.creatRandomKey();
+        String subject = "[코코노트] 인증 번호 발송 메일입니다.";
+        SesServiceRequest emailSenderDto = makeValidationEmailSenderDto(receiveEmail, subject, () -> ValidationEmailUtils.getEmailValidationHtml(authKey));
         SendEmailResult sendEmailResult = amazonSimpleEmailService.sendEmail(emailSenderDto.toSendRequestDto());
         confirmSentEmail(sendEmailResult);
         return authKey;
     }
 
-    private SesServiceRequest makeEmailSenderDto(String receiveEmail, String authKey) {
-        List<String> receiver = List.of(receiveEmail);
-        String subject = getSubject();
-        String emailVerificationHtml = getEmailVerificationHtml(authKey);
+    public void sendProjectInvitationEmail(String receiveEmail,
+                                           String projectName,
+                                           String projectSecretKey){
+        String subject = "[코코노트] 프로젝트 초대 메일입니다.";
 
+    }
+
+    private SesServiceRequest makeValidationEmailSenderDto(String receiveEmail,
+                                                           String subject,
+                                                           EmailHTMLMaker maker){
+        List<String> receiver = List.of(receiveEmail);
+        String html = maker.makeEmailHtml();
         return SesServiceRequest.builder()
                 .from(sender)
                 .to(receiver)
                 .subject(subject)
-                .content(emailVerificationHtml)
+                .content(html)
                 .build();
     }
 

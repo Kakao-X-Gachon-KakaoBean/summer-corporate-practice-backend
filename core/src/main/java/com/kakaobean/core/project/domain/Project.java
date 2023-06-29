@@ -20,10 +20,13 @@ public class Project extends BaseEntity {
 
     private String content;
 
+    private String secretKey;
+
     protected Project() {}
 
-    public Project(String title, String content) {
+    public Project(String title, String content, String secretKey) {
         this.title = title;
         this.content = content;
+        this.secretKey = secretKey;
     }
 }
