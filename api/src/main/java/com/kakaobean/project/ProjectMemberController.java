@@ -21,14 +21,14 @@ public class ProjectMemberController {
     @PostMapping("/projects/members")
     public ResponseEntity registerProjectMember(@AuthenticationPrincipal Long id, @RequestBody RegisterProjectMemberRequest request){
         projectMemberService.registerProjectMember(request.toServiceDto(id));
-        return new ResponseEntity("프로젝트 참여 완료했습니다.", HttpStatus.CREATED);
+        return new ResponseEntity(CommandSuccessResponse.from("프로젝트 참여에 성공했습니다."), HttpStatus.CREATED);
     }
 
     @PostMapping("/projects/{projectId}/invitation")
     public ResponseEntity inviteProjectMember(@AuthenticationPrincipal Long projectAdminId,
                                               @PathVariable Long projectId,
                                               @RequestBody InviteProjectMemberRequest request){
-        projectMemberService.inviteProjectMembers(projectAdminId, projectId, request.toServiceDto());
+        projectMemberService.inviteProjectMembers(request.toServiceDto(projectId, projectAdminId));
         return new ResponseEntity(CommandSuccessResponse.from("프로젝트 초대 이메일 발송에 성공했습니다."), HttpStatus.OK);
     }
 }
