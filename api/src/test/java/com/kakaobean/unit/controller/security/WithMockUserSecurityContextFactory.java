@@ -13,7 +13,7 @@ public class WithMockUserSecurityContextFactory implements WithSecurityContextFa
     @Override
     public SecurityContext createSecurityContext(WithMockUser customUser) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_SELLER");
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_USER");
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                 customUser.principal(),
                 customUser.password(),

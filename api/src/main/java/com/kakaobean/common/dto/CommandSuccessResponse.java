@@ -1,15 +1,20 @@
 package com.kakaobean.common.dto;
 
+import io.lettuce.core.protocol.Command;
 import lombok.Getter;
 
 @Getter
 public class CommandSuccessResponse {
 
-    private static final String SUCCESS_MESSAGE = "요청을 성공하셨습니다.";
+    private String message;
 
-    private final String message;
+    public CommandSuccessResponse() {};
 
-    public CommandSuccessResponse() {
-        this.message = SUCCESS_MESSAGE;
+    CommandSuccessResponse(String message) {
+        this.message = message;
+    }
+
+    public static CommandSuccessResponse from(String message){
+        return new CommandSuccessResponse(message);
     }
 }

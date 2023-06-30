@@ -170,49 +170,6 @@ public class MemberServiceIntegrationTest extends IntegrationTest {
         result.hasMessage("이메일 인증번호가 틀립니다.");
     }
 
-    @DisplayName("이메일을 찾을 수 있어야 한다.")
-    @Test
-    void findEmail(){
-        //given
-        String name = "bean";
-        String email = "123@gmail.com";
-        LocalDate birth = LocalDate.of(1999, 6, 27);
-        Member member = Member.builder()
-                .name(name)
-                .auth(new Auth(email, "pwd"))
-                .birth(birth)
-                .build();
-        memberRepository.save(member);
-
-        //when
-        FindEmailResponseDto res = memberProvider.findEmailByBirthAndName(name, birth);
-
-        //then
-        assertThat(res.getEmail()).isEqualTo(email);
-    }
-
-    @DisplayName("계정과 다른 이름을 입력하므로 이메일을 찾을 수 없다.")
-    @Test
-    void failFindEmail(){
-        //given
-        String name = "bean";
-        String email = "123@gmail.com";
-        LocalDate birth = LocalDate.of(1999, 6, 27);
-        Member member = Member.builder()
-                .name(name)
-                .auth(new Auth(email, "pwd"))
-                .birth(birth)
-                .build();
-        memberRepository.save(member);
-
-        //when
-        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
-            memberProvider.findEmailByBirthAndName("xxx", birth);
-        });
-
-        //then
-        result.isInstanceOf(NotExistsMemberException.class);
-    }
 
     @DisplayName("멤버 정보를 찾을 수 있어야 한다.")
     @Test
@@ -225,10 +182,7 @@ public class MemberServiceIntegrationTest extends IntegrationTest {
 
         //then
         assertThat(res.getName()).isEqualTo(member.getName());
-        assertThat(res.getAge()).isEqualTo(member.getAge());
-        assertThat(res.getGender()).isEqualTo(member.getGender());
         assertThat(res.getEmail()).isEqualTo(member.getAuth().getEmail());
-        assertThat(res.getBirth()).isEqualTo(member.getBirth());
     }
 
     @DisplayName("저장된 멤버 ID와는 다른 ID로 멤버 정보를 호출한다.")

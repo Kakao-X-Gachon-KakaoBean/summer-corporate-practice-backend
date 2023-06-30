@@ -7,7 +7,9 @@ import com.kakaobean.config.WebMvcConfig;
 import com.kakaobean.core.member.application.MemberProvider;
 import com.kakaobean.core.member.domain.repository.MemberRepository;
 import com.kakaobean.core.member.application.MemberService;
+import com.kakaobean.core.project.application.ProjectMemberService;
 import com.kakaobean.member.MemberController;
+import com.kakaobean.project.ProjectMemberController;
 import com.kakaobean.security.TokenProvider;
 
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,6 +31,7 @@ import org.springframework.test.web.servlet.MockMvc;
 })
 @WebMvcTest(controllers = {
         MemberController.class,
+        ProjectMemberController.class
 })
 @AutoConfigureRestDocs
 @MockBean(JpaMetamodelMappingContext.class)
@@ -58,5 +61,8 @@ public abstract class ControllerTest {
 
     @MockBean
     protected MemberProvider memberProvider;
+
+    @MockBean
+    protected ProjectMemberService projectMemberService;
 
 }

@@ -21,11 +21,17 @@ public class Project extends BaseEntity {
 
     private String content;
 
+    private String secretKey;
+
     protected Project() {}
 
-    public Project(String title, String content, BaseStatus baseStatus) {
+    public Project(String title,
+                   String content,
+                   BaseStatus baseStatus,
+                   String secretKey) {
         super(baseStatus);
         this.title = title;
         this.content = content;
+        this.secretKey = secretKey;
     }
 }

@@ -3,5 +3,7 @@ jar { enabled = true }
 
 dependencies {
 	implementation 'com.amazonaws:aws-java-sdk-ses:1.12.3'
+	implementation project(':common')
+
 }
 

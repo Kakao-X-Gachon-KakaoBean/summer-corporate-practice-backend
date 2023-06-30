@@ -24,9 +24,8 @@ public class ProjectController {
     public ResponseEntity registerProject(@AuthenticationPrincipal Long memberId,
                                           @Validated @RequestBody RegisterProjectRequest request) {
         log.info("프로젝트 생성 api 호출");
-        RegisterProjectResponseDto res = projectService.registerProject(request.toServiceDto());
+        RegisterProjectResponseDto res = projectService.registerProject(request.toServiceDto(memberId));
         log.info("프로젝트 생성 api 호출");
         return new ResponseEntity(res, HttpStatus.OK);
     }
-
 }

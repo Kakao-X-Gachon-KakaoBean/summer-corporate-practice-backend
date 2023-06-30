@@ -1,19 +1,8 @@
-package com.kakaobean.independentlysystem.config.ses;
+package com.kakaobean.independentlysystem.utils;
 
-import java.util.Random;
+public class ValidationEmailUtils {
 
-public class AwsSesUtils {
-
-    public static String getSubject(){
-        return "[카카오빈] 인증 번호 발송 메일입니다.";
-    }
-
-   public static String createAuthKey(){
-        Random random = new Random();
-        return String.valueOf(random.nextInt(888888) + 111111);
-    }
-
-    public static String getEmailVerificationHtml(String authKey) {
+    public static String getEmailValidationHtml(String authKey) {
         StringBuilder emailContent = new StringBuilder();
         emailContent.append("<!DOCTYPE html>");
         emailContent.append("<html>");
