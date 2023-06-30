@@ -47,3 +47,6 @@
 * link:/docs/auth/find_email.html[이메일 찾기 요청 API, window=_blank ]
 
 == 프로젝트 API
+
+* link:/docs/project/register_project_member.html[프로젝트 멤버 초대 이메일 발송 API, window=_blank ]
+* link:/docs/project/send_project_member_invitation_mail.html[프로젝트 멤버 참여 API, window=_blank ]
