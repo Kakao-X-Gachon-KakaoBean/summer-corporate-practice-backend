@@ -39,7 +39,7 @@ public class EmailSender {
                                            String projectName,
                                            String projectSecretKey){
         String subject = "[코코노트] "+ projectName  + " 프로젝트 초대 메일입니다.";
-        String invitationUrl = projectSecretKey;
+        String invitationUrl = "localhost:3000/invitation/" + projectSecretKey; //TODO 개발할 때 편의상 사용.
         SesServiceRequest emailSenderDto = makeValidationEmailSenderDto(receiveEmail, subject, () -> ProjectInvitationEmailUtils.getProjectInvitationHtml(invitationUrl));
         SendEmailResult sendEmailResult = amazonSimpleEmailService.sendEmail(emailSenderDto.toSendRequestDto());
         confirmSentEmail(sendEmailResult);
