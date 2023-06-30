@@ -89,7 +89,7 @@ public class ProjectMemberServiceTest extends UnitTest {
     }
 
     @Test
-    void 일반_프로젝트_멤버가_프로젝트_참여_멤버를_초대한다(){
+    void 일반_프로젝트_멤버가_프로젝트_참여_멤버를_초대해_테스트가_실패한다(){
         //given
         given(projectMemberRepository.findByMemberIdAndProjectId(Mockito.anyLong(), Mockito.anyLong())).willReturn(Optional.of(createMember()));
 
