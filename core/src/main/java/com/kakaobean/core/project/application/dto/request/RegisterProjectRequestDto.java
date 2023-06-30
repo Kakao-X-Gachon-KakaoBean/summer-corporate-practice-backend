@@ -5,18 +5,18 @@ import com.kakaobean.core.project.domain.Project;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.UUID;
+
 @Getter
 public class RegisterProjectRequestDto {
 
     private String title;
     private String content;
-    private String secretKey;
 
     @Builder
-    public RegisterProjectRequestDto(String title, String content, String secretKey) {
+    public RegisterProjectRequestDto(String title, String content) {
         this.title = title;
         this.content = content;
-        this.secretKey = secretKey;
     }
 
     public Project toEntity(){
@@ -25,7 +25,7 @@ public class RegisterProjectRequestDto {
                 title,
                 content,
                 BaseStatus.ACTIVE,
-                secretKey
+                UUID.randomUUID().toString()
         );
     }
 }

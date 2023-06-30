@@ -24,7 +24,7 @@ public class ProjectMemberController {
         return null;
     }
 
-    @PostMapping("/projects/invitation/{projectId}")
+    @PostMapping("/projects/{projectId}/invitation")
     public ResponseEntity inviteProjectMember(@AuthenticationPrincipal Long projectAdminId,
                                               @PathVariable Long projectId,
                                               @RequestBody InviteProjectMemberRequest request){

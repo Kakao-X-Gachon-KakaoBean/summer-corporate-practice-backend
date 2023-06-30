@@ -15,25 +15,16 @@ public class RegisterProjectRequest {
     @NotBlank
     private String content;
 
-    @NotBlank
-    private String secretKey;
-
     @Builder
-    public RegisterProjectRequest(String title, String content, String secretKey) {
+    public RegisterProjectRequest(String title, String content) {
         this.title = title;
         this.content = content;
-        this.secretKey = secretKey;
     }
-
-
-
-
 
     public RegisterProjectRequestDto toServiceDto(){
         return new RegisterProjectRequestDto(
                 title,
-                content,
-                secretKey
+                content
         );
     }
 }

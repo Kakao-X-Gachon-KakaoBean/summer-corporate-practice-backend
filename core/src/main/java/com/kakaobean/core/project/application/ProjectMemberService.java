@@ -52,7 +52,7 @@ public class ProjectMemberService {
     public void inviteProjectMembers(Long projectAdminId,
                                      Long projectId,
                                      InviteProjectMemberRequestDto inviteProjectMemberRequestDto) {
-        ProjectMember projectAdmin = projectMemberRepository.findMemberByMemberIdAndProjectId(projectAdminId, projectId).orElseThrow();
+        ProjectMember projectAdmin = projectMemberRepository.findByMemberIdAndProjectId(projectAdminId, projectId).orElseThrow();
         projectValidator.validAdmin(projectAdmin);
         Project project = projectRepository.findProjectById(projectId).orElseThrow();
         invitationProjectMemberService.sendInvitationMails(inviteProjectMemberRequestDto.getInvitedMemberIdList(), project);

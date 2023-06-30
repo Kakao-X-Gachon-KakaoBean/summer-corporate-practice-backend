@@ -28,5 +28,4 @@ public class ProjectController {
         log.info("프로젝트 생성 api 호출");
         return new ResponseEntity(res, HttpStatus.OK);
     }
-
 }
