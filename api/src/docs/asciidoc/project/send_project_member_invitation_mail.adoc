@@ -1,0 +1,13 @@
+= 프로젝트를 참여할 멤버에게 초대 이메일 발송
+
+== 요청
+
+include::{snippets}/send_project_member_invitation_mail/http-request.adoc[]
+
+include::{snippets}/send_project_member_invitation_mail/request-fields.adoc[]
+
+== 응답
+경
+include::{snippets}/send_project_member_invitation_mail/http-response.adoc[]
+
+include::{snippets}/send_project_member_invitation_mail/response-fields.adoc[]

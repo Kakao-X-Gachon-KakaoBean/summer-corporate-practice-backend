@@ -26,12 +26,11 @@ public class MemberService {
     private final ModifyMemberService modifyMemberService;
 
     @Transactional(readOnly = false)
-    public RegisterMemberResponseDto registerMember(RegisterMemberRequestDto dto){
+    public void registerMember(RegisterMemberRequestDto dto){
         Member member = dto.toEntity();
         member.validate(memberValidator);
         member.verifyEmail(memberVerifiedEmailService, dto.getEmailAuthKey());
         Member savedMember = memberRepository.save(member);
-        return new RegisterMemberResponseDto(savedMember.getId());
     }
 
     public void sendVerificationEmail(String email) {
