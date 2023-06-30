@@ -12,11 +12,13 @@ public class RegisterProjectRequestDto {
 
     private String title;
     private String content;
+    private Long adminId;
 
     @Builder
-    public RegisterProjectRequestDto(String title, String content) {
+    public RegisterProjectRequestDto(String title, String content, Long adminId) {
         this.title = title;
         this.content = content;
+        this.adminId = adminId;
     }
 
     public Project toEntity(){

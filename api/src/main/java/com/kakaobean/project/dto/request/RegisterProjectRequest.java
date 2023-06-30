@@ -21,10 +21,11 @@ public class RegisterProjectRequest {
         this.content = content;
     }
 
-    public RegisterProjectRequestDto toServiceDto(){
+    public RegisterProjectRequestDto toServiceDto(Long adminId){
         return new RegisterProjectRequestDto(
                 title,
-                content
+                content,
+                adminId
         );
     }
 }
