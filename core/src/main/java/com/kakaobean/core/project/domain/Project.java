@@ -1,6 +1,7 @@
 package com.kakaobean.core.project.domain;
 
 import com.kakaobean.core.common.domain.BaseEntity;
+import com.kakaobean.core.common.domain.BaseStatus;
 import lombok.Getter;
 
 import javax.persistence.Entity;
@@ -24,7 +25,11 @@ public class Project extends BaseEntity {
 
     protected Project() {}
 
-    public Project(String title, String content, String secretKey) {
+    public Project(String title,
+                   String content,
+                   BaseStatus baseStatus,
+                   String secretKey) {
+        super(baseStatus);
         this.title = title;
         this.content = content;
         this.secretKey = secretKey;

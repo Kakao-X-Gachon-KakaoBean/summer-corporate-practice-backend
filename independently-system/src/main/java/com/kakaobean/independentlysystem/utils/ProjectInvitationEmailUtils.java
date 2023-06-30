@@ -2,10 +2,6 @@ package com.kakaobean.independentlysystem.utils;
 
 public class ProjectInvitationEmailUtils {
 
-    public static String getSubject(){
-        return "[코코노트] 프로젝트 초대 메일입니다.";
-    }
-
     public static String getProjectInvitationHtml(String url) {
         StringBuilder emailContent = new StringBuilder();
         emailContent.append("<!DOCTYPE html>");

@@ -4,6 +4,7 @@ import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.simpleemail.model.SendEmailResult;
 import com.kakaobean.common.RandomUtils;
 import com.kakaobean.independentlysystem.email.dto.SesServiceRequest;
+import com.kakaobean.independentlysystem.utils.ProjectInvitationEmailUtils;
 import com.kakaobean.independentlysystem.utils.ValidationEmailUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,8 +38,11 @@ public class EmailSender {
     public void sendProjectInvitationEmail(String receiveEmail,
                                            String projectName,
                                            String projectSecretKey){
-        String subject = "[코코노트] 프로젝트 초대 메일입니다.";
-
+        String subject = "[코코노트] "+ projectName  + " 프로젝트 초대 메일입니다.";
+        String invitationUrl = projectSecretKey;
+        SesServiceRequest emailSenderDto = makeValidationEmailSenderDto(receiveEmail, subject, () -> ProjectInvitationEmailUtils.getProjectInvitationHtml(invitationUrl));
+        SendEmailResult sendEmailResult = amazonSimpleEmailService.sendEmail(emailSenderDto.toSendRequestDto());
+        confirmSentEmail(sendEmailResult);
     }
 
     private SesServiceRequest makeValidationEmailSenderDto(String receiveEmail,
