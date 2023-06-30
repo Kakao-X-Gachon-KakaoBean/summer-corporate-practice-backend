@@ -12,11 +12,8 @@ public class RegisterMemberServiceDtoFactory {
     public static RegisterMemberRequestDto createSuccessCaseRequestDto(){
         return RegisterMemberRequestDto.builder()
                 .name("kakoBean")
-                .age(25)
-                .gender(Gender.MALE)
                 .email("example@gmail.com")
                 .password("1q2w3e4r!")
-                .birth(LocalDate.parse("1998-03-04"))
                 .emailAuthKey("113336")
                 .build();
     }
