@@ -7,8 +7,6 @@ import com.kakaobean.core.project.domain.service.InvitationProjectMemberService;
 import com.kakaobean.independentlysystem.email.EmailSender;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
 public class InvitationProjectMemberServiceImpl implements InvitationProjectMemberService {
 
@@ -22,10 +20,8 @@ public class InvitationProjectMemberServiceImpl implements InvitationProjectMemb
     }
 
     @Override
-    public void sendInvitationMails(List<Long> invitedMemberIds, Project project) {
-        for (Long invitedMemberId : invitedMemberIds) {
-            Member member = memberRepository.findMemberById(invitedMemberId).orElseThrow();
-            emailSender.sendProjectInvitationEmail(member.getAuth().getEmail(), project.getTitle(), project.getSecretKey());
-        }
+    public void sendInvitationMail(Long invitedMemberId, Project project) {
+        Member member = memberRepository.findMemberById(invitedMemberId).orElseThrow();
+        emailSender.sendProjectInvitationEmail(member.getAuth().getEmail(), project.getTitle(), project.getSecretKey());
     }
 }

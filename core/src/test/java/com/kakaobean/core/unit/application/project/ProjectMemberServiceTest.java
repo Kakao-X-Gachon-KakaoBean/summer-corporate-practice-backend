@@ -21,6 +21,7 @@ import com.kakaobean.core.project.application.dto.request.RegisterProjectMemberR
 import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.ProjectValidator;
+import com.kakaobean.core.project.domain.event.ProjectMemberInvitedEvent;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.project.domain.service.InvitationProjectMemberService;
@@ -78,14 +79,13 @@ public class ProjectMemberServiceTest extends UnitTest {
         //given
         given(projectMemberRepository.findByMemberIdAndProjectId(Mockito.anyLong(), Mockito.anyLong())).willReturn(Optional.of(createAdmin()));
         given(projectRepository.findProjectById(Mockito.anyLong())).willReturn(Optional.of(ProjectFactory.create()));
-        given(memberRepository.findMemberById(Mockito.anyLong())).willReturn(Optional.of(MemberFactory.create()));
 
         //when
-        projectMemberService.inviteProjectMembers(new InviteProjectMemberRequestDto(List.of(1L, 2L), 3L, 4L));
+        List<ProjectMemberInvitedEvent> events = projectMemberService.inviteProjectMembers(new InviteProjectMemberRequestDto(List.of(1L, 2L), 3L, 4L));
 
         //then
+        Assertions.assertThat(events.size()).isEqualTo(2);
         verify(projectMemberRepository, times(1)).findByMemberIdAndProjectId(Mockito.anyLong(), Mockito.anyLong());
-        verify(emailSender, times(2)).sendProjectInvitationEmail(Mockito.anyString(), Mockito.anyString(), Mockito.anyString());
     }
 
     @Test

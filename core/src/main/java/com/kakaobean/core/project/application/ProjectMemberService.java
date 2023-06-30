@@ -9,6 +9,7 @@ import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.ProjectRole;
 import com.kakaobean.core.project.domain.ProjectValidator;
+import com.kakaobean.core.project.domain.event.ProjectMemberInvitedEvent;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.project.domain.service.InvitationProjectMemberService;
@@ -18,11 +19,12 @@ import com.kakaobean.core.project.exception.NotExistsProjectMemberException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.kakaobean.core.common.domain.BaseStatus.ACTIVE;
 
 
 @Service
-@Transactional(readOnly = false)
 public class ProjectMemberService {
 
     private final ProjectMemberRepository projectMemberRepository;
@@ -43,6 +45,7 @@ public class ProjectMemberService {
         this.invitationProjectMemberService = invitationProjectMemberService;
     }
 
+    @Transactional(readOnly = false)
     public void registerProjectMember(RegisterProjectMemberRequestDto dto){
         memberRepository.findMemberById(dto.getMemberId()).orElseThrow(NotExistsMemberException::new);
         Project project = projectRepository.findBySecretKey(dto.getProjectSecretKey()).orElseThrow(NotExistsProjectException::new);
@@ -50,10 +53,11 @@ public class ProjectMemberService {
         projectMemberRepository.save(projectMember);
     }
 
-    public void inviteProjectMembers(InviteProjectMemberRequestDto dto) {
+    @Transactional(readOnly = true)
+    public List<ProjectMemberInvitedEvent> inviteProjectMembers(InviteProjectMemberRequestDto dto) {
         ProjectMember projectAdmin = projectMemberRepository.findByMemberIdAndProjectId(dto.getProjectAdminId(), dto.getProjectId()).orElseThrow(NotExistsProjectMemberException::new);
         projectValidator.validAdmin(projectAdmin);
         Project project = projectRepository.findProjectById(dto.getProjectId()).orElseThrow(NotExistsProjectException::new);
-        invitationProjectMemberService.sendInvitationMails(dto.getInvitedMemberIdList(), project);
+        return project.sendInvitationEmail(dto.getInvitedMemberIdList());
     }
 }

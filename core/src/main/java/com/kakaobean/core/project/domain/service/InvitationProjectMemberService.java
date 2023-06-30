@@ -5,5 +5,6 @@ import com.kakaobean.core.project.domain.Project;
 import java.util.List;
 
 public interface InvitationProjectMemberService {
-    void sendInvitationMails(List<Long> invitedMemberIds, Project project);
+    void sendInvitationMail(Long invitedMemberId, Project project);
+
 }
