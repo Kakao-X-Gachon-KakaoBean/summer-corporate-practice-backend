@@ -10,8 +10,14 @@ public class InviteProjectMemberRequest {
 
     private List<Long> invitedMemberIdList;
 
-    public InviteProjectMemberRequestDto toServiceDto(){
-        return new InviteProjectMemberRequestDto(invitedMemberIdList);
+    public InviteProjectMemberRequest() {}
+
+    public InviteProjectMemberRequest(List<Long> invitedMemberIdList) {
+        this.invitedMemberIdList = invitedMemberIdList;
+    }
+
+    public InviteProjectMemberRequestDto toServiceDto(Long projectId, Long projectAdminId){
+        return new InviteProjectMemberRequestDto(invitedMemberIdList, projectId, projectAdminId);
     }
 
 }

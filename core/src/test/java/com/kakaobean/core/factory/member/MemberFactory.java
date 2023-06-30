@@ -12,10 +12,7 @@ public class MemberFactory {
         return Member.builder()
                 .id(1L)
                 .name("kakoBean")
-                .age(25)
-                .gender(Gender.MALE)
                 .auth(new Auth("example@gmail.com", "1q2w3e4r!"))
-                .birth(LocalDate.parse("1998-03-04"))
                 .role(Role.ROLE_USER)
                 .authProvider(AuthProvider.local)
                 .build();
