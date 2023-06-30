@@ -1,9 +1,8 @@
 package com.kakaobean.core.project.application;
 
-import com.kakaobean.core.member.domain.Member;
-import com.kakaobean.core.member.domain.MemberValidator;
 import com.kakaobean.core.member.domain.repository.MemberRepository;
 import com.kakaobean.core.project.application.dto.request.InviteProjectMemberRequestDto;
+import com.kakaobean.core.project.application.dto.request.RegisterProjectMemberRequestDto;
 import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.ProjectRole;
@@ -14,8 +13,11 @@ import com.kakaobean.core.project.domain.service.InvitationProjectMemberService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.kakaobean.core.common.domain.BaseStatus.ACTIVE;
+
 
 @Service
+@Transactional(readOnly = false)
 public class ProjectMemberService {
 
     private final ProjectMemberRepository projectMemberRepository;
@@ -37,18 +39,13 @@ public class ProjectMemberService {
         this.invitationProjectMemberService = invitationProjectMemberService;
     }
 
-    public void registerProjectMember(Long memberId, String projectSecretKey){
-
-        //TODO 멤버가 존재하는지 검증
-
-        //TODO 프로젝트를 찾아야함
-
-        //ProjectMember projectMember = new ProjectMember(ACTIVE,   );
-        //projectMemberRepository.save(projectMember)
-
+    public void registerProjectMember(RegisterProjectMemberRequestDto dto){
+        memberRepository.findMemberById(dto.getMemberId()).orElseThrow();
+        Project project = projectRepository.findBySecretKey(dto.getProjectSecretKey()).orElseThrow();
+        ProjectMember projectMember = new ProjectMember(ACTIVE, project.getId(), dto.getMemberId(), ProjectRole.VIEWER);
+        projectMemberRepository.save(projectMember);
     }
 
-    @Transactional(readOnly = false)
     public void inviteProjectMembers(Long projectAdminId,
                                      Long projectId,
                                      InviteProjectMemberRequestDto inviteProjectMemberRequestDto) {
