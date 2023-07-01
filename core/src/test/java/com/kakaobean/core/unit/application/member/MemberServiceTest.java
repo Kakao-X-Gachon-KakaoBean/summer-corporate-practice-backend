@@ -78,10 +78,9 @@ public class MemberServiceTest extends UnitTest {
         given(emailRepository.getEmailCertification(Mockito.any())).willReturn(new Email(req.getEmail(), req.getEmailAuthKey()));
 
         //when
-        RegisterMemberResponseDto res = memberService.registerMember(req);
+        memberService.registerMember(req);
 
         //then
-        assertThat(res.getMemberId()).isEqualTo(1L);
         verify(memberRepository, times(1)).save(Mockito.any());
     }
 

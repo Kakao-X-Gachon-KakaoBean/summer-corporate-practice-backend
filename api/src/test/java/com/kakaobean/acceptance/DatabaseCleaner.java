@@ -19,27 +19,11 @@ public class DatabaseCleaner implements InitializingBean {
     private List<String> entities;
     private List<String> tables = new ArrayList<>();
 
-
-    private List<String> filters = List.of(
-            "essayquestionresponse",
-            "multiplechoicequestionresponse",
-            "rangequestionresponse",
-            "essayquestion",
-            "multiplechoicequestion",
-            "rangequestion",
-            "multiplechoiceanswerresponse"
-    );
-
     @Override
     public void afterPropertiesSet() throws Exception {
         entities = entityManager.getMetamodel().getEntities().stream()
                 .map(entry -> entry.getName().toLowerCase(Locale.ROOT))
                 .collect(Collectors.toList());
-        for (String str : entities) {
-            if (!filters.contains(str)) {
-                tables.add(str);
-            }
-        }
         System.out.println("tables = " + tables);
     }
 

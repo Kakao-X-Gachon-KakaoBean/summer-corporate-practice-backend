@@ -29,13 +29,13 @@ public class EmailSender {
     public String sendVerificationEmail(String receiveEmail) {
         String authKey = RandomUtils.creatRandomKey();
         String subject = "[코코노트] 인증 번호 발송 메일입니다.";
-        SesServiceRequest emailSenderDto = makeValidationEmailSenderDto(receiveEmail, subject, () -> ValidationEmailUtils.getEmailValidationHtml(authKey));
+        SesServiceRequest emailSenderDto = makeValidationEmailSenderDto(List.of(receiveEmail), subject, () -> ValidationEmailUtils.getEmailValidationHtml(authKey));
         SendEmailResult sendEmailResult = amazonSimpleEmailService.sendEmail(emailSenderDto.toSendRequestDto());
         confirmSentEmail(sendEmailResult);
         return authKey;
     }
 
-    public void sendProjectInvitationEmail(String receiveEmail,
+    public void sendProjectInvitationEmail(List<String> receiveEmail,
                                            String projectName,
                                            String projectSecretKey){
         String subject = "[코코노트] "+ projectName  + " 프로젝트 초대 메일입니다.";
@@ -45,10 +45,9 @@ public class EmailSender {
         confirmSentEmail(sendEmailResult);
     }
 
-    private SesServiceRequest makeValidationEmailSenderDto(String receiveEmail,
+    private SesServiceRequest makeValidationEmailSenderDto(List<String> receiver,
                                                            String subject,
                                                            EmailHTMLMaker maker){
-        List<String> receiver = List.of(receiveEmail);
         String html = maker.makeEmailHtml();
         return SesServiceRequest.builder()
                 .from(sender)

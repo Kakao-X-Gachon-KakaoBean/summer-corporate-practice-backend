@@ -22,12 +22,6 @@ public abstract class AcceptanceTest {
 
     @BeforeEach
     void beforeEach(){
-
-//        if (RestAssured.port == RestAssured.UNDEFINED_PORT) {
-//            RestAssured.port = 12312;
-//            databaseConfigurator.afterPropertiesSet();
-//        }
-
         RestAssured.port = port;
         databaseConfigurator.execute();;
     }

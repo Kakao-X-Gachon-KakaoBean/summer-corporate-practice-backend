@@ -75,10 +75,10 @@ public class MemberServiceIntegrationTest extends IntegrationTest {
         emailRepository.save(new Email(dto.getEmail(), dto.getEmailAuthKey()));
 
         //when
-        RegisterMemberResponseDto res = memberService.registerMember(dto);
+        memberService.registerMember(dto);
 
         //then
-        assertThat(res.getMemberId()).isNotNull();
+        assertThat(memberRepository.findAll().size()).isEqualTo(1);
     }
 
     @DisplayName("이미 등록된 이메일이면 멤버를 등록할 수 없다.")
