@@ -6,7 +6,6 @@ import com.kakaobean.core.project.domain.service.InvitationProjectMemberService;
 
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 
 @Component
 public class ProjectMemberFacade {
@@ -20,13 +19,7 @@ public class ProjectMemberFacade {
         this.invitationProjectMemberService = invitationProjectMemberService;
     }
     public void inviteProjectMembers(InviteProjectMemberRequestDto dto){
-        List<ProjectMemberInvitedEvent> events = projectMemberService.inviteProjectMembers(dto);
-        sendInvitationProjectEmails(events);
-    }
-
-    private void sendInvitationProjectEmails(List<ProjectMemberInvitedEvent> events) {
-        for (ProjectMemberInvitedEvent event : events) {
-            invitationProjectMemberService.sendInvitationMail(event.getInvitedMemberId(), event.getProject());
-        }
+        ProjectMemberInvitedEvent event = projectMemberService.registerInvitedProjectPersons(dto);
+        invitationProjectMemberService.sendInvitationMails(event.getInvitedMemberEmails(), event.getProject());
     }
 }

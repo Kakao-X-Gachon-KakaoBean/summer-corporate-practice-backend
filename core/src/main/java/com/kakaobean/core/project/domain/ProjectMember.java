@@ -34,4 +34,8 @@ public class ProjectMember extends BaseEntity {
         this.memberId = memberId;
         this.projectRole = projectRole;
     }
+
+    public void modifyProjectRole(ProjectRole projectRole) {
+        this.projectRole = projectRole;
+    }
 }

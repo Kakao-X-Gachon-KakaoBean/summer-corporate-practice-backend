@@ -1,5 +1,6 @@
 package com.kakaobean.core.project.application;
 
+import com.kakaobean.core.member.domain.Member;
 import com.kakaobean.core.member.domain.repository.MemberRepository;
 import com.kakaobean.core.member.exception.member.NotExistsMemberException;
 
@@ -20,8 +21,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.kakaobean.core.common.domain.BaseStatus.ACTIVE;
+import static com.kakaobean.core.project.domain.ProjectRole.*;
 
 
 @Service
@@ -31,33 +34,52 @@ public class ProjectMemberService {
     private final MemberRepository memberRepository;
     private final ProjectRepository projectRepository;
     private final ProjectValidator projectValidator;
-    private final InvitationProjectMemberService invitationProjectMemberService;
 
     public ProjectMemberService(ProjectMemberRepository projectMemberRepository,
                                 MemberRepository memberRepository,
                                 ProjectRepository projectRepository,
-                                ProjectValidator projectValidator,
-                                InvitationProjectMemberService invitationProjectMemberService) {
+                                ProjectValidator projectValidator) {
         this.projectMemberRepository = projectMemberRepository;
         this.memberRepository = memberRepository;
         this.projectRepository = projectRepository;
         this.projectValidator = projectValidator;
-        this.invitationProjectMemberService = invitationProjectMemberService;
     }
 
     @Transactional(readOnly = false)
     public void registerProjectMember(RegisterProjectMemberRequestDto dto){
-        memberRepository.findMemberById(dto.getMemberId()).orElseThrow(NotExistsMemberException::new);
-        Project project = projectRepository.findBySecretKey(dto.getProjectSecretKey()).orElseThrow(NotExistsProjectException::new);
-        ProjectMember projectMember = new ProjectMember(ACTIVE, project.getId(), dto.getMemberId(), ProjectRole.VIEWER);
-        projectMemberRepository.save(projectMember);
+
+        //프로젝트를 가져옴.
+        Project project = projectRepository.findBySecretKey(dto.getProjectSecretKey())
+                .orElseThrow(NotExistsProjectException::new);
+
+        //프로젝트 멤버를 가져온다.
+        ProjectMember invitedPerson = projectMemberRepository.findByMemberIdAndProjectId(dto.getMemberId(), project.getId())
+                .orElseThrow(NotExistsProjectMemberException::new);
+
+        projectValidator.validInvitedPerson(invitedPerson);
+        invitedPerson.modifyProjectRole(VIEWER);
     }
 
-    @Transactional(readOnly = true)
-    public List<ProjectMemberInvitedEvent> inviteProjectMembers(InviteProjectMemberRequestDto dto) {
+    @Transactional(readOnly = false)
+    public ProjectMemberInvitedEvent registerInvitedProjectPersons(InviteProjectMemberRequestDto dto) {
         ProjectMember projectAdmin = projectMemberRepository.findByMemberIdAndProjectId(dto.getProjectAdminId(), dto.getProjectId()).orElseThrow(NotExistsProjectMemberException::new);
         projectValidator.validAdmin(projectAdmin);
         Project project = projectRepository.findProjectById(dto.getProjectId()).orElseThrow(NotExistsProjectException::new);
-        return project.sendInvitationEmail(dto.getInvitedMemberIdList());
+        List<String> invitedEmails = saveInvitedPersons(dto, project);
+        return project.createInvitationProjectMemberEvent(invitedEmails);
+    }
+
+    private List<String> saveInvitedPersons(InviteProjectMemberRequestDto dto, Project project) {
+        return dto
+                .getInvitedMemberIdList()
+                .stream()
+                .map(invitedMemberId -> saveInvitedPerson(project, invitedMemberId))
+                .collect(Collectors.toList());
+    }
+
+    private String saveInvitedPerson(Project project, Long invitedMemberId) {
+        Member member = memberRepository.findMemberById(invitedMemberId).orElseThrow(NotExistsMemberException::new);
+        projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), member.getId(), INVITED_PERSON));
+        return member.getAuth().getEmail();
     }
 }

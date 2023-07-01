@@ -39,10 +39,19 @@ public class Project extends BaseEntity {
         this.secretKey = secretKey;
     }
 
-    public List<ProjectMemberInvitedEvent> sendInvitationEmail(List<Long> invitedMemberIdList) {
-        return invitedMemberIdList
-                .stream()
-                .map(id -> new ProjectMemberInvitedEvent(id, this))
-                .collect(Collectors.toList());
+
+    /**
+     * 테스트에서 사용
+     */
+    public Project(BaseStatus status, Long id, String title, String content, String secretKey) {
+        super(status);
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.secretKey = secretKey;
+    }
+
+    public ProjectMemberInvitedEvent createInvitationProjectMemberEvent(List<String> invitedMemberEmails) {
+        return new ProjectMemberInvitedEvent(invitedMemberEmails, this);
     }
 }
