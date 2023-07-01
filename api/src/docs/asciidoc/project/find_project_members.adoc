@@ -1,0 +1,13 @@
+= 프로젝트 참여 멤버 조회
+
+== 요청
+
+include::{snippets}/find_project_members/http-request.adoc[]
+
+include::{snippets}/find_project_members/path-parameters.adoc[]
+
+== 응답
+
+include::{snippets}/register_project_member/http-response.adoc[]
+
+include::{snippets}/register_project_member/response-fields.adoc[]

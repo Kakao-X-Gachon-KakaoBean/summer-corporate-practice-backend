@@ -1,7 +1,7 @@
 package com.kakaobean.core.project.application;
 
 import com.kakaobean.core.common.domain.BaseStatus;
-import com.kakaobean.core.project.application.dto.Response.RegisterProjectResponseDto;
+import com.kakaobean.core.project.application.dto.response.RegisterProjectResponseDto;
 import com.kakaobean.core.project.application.dto.request.RegisterProjectRequestDto;
 import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.ProjectMember;
