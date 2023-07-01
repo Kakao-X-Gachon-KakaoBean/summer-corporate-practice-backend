@@ -1,8 +1,6 @@
 package com.kakaobean.unit.controller.member;
 
-import com.kakaobean.core.member.application.dto.response.FindEmailResponseDto;
 import com.kakaobean.core.member.application.dto.response.FindMemberInfoResponseDto;
-import com.kakaobean.member.dto.FindEmailRequest;
 import com.kakaobean.member.dto.ModifyMemberPasswordRequest;
 import com.kakaobean.member.dto.SendVerifiedEmailRequest;
 import com.kakaobean.unit.controller.ControllerTest;
@@ -15,8 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
-
-import java.time.LocalDate;
 
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentRequest;
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentResponse;
@@ -41,8 +37,6 @@ public class MemberControllerTest extends ControllerTest {
         //given
         RegisterMemberRequest request = RegisterMemberRequestFactory.createRequest();
         String requestBody = objectMapper.writeValueAsString(request);
-        given(memberService.registerMember(Mockito.any(RegisterMemberRequestDto.class)))
-                        .willReturn(RegisterMemberRequestFactory.createResponseDto());
 
         //when
         ResultActions perform = mockMvc.perform(post("/members")
@@ -59,16 +53,13 @@ public class MemberControllerTest extends ControllerTest {
                 getDocumentResponse(),
                 requestFields(
                         fieldWithPath("name").type(STRING).description("이름"),
-                        fieldWithPath("age").type(NUMBER).description("나이"),
-                        fieldWithPath("gender").type(STRING).description("성별"),
                         fieldWithPath("email").type(STRING).description("이메일"),
                         fieldWithPath("emailAuthKey").type(STRING).description("이메일 인증 키"),
                         fieldWithPath("password").type(STRING).description("비밀번호"),
-                        fieldWithPath("checkPassword").type(STRING).description("비밀번호 확인"),
-                        fieldWithPath("birth").type(STRING).description("생일")
+                        fieldWithPath("checkPassword").type(STRING).description("비밀번호 확인")
                 ),
                 responseFields(
-                        fieldWithPath("memberId").type(NUMBER).description("등록한 회원 id")
+                        fieldWithPath("message").type(STRING).description("성공 메시지")
                 )
         ));
     }
@@ -125,10 +116,7 @@ public class MemberControllerTest extends ControllerTest {
                 getDocumentResponse(),
                 responseFields(
                         fieldWithPath("name").type(STRING).description("찾은 멤버 이름"),
-                        fieldWithPath("age").type(NUMBER).description("찾은 멤버 나이"),
-                        fieldWithPath("gender").type(STRING).description("찾은 멤버 성별"),
-                        fieldWithPath("email").type(STRING).description("찾은 멤버 이메일"),
-                        fieldWithPath("birth").type(STRING).description("찾은 멤버 생일")
+                        fieldWithPath("email").type(STRING).description("찾은 멤버 이메일")
                 )
         ));
     }

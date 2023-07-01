@@ -37,9 +37,9 @@ public class MemberController {
     @PostMapping("/members")
     public ResponseEntity<RegisterMemberResponseDto> registerMember(@Validated @RequestBody RegisterMemberRequest request){
         log.info("회원 가입 api 호출");
-        RegisterMemberResponseDto res = memberService.registerMember(request.toServiceDto(passwordEncoder));
+        memberService.registerMember(request.toServiceDto(passwordEncoder));
         log.info("회원 가입 api 종료");
-        return new ResponseEntity(res, OK);
+        return new ResponseEntity(CommandSuccessResponse.from("회원가입에 성공했습니다."), OK);
     }
 
     @PostMapping("/emails")
@@ -47,7 +47,7 @@ public class MemberController {
         log.info("인증 이메일 발송 api 호출");
         memberService.sendVerificationEmail(request.getEmail());
         log.info("인증 이메일 발송 api 종료");
-        return new ResponseEntity(new CommandSuccessResponse(), OK);
+        return new ResponseEntity(CommandSuccessResponse.from("인증 이메일 발송을 성공했습니다."), OK);
     }
 
     @GetMapping("/members/info")
@@ -63,6 +63,6 @@ public class MemberController {
         log.info("비밀번호 수정 api 호출");
         memberService.modifyMemberPassword(request.toServiceDto());
         log.info("비밀번호 수정 api 종료");
-        return new ResponseEntity(new CommandSuccessResponse(), OK);
+        return new ResponseEntity(CommandSuccessResponse.from("비밀번호 변경에 성공하셨습니다."), OK);
     }
 }

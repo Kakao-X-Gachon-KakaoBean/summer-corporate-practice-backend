@@ -7,6 +7,7 @@ import com.kakaobean.config.WebMvcConfig;
 import com.kakaobean.core.member.application.MemberProvider;
 import com.kakaobean.core.member.domain.repository.MemberRepository;
 import com.kakaobean.core.member.application.MemberService;
+import com.kakaobean.core.project.application.ProjectMemberFacade;
 import com.kakaobean.core.project.application.ProjectMemberService;
 import com.kakaobean.member.MemberController;
 import com.kakaobean.project.ProjectMemberController;
@@ -64,5 +65,8 @@ public abstract class ControllerTest {
 
     @MockBean
     protected ProjectMemberService projectMemberService;
+
+    @MockBean
+    protected ProjectMemberFacade projectMemberFacade;
 
 }

@@ -71,7 +71,7 @@ public class ProjectMemberControllerTest extends ControllerTest {
         //then
         perform.andDo(print());
         perform.andExpect(status().is2xxSuccessful());
-        perform.andDo(document("send_invitation_project_mail",
+        perform.andDo(document("send_project_member_invitation_mail",
                 getDocumentRequest(),
                 getDocumentResponse(),
                 requestFields(

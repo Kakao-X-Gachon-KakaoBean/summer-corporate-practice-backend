@@ -1,6 +1,7 @@
 package com.kakaobean.project;
 
 import com.kakaobean.common.dto.CommandSuccessResponse;
+import com.kakaobean.core.project.application.ProjectMemberFacade;
 import com.kakaobean.core.project.application.ProjectMemberService;
 import com.kakaobean.project.dto.request.InviteProjectMemberRequest;
 import com.kakaobean.project.dto.request.RegisterProjectMemberRequest;
@@ -13,9 +14,11 @@ import org.springframework.web.bind.annotation.*;
 public class ProjectMemberController {
 
     private final ProjectMemberService projectMemberService;
+    private final ProjectMemberFacade projectMemberFacade;
 
-    public ProjectMemberController(ProjectMemberService projectMemberService) {
+    public ProjectMemberController(ProjectMemberService projectMemberService, ProjectMemberFacade projectMemberFacade) {
         this.projectMemberService = projectMemberService;
+        this.projectMemberFacade = projectMemberFacade;
     }
 
     @PostMapping("/projects/members")
@@ -28,7 +31,7 @@ public class ProjectMemberController {
     public ResponseEntity inviteProjectMember(@AuthenticationPrincipal Long projectAdminId,
                                               @PathVariable Long projectId,
                                               @RequestBody InviteProjectMemberRequest request){
-        projectMemberService.inviteProjectMembers(request.toServiceDto(projectId, projectAdminId));
+        projectMemberFacade.inviteProjectMembers(request.toServiceDto(projectId, projectAdminId));
         return new ResponseEntity(CommandSuccessResponse.from("프로젝트 초대 이메일 발송에 성공했습니다."), HttpStatus.OK);
     }
 }
