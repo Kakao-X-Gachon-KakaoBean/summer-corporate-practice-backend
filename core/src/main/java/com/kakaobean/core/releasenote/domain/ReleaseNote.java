@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Getter
+@Entity
 public class ReleaseNote {
 
     @Id
