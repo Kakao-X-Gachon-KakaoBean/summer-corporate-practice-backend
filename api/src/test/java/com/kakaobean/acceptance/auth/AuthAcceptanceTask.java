@@ -32,6 +32,7 @@ public class AuthAcceptanceTask {
                         ),
                         responseFields(
                                 fieldWithPath("accessToken").type(STRING).description("로그인 액세스 토큰"),
+                                fieldWithPath("refreshToken").type(STRING).description("로그인 리프레쉬 토큰"),
                                 fieldWithPath("tokenType").type(STRING).description("토큰 타입")
                         )
                 ))

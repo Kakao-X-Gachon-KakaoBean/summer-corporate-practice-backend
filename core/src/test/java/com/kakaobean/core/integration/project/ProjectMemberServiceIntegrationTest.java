@@ -67,6 +67,7 @@ public class ProjectMemberServiceIntegrationTest extends IntegrationTest {
         Member invitedMember = memberRepository.save(MemberFactory.create());
         Project project = projectRepository.save(ProjectFactory.create());
         projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), member.getId(), MEMBER));
+
         //when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
             projectMemberService.registerInvitedProjectPersons(new InviteProjectMemberRequestDto(List.of(invitedMember.getId()), project.getId(), member.getId()));

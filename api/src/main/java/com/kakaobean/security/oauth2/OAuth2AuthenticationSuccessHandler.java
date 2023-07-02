@@ -1,7 +1,8 @@
 package com.kakaobean.security.oauth2;
 
 import com.kakaobean.config.AppProperties;
-import com.kakaobean.security.TokenProvider;
+import com.kakaobean.security.token.RefreshTokenRepository;
+import com.kakaobean.security.token.TokenProvider;
 import com.kakaobean.util.CookieUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -25,6 +26,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private final TokenProvider tokenProvider;
     private final AppProperties appProperties;
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException{
@@ -48,11 +50,15 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         }
 
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
-        String token = tokenProvider.createToken(authentication);
+        String accessToken = tokenProvider.createAccessToken(authentication);
+        String refreshToken = tokenProvider.createRefreshToken(authentication);
+
+        refreshTokenRepository.save(authentication, refreshToken);
 
         return UriComponentsBuilder
                 .fromUriString(targetUrl)
-                .queryParam("token", token)
+                .queryParam("accessToken", accessToken)
+                .queryParam("refreshToken", refreshToken)
                 .build().toUriString();
     }
 

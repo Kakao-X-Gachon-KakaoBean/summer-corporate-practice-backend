@@ -9,6 +9,9 @@ import com.kakaobean.security.oauth2.CustomOAuth2UserService;
 import com.kakaobean.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.kakaobean.security.oauth2.OAuth2AuthenticationFailureHandler;
 import com.kakaobean.security.oauth2.OAuth2AuthenticationSuccessHandler;
+import com.kakaobean.security.token.RefreshTokenRepository;
+import com.kakaobean.security.TokenAuthenticationFilter;
+import com.kakaobean.security.token.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -32,10 +35,11 @@ public class SecurityConfig {
     private final TokenProvider tokenProvider;
     private final MemberRepository memberRepository;
     private final AppProperties appProperties;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Bean
     OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler(){
-        return new OAuth2AuthenticationSuccessHandler(tokenProvider, appProperties,httpCookieOAuth2AuthorizationRequestRepository());
+        return new OAuth2AuthenticationSuccessHandler(tokenProvider, appProperties,httpCookieOAuth2AuthorizationRequestRepository(), refreshTokenRepository);
     }
 
     @Bean
@@ -74,7 +78,7 @@ public class SecurityConfig {
 
     @Bean
     public TokenAuthenticationFilter tokenAuthenticationFilter() {
-        return new TokenAuthenticationFilter(tokenProvider, customUserDetailsService());
+        return new TokenAuthenticationFilter(tokenProvider, customUserDetailsService(), refreshTokenRepository);
     }
 
     @Bean
@@ -140,7 +144,7 @@ public class SecurityConfig {
         LoginFilter loginFilter = new LoginFilter(objectMapper);
         loginFilter.setFilterProcessesUrl("/local/login");
         loginFilter.setAuthenticationManager(authenticationManager());
-        loginFilter.setAuthenticationSuccessHandler(new LoginSuccessHandler(tokenProvider, objectMapper));
+        loginFilter.setAuthenticationSuccessHandler(new LoginSuccessHandler(tokenProvider, objectMapper, refreshTokenRepository));
         return loginFilter;
     }
 }
