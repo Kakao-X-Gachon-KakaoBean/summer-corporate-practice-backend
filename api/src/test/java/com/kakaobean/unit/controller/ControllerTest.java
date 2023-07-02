@@ -14,7 +14,8 @@ import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
 import com.kakaobean.member.MemberController;
 import com.kakaobean.project.ProjectController;
 import com.kakaobean.project.ProjectMemberController;
-import com.kakaobean.security.TokenProvider;
+import com.kakaobean.security.token.RefreshTokenRepository;
+import com.kakaobean.security.token.TokenProvider;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -78,5 +79,8 @@ public abstract class ControllerTest {
 
     @MockBean
     protected ProjectQueryRepository projectQueryRepository;
+
+    @MockBean
+    protected RefreshTokenRepository refreshTokenRepository;
 
 }

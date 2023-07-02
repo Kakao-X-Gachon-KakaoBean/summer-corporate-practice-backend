@@ -7,6 +7,7 @@ import com.kakaobean.core.project.application.dto.response.FindProjectMemberResp
 import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
 import com.kakaobean.project.dto.request.InviteProjectMemberRequest;
 import com.kakaobean.project.dto.request.RegisterProjectMemberRequest;
+import com.kakaobean.security.UserPrincipal;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -38,16 +39,17 @@ public class ProjectMemberController {
     }
 
     @PostMapping("/projects/members")
-    public ResponseEntity registerProjectMember(@AuthenticationPrincipal Long id, @RequestBody RegisterProjectMemberRequest request){
-        projectMemberService.registerProjectMember(request.toServiceDto(id));
+    public ResponseEntity registerProjectMember(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                                @RequestBody RegisterProjectMemberRequest request){
+        projectMemberService.registerProjectMember(request.toServiceDto(userPrincipal.getId()));
         return new ResponseEntity(CommandSuccessResponse.from("프로젝트 참여에 성공했습니다."), CREATED);
     }
 
     @PostMapping("/projects/{projectId}/invitation")
-    public ResponseEntity inviteProjectMember(@AuthenticationPrincipal Long projectAdminId,
+    public ResponseEntity inviteProjectMember(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                               @PathVariable Long projectId,
                                               @RequestBody InviteProjectMemberRequest request){
-        projectMemberFacade.inviteProjectMembers(request.toServiceDto(projectId, projectAdminId));
+        projectMemberFacade.inviteProjectMembers(request.toServiceDto(projectId, userPrincipal.getId()));
         return new ResponseEntity(CommandSuccessResponse.from("프로젝트 초대 이메일 발송에 성공했습니다."), OK);
     }
 }
