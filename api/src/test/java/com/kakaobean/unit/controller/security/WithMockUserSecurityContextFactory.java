@@ -1,5 +1,6 @@
 package com.kakaobean.unit.controller.security;
 
+import com.kakaobean.security.UserPrincipal;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -15,7 +16,7 @@ public class WithMockUserSecurityContextFactory implements WithSecurityContextFa
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_USER");
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                customUser.principal(),
+                new UserPrincipal(1L , "hello@gmail.com", "pwd", null),
                 customUser.password(),
                 singleton(authority)
         );

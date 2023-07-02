@@ -1,13 +1,13 @@
 package com.kakaobean.security.local;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kakaobean.security.TokenProvider;
+import com.kakaobean.security.token.RefreshTokenRepository;
+import com.kakaobean.security.token.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -17,6 +17,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     private final TokenProvider tokenProvider;
     private final ObjectMapper objectMapper;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -25,6 +26,12 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         response.setStatus(HttpStatus.OK.value());
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        objectMapper.writeValue(response.getWriter(), new LocalLoginResponse(tokenProvider.createToken(authentication)));
+
+        String accessToken = tokenProvider.createAccessToken(authentication);
+        String refreshToken = tokenProvider.createRefreshToken(authentication);
+
+        refreshTokenRepository.save(authentication, refreshToken);
+
+        objectMapper.writeValue(response.getWriter(), new LocalLoginResponse(accessToken, refreshToken));
     }
 }

@@ -16,13 +16,12 @@ public class DatabaseCleaner implements InitializingBean {
 
     @PersistenceContext
     private EntityManager entityManager;
-    private List<String> entities;
     private List<String> tables = new ArrayList<>();
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        entities = entityManager.getMetamodel().getEntities().stream()
-                .map(entry -> entry.getName().toLowerCase(Locale.ROOT))
+        tables = entityManager.getMetamodel().getEntities().stream()
+                .map(entry -> CamelToSnakeCaseConverter.convert(entry.getName()))
                 .collect(Collectors.toList());
         System.out.println("tables = " + tables);
     }

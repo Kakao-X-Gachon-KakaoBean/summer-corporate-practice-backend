@@ -9,9 +9,13 @@ import com.kakaobean.core.member.domain.repository.MemberRepository;
 import com.kakaobean.core.member.application.MemberService;
 import com.kakaobean.core.project.application.ProjectMemberFacade;
 import com.kakaobean.core.project.application.ProjectMemberService;
+import com.kakaobean.core.project.application.ProjectService;
+import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
 import com.kakaobean.member.MemberController;
+import com.kakaobean.project.ProjectController;
 import com.kakaobean.project.ProjectMemberController;
-import com.kakaobean.security.TokenProvider;
+import com.kakaobean.security.token.RefreshTokenRepository;
+import com.kakaobean.security.token.TokenProvider;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -32,6 +36,7 @@ import org.springframework.test.web.servlet.MockMvc;
 })
 @WebMvcTest(controllers = {
         MemberController.class,
+        ProjectController.class,
         ProjectMemberController.class
 })
 @AutoConfigureRestDocs
@@ -68,5 +73,14 @@ public abstract class ControllerTest {
 
     @MockBean
     protected ProjectMemberFacade projectMemberFacade;
+
+    @MockBean
+    protected ProjectService projectService;
+
+    @MockBean
+    protected ProjectQueryRepository projectQueryRepository;
+
+    @MockBean
+    protected RefreshTokenRepository refreshTokenRepository;
 
 }
