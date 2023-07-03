@@ -1,5 +1,6 @@
 package com.kakaobean.core.project.infrastructure;
 
+import com.kakaobean.core.common.domain.BaseStatus;
 import com.kakaobean.core.project.application.dto.response.FindProjectMemberResponseDto;
 import com.kakaobean.core.project.application.dto.response.FindProjectResponseDto;
 import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.kakaobean.core.common.domain.BaseStatus.*;
 import static com.kakaobean.core.member.domain.QMember.*;
 import static com.kakaobean.core.project.domain.QProject.*;
 import static com.kakaobean.core.project.domain.QProjectMember.*;
@@ -27,13 +29,14 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
         return queryFactory.select(
                 Projections.constructor(
                         FindProjectMemberResponseDto.class,
-                        projectMember.id,
+                        member.id,
                         member.name,
                         member.auth.email,
                         projectMember.projectRole
                 ))
                 .from(projectMember)
                 .join(member).on(member.id.eq(projectMember.memberId))
+                .where(projectMember.status.eq(ACTIVE))
                 .fetch();
     }
 
@@ -47,6 +50,7 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                         project.content
                 ))
                 .from(project)
+                .where(project.status.eq(ACTIVE))
                 .fetch();
     }
 }

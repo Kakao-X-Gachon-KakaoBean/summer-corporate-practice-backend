@@ -1,0 +1,15 @@
+= 프로젝트 멤버 역할(권한) 수정
+
+== 요청
+
+include::{snippets}/modify_project_members/http-request.adoc[]
+
+include::{snippets}/modify_project_members/request-fields.adoc[]
+
+include::{snippets}/modify_project_members/path-parameters.adoc[]
+
+== 응답
+
+include::{snippets}/modify_project_members/http-response.adoc[]
+
+include::{snippets}/modify_project_members/response-fields.adoc[]
