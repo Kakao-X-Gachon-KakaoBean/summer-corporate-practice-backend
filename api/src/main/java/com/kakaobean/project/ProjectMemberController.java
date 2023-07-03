@@ -6,10 +6,12 @@ import com.kakaobean.core.project.application.ProjectMemberService;
 import com.kakaobean.core.project.application.dto.response.FindProjectMemberResponseDto;
 import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
 import com.kakaobean.project.dto.request.InviteProjectMemberRequest;
+import com.kakaobean.project.dto.request.ModifyProjectMembersRolesRequest;
 import com.kakaobean.project.dto.request.RegisterProjectMemberRequest;
 import com.kakaobean.security.UserPrincipal;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,7 +42,7 @@ public class ProjectMemberController {
 
     @PostMapping("/projects/members")
     public ResponseEntity registerProjectMember(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                                @RequestBody RegisterProjectMemberRequest request){
+                                                @RequestBody @Validated RegisterProjectMemberRequest request){
         projectMemberService.registerProjectMember(request.toServiceDto(userPrincipal.getId()));
         return new ResponseEntity(CommandSuccessResponse.from("프로젝트 참여에 성공했습니다."), CREATED);
     }
@@ -52,4 +54,13 @@ public class ProjectMemberController {
         projectMemberFacade.inviteProjectMembers(request.toServiceDto(projectId, userPrincipal.getId()));
         return new ResponseEntity(CommandSuccessResponse.from("프로젝트 초대 이메일 발송에 성공했습니다."), OK);
     }
+
+    @PatchMapping("/projects/{projectId}/members")
+    public ResponseEntity modifyProjectMemberRole(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                                  @PathVariable Long projectId,
+                                                  @RequestBody @Validated ModifyProjectMembersRolesRequest request){
+        projectMemberService.modifyProjectMemberRole(request.toServiceDto(projectId, userPrincipal.getId()));
+        return new ResponseEntity(CommandSuccessResponse.from("프로젝트 멤버 권한 수정을 성공했습니다."), OK);
+    }
+
 }

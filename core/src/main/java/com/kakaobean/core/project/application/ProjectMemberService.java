@@ -5,15 +5,15 @@ import com.kakaobean.core.member.domain.repository.MemberRepository;
 import com.kakaobean.core.member.exception.member.NotExistsMemberException;
 
 import com.kakaobean.core.project.application.dto.request.InviteProjectMemberRequestDto;
+import com.kakaobean.core.project.application.dto.request.ModifyProjectMemberRoleRequestDto;
+import com.kakaobean.core.project.application.dto.request.ModifyProjectMembersRolesRequestDto;
 import com.kakaobean.core.project.application.dto.request.RegisterProjectMemberRequestDto;
 import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.ProjectMember;
-import com.kakaobean.core.project.domain.ProjectRole;
 import com.kakaobean.core.project.domain.ProjectValidator;
 import com.kakaobean.core.project.domain.event.ProjectMemberInvitedEvent;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
-import com.kakaobean.core.project.domain.service.InvitationProjectMemberService;
 import com.kakaobean.core.project.exception.NotExistsProjectException;
 import com.kakaobean.core.project.exception.NotExistsProjectMemberException;
 
@@ -28,6 +28,7 @@ import static com.kakaobean.core.project.domain.ProjectRole.*;
 
 
 @Service
+@Transactional(readOnly = false)
 public class ProjectMemberService {
 
     private final ProjectMemberRepository projectMemberRepository;
@@ -45,7 +46,6 @@ public class ProjectMemberService {
         this.projectValidator = projectValidator;
     }
 
-    @Transactional(readOnly = false)
     public void registerProjectMember(RegisterProjectMemberRequestDto dto){
 
         //프로젝트를 가져옴.
@@ -60,11 +60,17 @@ public class ProjectMemberService {
         invitedPerson.modifyProjectRole(VIEWER);
     }
 
-    @Transactional(readOnly = false)
     public ProjectMemberInvitedEvent registerInvitedProjectPersons(InviteProjectMemberRequestDto dto) {
+        //프로젝트 관리자를 찾고
         ProjectMember projectAdmin = projectMemberRepository.findByMemberIdAndProjectId(dto.getProjectAdminId(), dto.getProjectId()).orElseThrow(NotExistsProjectMemberException::new);
+
+        //관리자인지 검증
         projectValidator.validAdmin(projectAdmin);
+
+        //프로젝트를 찾고
         Project project = projectRepository.findProjectById(dto.getProjectId()).orElseThrow(NotExistsProjectException::new);
+
+        //초대 멤버로 저장하고 도메인 이벤트를 발행
         List<String> invitedEmails = saveInvitedPersons(dto, project);
         return project.createInvitationProjectMemberEvent(invitedEmails);
     }
@@ -81,5 +87,22 @@ public class ProjectMemberService {
         Member member = memberRepository.findMemberById(invitedMemberId).orElseThrow(NotExistsMemberException::new);
         projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), member.getId(), INVITED_PERSON));
         return member.getAuth().getEmail();
+    }
+
+    public void modifyProjectMemberRole(ModifyProjectMembersRolesRequestDto dto){
+        ProjectMember admin = projectMemberRepository.findByMemberIdAndProjectId(dto.getAdminId(), dto.getProjectId())
+                .orElseThrow(NotExistsProjectMemberException::new);
+
+        projectValidator.validAdmin(admin);
+        modifyProjectMembersRoles(dto.getProjectId(), dto.getModifyProjectMemberRoles());
+    }
+
+    private void modifyProjectMembersRoles(Long projectId, List<ModifyProjectMemberRoleRequestDto> dto) {
+        for (ModifyProjectMemberRoleRequestDto modifyProjectMemberRole : dto) {
+            ProjectMember projectMember = projectMemberRepository
+                    .findByMemberIdAndProjectId(modifyProjectMemberRole.getModifyProjectMemberId(), projectId)
+                    .orElseThrow(NotExistsProjectMemberException::new);
+            projectMember.modifyProjectRole(modifyProjectMemberRole.getProjectRole());
+        }
     }
 }

@@ -13,6 +13,9 @@ import javax.persistence.Id;
 @Entity
 public class ProjectMember extends BaseEntity {
 
+    /**
+     * 중간 테이블 pk는 되도록 사용하지 말 것.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
