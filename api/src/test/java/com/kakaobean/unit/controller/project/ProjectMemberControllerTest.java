@@ -1,7 +1,10 @@
 package com.kakaobean.unit.controller.project;
 
 
+import com.kakaobean.core.project.domain.ProjectRole;
 import com.kakaobean.project.dto.request.InviteProjectMemberRequest;
+import com.kakaobean.project.dto.request.ModifyProjectMemberRoleRequest;
+import com.kakaobean.project.dto.request.ModifyProjectMembersRolesRequest;
 import com.kakaobean.project.dto.request.RegisterProjectMemberRequest;
 import com.kakaobean.unit.controller.ControllerTest;
 import com.kakaobean.unit.controller.security.WithMockUser;
@@ -116,6 +119,49 @@ public class ProjectMemberControllerTest extends ControllerTest {
                         fieldWithPath("[].projectMemberName").type(STRING).description("프로젝트 멤버 이름"),
                         fieldWithPath("[].projectMemberEmail").type(STRING).description("프로젝트 멤버 이메일"),
                         fieldWithPath("[].projectMemberRole").type(STRING).description("프로젝트 멤버 역할")
+                )
+        ));
+    }
+
+
+    @Test
+    @WithMockUser
+    void 프로젝트_멤버_역할_수정_api_테스트() throws Exception {
+
+        //given
+        ModifyProjectMembersRolesRequest request = new ModifyProjectMembersRolesRequest(
+                List.of(
+                        new ModifyProjectMemberRoleRequest(3L, ProjectRole.ADMIN),
+                        new ModifyProjectMemberRoleRequest(4L, ProjectRole.MEMBER),
+                        new ModifyProjectMemberRoleRequest(5L, ProjectRole.LEFT_MEMBER)
+                )
+        );
+        String requestBody = objectMapper.writeValueAsString(request);
+
+        //when
+        ResultActions perform = mockMvc.perform(patch("/projects/{projectId}/members", 4L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+        );
+
+        //then
+        perform.andDo(print());
+        perform.andExpect(status().is2xxSuccessful());
+        perform.andDo(document("modify_project_members",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                pathParameters(
+                        parameterWithName("projectId").description("조회할 프로젝트 id")
+                ),
+                requestFields(
+                        fieldWithPath("modifyProjectMemberRole").type(ARRAY).description("프로젝트 멤버 역할 변경 정보 배열"),
+                        fieldWithPath("modifyProjectMemberRole[].modifyProjectMemberId").type(NUMBER).description("변경할 프로젝트 멤버 id"),
+                        fieldWithPath("modifyProjectMemberRole[].projectRole").type(STRING).description("변경할 프로젝트 멤버 권한")
+
+                ),
+                responseFields(
+                        fieldWithPath("message").type(STRING).description("성공 메시지")
                 )
         ));
     }

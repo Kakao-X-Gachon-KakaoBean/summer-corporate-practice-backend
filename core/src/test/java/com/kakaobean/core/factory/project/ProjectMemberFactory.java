@@ -25,5 +25,4 @@ public class ProjectMemberFactory {
     public static ProjectMember createWithMemberIdAndProjectId(Long memberId, Long projectId, ProjectRole role){
         return new ProjectMember(ACTIVE, projectId, memberId, role);
     }
-
 }

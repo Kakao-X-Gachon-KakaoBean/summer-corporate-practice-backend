@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 import static com.kakaobean.core.common.domain.BaseStatus.ACTIVE;
+import static com.kakaobean.core.factory.project.ModifyProjectMembersRolesRequestDtoFactory.create;
 import static com.kakaobean.core.factory.project.ProjectMemberFactory.*;
 import static com.kakaobean.core.project.domain.ProjectRole.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -105,5 +106,48 @@ public class ProjectMemberServiceIntegrationTest extends IntegrationTest {
 
         //then
         result.isInstanceOf(NotProjectInvitedPersonException.class);
+    }
+
+    @Test
+    void 관리자가_프로젝트_멤버들_권한을_변경한다(){
+        //given
+        Project project = projectRepository.save(ProjectFactory.create());
+
+        ProjectMember admin = createWithMemberIdAndProjectId(1L, project.getId(), ADMIN);
+        ProjectMember member1 = createWithMemberIdAndProjectId(2L, project.getId(), MEMBER);
+        ProjectMember member2 = createWithMemberIdAndProjectId(3L, project.getId(), MEMBER);
+
+        projectMemberRepository.save(admin);
+        projectMemberRepository.save(member1);
+        projectMemberRepository.save(member2);
+
+        //when
+        projectMemberService.modifyProjectMemberRole(create(admin.getMemberId(), project.getId(), member1.getMemberId(), member2.getMemberId()));
+
+        //when
+        assertThat(member1.getProjectRole()).isSameAs(ADMIN);
+        assertThat(member2.getProjectRole()).isSameAs(VIEWER);
+    }
+
+    @Test
+    void 관리자가_아니면_멤버_권한을_수정할_수_없다(){
+        //given
+        Project project = projectRepository.save(ProjectFactory.create());
+
+        ProjectMember admin = createWithMemberIdAndProjectId(1L, project.getId(), MEMBER);
+        ProjectMember member1 = createWithMemberIdAndProjectId(2L, project.getId(), MEMBER);
+        ProjectMember member2 = createWithMemberIdAndProjectId(3L, project.getId(), MEMBER);
+
+        projectMemberRepository.save(admin);
+        projectMemberRepository.save(member1);
+        projectMemberRepository.save(member2);
+
+        //when
+        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
+            projectMemberService.modifyProjectMemberRole(create(admin.getMemberId(), project.getId(), member1.getMemberId(), member2.getMemberId()));
+        });
+
+        //then
+        result.isInstanceOf(NotProjectAdminException.class);
     }
 }
