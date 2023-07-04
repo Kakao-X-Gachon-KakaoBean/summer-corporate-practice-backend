@@ -36,7 +36,10 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                 ))
                 .from(projectMember)
                 .join(member).on(member.id.eq(projectMember.memberId))
-                .where(projectMember.status.eq(ACTIVE))
+                .where(
+                        projectMember.status.eq(ACTIVE),
+                        projectMember.projectId.eq(projectId)
+                )
                 .fetch();
     }
 
@@ -50,7 +53,10 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                         project.content
                 ))
                 .from(project)
-                .where(project.status.eq(ACTIVE))
+                .where(
+                        project.status.eq(ACTIVE),
+                        projectMember.memberId.eq(memberId)
+                )
                 .fetch();
     }
 }

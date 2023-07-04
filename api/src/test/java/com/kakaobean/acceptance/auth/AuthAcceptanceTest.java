@@ -17,6 +17,7 @@ import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 
 
+import static com.kakaobean.acceptance.TestMember.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.documentationConfiguration;
 
@@ -41,7 +42,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         //given
         MemberAcceptanceTask.registerMemberTask(RegisterMemberRequestFactory.createRequest(), emailRepository);
-        LocalLoginRequest loginRequest = new LocalLoginRequest("example@gmail.com", "1q2w3e4r!");
+        LocalLoginRequest loginRequest = new LocalLoginRequest(MEMBER.getEmail(), MEMBER.getPassword());
 
         //when
         ExtractableResponse response = AuthAcceptanceTask.login(loginRequest, spec);

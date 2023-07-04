@@ -1,11 +1,13 @@
 package com.kakaobean.acceptance.auth;
 
 import com.kakaobean.security.local.LocalLoginRequest;
+import com.kakaobean.security.local.LocalLoginResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.specification.RequestSpecification;
-import org.springframework.restdocs.payload.JsonFieldType;
 
+import static com.kakaobean.acceptance.TestMember.MEMBER;
+import static com.kakaobean.acceptance.TestMember.TESTER;
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentRequest;
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentResponse;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -17,7 +19,7 @@ public class AuthAcceptanceTask {
 
     private AuthAcceptanceTask(){}
 
-    static public ExtractableResponse login(LocalLoginRequest request, RequestSpecification spec){
+    public static ExtractableResponse login(LocalLoginRequest request, RequestSpecification spec){
         return RestAssured
                 .given(spec)
                 .accept(APPLICATION_JSON_VALUE)
@@ -40,4 +42,22 @@ public class AuthAcceptanceTask {
                 .then().log().all()
                 .extract();
     }
+
+    private static ExtractableResponse requestLogin(LocalLoginRequest request){
+        return RestAssured
+                .given()
+                .accept(APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
+                .body(request)
+                .when().post("/local/login")
+                .then().log().all()
+                .extract();
+    }
+
+    public static String getAuthorizationHeaderToken(){
+        ExtractableResponse response = requestLogin(new LocalLoginRequest(TESTER.getEmail(), TESTER.getPassword()));
+        String accessToken = response.as(LocalLoginResponse.class).getAccessToken();
+        return "Bearer " + accessToken;
+    }
+
 }
