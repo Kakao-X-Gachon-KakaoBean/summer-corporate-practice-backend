@@ -18,7 +18,7 @@ public class RegisterNotificationWithReleaseNoteEventHandler {
     @TransactionalEventListener(value = ReleaseNoteRegisteredEvent.class)
     public void handle(ReleaseNoteRegisteredEvent event){
         if(event != null){
-            notificationFacade.registerNotification(RegisterNotificationRequestDto.from(event));
+            notificationFacade.registerNotificationByEvent(RegisterNotificationRequestDto.from(event));
         }
     }
 }

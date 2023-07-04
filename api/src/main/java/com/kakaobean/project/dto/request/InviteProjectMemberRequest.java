@@ -8,16 +8,15 @@ import java.util.List;
 @Getter
 public class InviteProjectMemberRequest {
 
-    private List<Long> invitedMemberIdList;
+    private List<String> invitedMemberEmails;
 
     public InviteProjectMemberRequest() {}
 
-    public InviteProjectMemberRequest(List<Long> invitedMemberIdList) {
-        this.invitedMemberIdList = invitedMemberIdList;
+    public InviteProjectMemberRequest(List<String> invitedMemberEmails) {
+        this.invitedMemberEmails = invitedMemberEmails;
     }
 
     public InviteProjectMemberRequestDto toServiceDto(Long projectId, Long projectAdminId){
-        return new InviteProjectMemberRequestDto(invitedMemberIdList, projectId, projectAdminId);
+        return new InviteProjectMemberRequestDto(invitedMemberEmails, projectId, projectAdminId);
     }
-
 }

@@ -48,8 +48,8 @@
 
 == 프로젝트 API
 
-* link:/docs/project/register_project_member.html[프로젝트 멤버 초대 이메일 발송 API, window=_blank ]
-* link:/docs/project/send_project_member_invitation_mail.html[프로젝트 멤버 참여 API, window=_blank ]
+* link:/docs/project/register_project_member.html[프로젝트 멤버 참여 API, window=_blank ]
+* link:/docs/project/send_project_member_invitation_mail.html[프로젝트 멤버 초대 이메일 발송 API, window=_blank ]
 * link:/docs/project/find_projects.html[내가 참여한 프로젝트 조회 API, window=_blank ]
 * link:/docs/project/find_project_members.html[프로젝트 멤버 조회 API, window=_blank ]
 * link:/docs/project/modify_project_members_roles.html[프로젝트 멤버 역할(권한) 수정 API, window=_blank ]

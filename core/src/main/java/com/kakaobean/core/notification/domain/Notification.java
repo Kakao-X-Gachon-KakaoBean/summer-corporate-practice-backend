@@ -26,16 +26,20 @@ public class Notification extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private NotificationType type;
 
+    private Boolean hasRead;
+
     public Notification(BaseStatus status,
                         Long memberId,
                         Long sourceId,
                         String title,
-                        NotificationType type) {
+                        NotificationType type,
+                        Boolean hasRead) {
         super(status);
         this.memberId = memberId;
         this.sourceId = sourceId;
         this.title = title;
         this.type = type;
+        this.hasRead = hasRead;
     }
 
 }

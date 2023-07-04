@@ -12,15 +12,13 @@ public class NotificationFacade {
     private final NotificationService notificationService;
     private final SendEmailNotificationService sendEmailNotificationService;
 
-    public void registerNotification(RegisterNotificationRequestDto dto){
+    public void registerNotificationByEvent(RegisterNotificationRequestDto dto){
 
         //알람 저장
-        notificationService.registerNotification(dto);
+        notificationService.registerNotificationByEvent(dto);
 
         //알람 전송
         //1. mq, 2. 이메일
         sendEmailNotificationService.sendNotificationEmail();
-
-
     }
 }

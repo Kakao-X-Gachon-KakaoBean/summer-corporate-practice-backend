@@ -7,13 +7,12 @@ import java.util.List;
 @Getter
 public class InviteProjectMemberRequestDto {
 
-    private List<Long> invitedMemberIdList;
-    private Long projectId;
-    private Long projectAdminId;
+    private final List<String> invitedMemberEmails;
+    private final Long projectId;
+    private final Long projectAdminId;
 
-
-    public InviteProjectMemberRequestDto(List<Long> invitedMemberIdList, Long projectId, Long projectAdminId) {
-        this.invitedMemberIdList = invitedMemberIdList;
+    public InviteProjectMemberRequestDto(List<String> invitedMemberEmails, Long projectId, Long projectAdminId) {
+        this.invitedMemberEmails = invitedMemberEmails;
         this.projectId = projectId;
         this.projectAdminId = projectAdminId;
     }

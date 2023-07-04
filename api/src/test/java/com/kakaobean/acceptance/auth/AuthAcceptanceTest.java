@@ -42,7 +42,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
 
         //given
         MemberAcceptanceTask.registerMemberTask(RegisterMemberRequestFactory.createRequest(), emailRepository);
-        LocalLoginRequest loginRequest = new LocalLoginRequest(MEMBER.getEmail(), MEMBER.getPassword());
+        LocalLoginRequest loginRequest = new LocalLoginRequest(TESTER.getEmail(), TESTER.getPassword());
 
         //when
         ExtractableResponse response = AuthAcceptanceTask.login(loginRequest, spec);

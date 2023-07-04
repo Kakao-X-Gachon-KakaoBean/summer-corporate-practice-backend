@@ -12,9 +12,9 @@ public class RegisterMemberRequestFactory {
     public static RegisterMemberRequest createRequest(){
         return RegisterMemberRequest.builder()
                 .name("kakoBean")
-                .email(MEMBER.getEmail())
-                .password(MEMBER.getPassword())
-                .checkPassword(MEMBER.getPassword())
+                .email(TESTER.getEmail())
+                .password(TESTER.getPassword())
+                .checkPassword(TESTER.getPassword())
                 .emailAuthKey("113336")
                 .build();
     }

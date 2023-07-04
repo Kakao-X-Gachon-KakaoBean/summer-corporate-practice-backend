@@ -6,8 +6,7 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.specification.RequestSpecification;
 
-import static com.kakaobean.acceptance.TestMember.MEMBER;
-import static com.kakaobean.acceptance.TestMember.TESTER;
+import static com.kakaobean.acceptance.TestMember.*;
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentRequest;
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentResponse;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -54,8 +53,14 @@ public class AuthAcceptanceTask {
                 .extract();
     }
 
-    public static String getAuthorizationHeaderToken(){
-        ExtractableResponse response = requestLogin(new LocalLoginRequest(TESTER.getEmail(), TESTER.getPassword()));
+    public static String getAdminAuthorizationHeaderToken(){
+        ExtractableResponse response = requestLogin(new LocalLoginRequest(ADMIN.getEmail(), ADMIN.getPassword()));
+        String accessToken = response.as(LocalLoginResponse.class).getAccessToken();
+        return "Bearer " + accessToken;
+    }
+
+    public static String getMemberAuthorizationHeaderToken(){
+        ExtractableResponse response = requestLogin(new LocalLoginRequest(MEMBER.getEmail(), MEMBER.getPassword()));
         String accessToken = response.as(LocalLoginResponse.class).getAccessToken();
         return "Bearer " + accessToken;
     }

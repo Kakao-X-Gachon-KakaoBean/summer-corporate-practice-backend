@@ -38,12 +38,17 @@ public abstract class AcceptanceTest {
     void beforeEach(){
         RestAssured.port = port;
         databaseConfigurator.execute();;
+        createMember("ADMIN", ADMIN);
+        createMember("MEMBER", MEMBER);
+    }
+
+    private void createMember(String name, TestMember member) {
         memberRepository.save(new Member(
-                "TESTER",
-                TESTER.getEmail(),
-                ROLE_USER,
-                passwordEncoder.encode(TESTER.getPassword()),
-                AuthProvider.local, ACTIVE
+                name,
+                        member.getEmail(),
+                        ROLE_USER,
+                        passwordEncoder.encode(member.getPassword()),
+                        AuthProvider.local, ACTIVE
                 )
         );
     }

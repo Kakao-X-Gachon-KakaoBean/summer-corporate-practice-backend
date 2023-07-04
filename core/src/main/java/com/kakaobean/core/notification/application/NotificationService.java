@@ -20,9 +20,9 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void registerNotification(RegisterNotificationRequestDto dto){
+    public void registerNotificationByEvent(RegisterNotificationRequestDto dto){
         for (NotifiedTargetInfo info : dto.getNotifiedInfos()) {
-            Notification notification = new Notification(ACTIVE, info.getMemberId(), dto.getSourceId(), dto.getTitle(), dto.getType());
+            Notification notification = new Notification(ACTIVE, info.getMemberId(), dto.getSourceId(), dto.getTitle(), dto.getType(), false);
             notificationRepository.save(notification);
         }
     }
