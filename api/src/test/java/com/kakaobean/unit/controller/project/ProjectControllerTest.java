@@ -19,8 +19,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -76,6 +75,10 @@ public class ProjectControllerTest extends ControllerTest {
         perform.andDo(document("register_projects",
                 getDocumentRequest(),
                 getDocumentResponse(),
+                requestFields(
+                        fieldWithPath("title").type(STRING).description("프로젝트 이름"),
+                        fieldWithPath("content").type(STRING).description("프로젝트 설명")
+                ),
                 responseFields(
                         fieldWithPath("projectId").type(NUMBER).description("생성된 프로젝트 id")
                 )

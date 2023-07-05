@@ -48,6 +48,7 @@
 
 == 프로젝트 API
 
+* link:/docs/project/register_project.html[프로젝트 생성 API, window=_blank ]
 * link:/docs/project/register_project_member.html[프로젝트 멤버 참여 API, window=_blank ]
 * link:/docs/project/send_project_member_invitation_mail.html[프로젝트 멤버 초대 이메일 발송 API, window=_blank ]
 * link:/docs/project/find_projects.html[내가 참여한 프로젝트 조회 API, window=_blank ]
