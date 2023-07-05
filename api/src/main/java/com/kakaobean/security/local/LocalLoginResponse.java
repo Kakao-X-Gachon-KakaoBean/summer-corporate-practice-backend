@@ -2,9 +2,11 @@ package com.kakaobean.security.local;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @NoArgsConstructor
+@ToString
 public class LocalLoginResponse {
 
     private String accessToken;

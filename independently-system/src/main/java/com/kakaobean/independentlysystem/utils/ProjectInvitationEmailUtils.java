@@ -17,7 +17,7 @@ public class ProjectInvitationEmailUtils {
                         "	</h1>\n" +
                         "	<p style=\"font-size: 16px; line-height: 26px; margin-top: 50px; padding: 0 5px;\">" +
                         "	    프로젝트 참여를 위한 링크를 알려드립니다. <br/> 아래 링크로 " + "<strong style=\"color:#29ABE2\"> </strong> 입장하시면 프로젝트에 참여 가능합니다. <br/>" +
-                        "  <a href=\"google.com\" style=\"text-decoration: none;\" >" +
+                        "  <a href=\"" + url + "\" style=\"text-decoration: none;\" >" +
                         "      <div style=\"width: 576px;height: 90px; margin-top: 50px; padding: 0 27px;color: #242424;font-size: 16px;font-weight: bold;background-color: #F9F9F9;vertical-align: middle;line-height: 90px;\">초대 링크 : " +
                         "          <strong style=\"font-style: normal;font-weight: bold;color: #29ABE2\"> " + url + "</strong>" +
                         "      </div>" +

@@ -17,4 +17,13 @@ public class MemberFactory {
                 .authProvider(AuthProvider.local)
                 .build();
     }
+
+    public static Member createWithoutId(){
+        return Member.builder()
+                .name("kakoBean1")
+                .auth(new Auth("example1@gmail.com", "1q2w3e4r!"))
+                .role(Role.ROLE_USER)
+                .authProvider(AuthProvider.local)
+                .build();
+    }
 }

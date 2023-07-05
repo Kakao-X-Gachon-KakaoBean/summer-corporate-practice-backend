@@ -66,7 +66,7 @@ public class ProjectMemberControllerTest extends ControllerTest {
     void 프로젝트_멤버_초대_이메일_발송_api_테스트() throws Exception {
 
         //given
-        InviteProjectMemberRequest request = new InviteProjectMemberRequest(List.of(11L, 23L));
+        InviteProjectMemberRequest request = new InviteProjectMemberRequest(List.of("example@gmail.com", "test@gmail.com"));
         String requestBody = objectMapper.writeValueAsString(request);
 
         //when
@@ -83,7 +83,7 @@ public class ProjectMemberControllerTest extends ControllerTest {
                 getDocumentRequest(),
                 getDocumentResponse(),
                 requestFields(
-                        fieldWithPath("invitedMemberIdList").type(ARRAY).description("프로젝트에 초대할 멤버 id")
+                        fieldWithPath("invitedMemberEmails").type(ARRAY).description("프로젝트에 초대할 멤버 이메일")
                 ),
                 responseFields(
                         fieldWithPath("message").type(STRING).description("성공 메시지")

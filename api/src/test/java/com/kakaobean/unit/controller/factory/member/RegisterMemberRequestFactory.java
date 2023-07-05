@@ -3,7 +3,7 @@ package com.kakaobean.unit.controller.factory.member;
 import com.kakaobean.core.member.application.dto.response.RegisterMemberResponseDto;
 import com.kakaobean.member.dto.RegisterMemberRequest;
 
-import java.time.LocalDate;
+import static com.kakaobean.acceptance.TestMember.*;
 
 public class RegisterMemberRequestFactory {
 
@@ -12,9 +12,9 @@ public class RegisterMemberRequestFactory {
     public static RegisterMemberRequest createRequest(){
         return RegisterMemberRequest.builder()
                 .name("kakoBean")
-                .email("example@gmail.com")
-                .password("1q2w3e4r!")
-                .checkPassword("1q2w3e4r!")
+                .email(TESTER.getEmail())
+                .password(TESTER.getPassword())
+                .checkPassword(TESTER.getPassword())
                 .emailAuthKey("113336")
                 .build();
     }
