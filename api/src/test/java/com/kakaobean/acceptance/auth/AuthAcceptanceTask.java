@@ -48,7 +48,8 @@ public class AuthAcceptanceTask {
                 .accept(APPLICATION_JSON_VALUE)
                 .contentType(APPLICATION_JSON_VALUE)
                 .body(request)
-                .when().post("/local/login")
+                .when()
+                .post("/local/login")
                 .then().log().all()
                 .extract();
     }

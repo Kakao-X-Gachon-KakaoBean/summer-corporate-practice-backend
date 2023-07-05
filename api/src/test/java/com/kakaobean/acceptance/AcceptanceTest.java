@@ -23,7 +23,7 @@ public abstract class AcceptanceTest {
     int port;
 
     @Autowired
-    DatabaseCleaner databaseConfigurator;
+    DatabaseCleaner databaseCleaner;
 
     @Autowired
     protected EmailRepository emailRepository;
@@ -37,7 +37,7 @@ public abstract class AcceptanceTest {
     @BeforeEach
     void beforeEach(){
         RestAssured.port = port;
-        databaseConfigurator.execute();;
+        databaseCleaner.execute();;
         createMember("ADMIN", ADMIN);
         createMember("MEMBER", MEMBER);
     }

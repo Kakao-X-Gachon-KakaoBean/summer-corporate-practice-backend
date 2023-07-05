@@ -1,6 +1,7 @@
 package com.kakaobean.acceptance.project;
 
 import static com.kakaobean.acceptance.auth.AuthAcceptanceTask.getAdminAuthorizationHeaderToken;
+
 import static com.kakaobean.acceptance.auth.AuthAcceptanceTask.getMemberAuthorizationHeaderToken;
 import static org.apache.http.HttpHeaders.*;
 
@@ -34,14 +35,29 @@ public class ProjectAcceptanceTask {
                                                               Long projectId){
         return RestAssured
                 .given()
+                .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
+                .accept(APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .post("/projects/{projectId}/invitation", projectId)
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse joinProjectMemberTask(RegisterProjectMemberRequest request){
+        return RestAssured
+                .given()
                 .header(AUTHORIZATION, getMemberAuthorizationHeaderToken())
                 .accept(APPLICATION_JSON_VALUE)
                 .contentType(APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()
-                .post("/projects/{}/members", projectId)
+                .post("/projects/members")
                 .then().log().all()
                 .extract();
     }
+
+
 
 }
