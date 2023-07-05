@@ -62,7 +62,8 @@ public class ProjectMemberService {
 
     public ProjectMemberInvitedEvent registerInvitedProjectPersons(InviteProjectMemberRequestDto dto) {
         //프로젝트 관리자를 찾고
-        ProjectMember projectAdmin = projectMemberRepository.findByMemberIdAndProjectId(dto.getProjectAdminId(), dto.getProjectId()).orElseThrow(NotExistsProjectMemberException::new);
+        ProjectMember projectAdmin = projectMemberRepository.findByMemberIdAndProjectId(dto.getProjectAdminId(), dto.getProjectId())
+                .orElseThrow(NotExistsProjectMemberException::new);
 
         //관리자인지 검증
         projectValidator.validAdmin(projectAdmin);
@@ -77,14 +78,14 @@ public class ProjectMemberService {
 
     private List<String> saveInvitedPersons(InviteProjectMemberRequestDto dto, Project project) {
         return dto
-                .getInvitedMemberIdList()
+                .getInvitedMemberEmails()
                 .stream()
-                .map(invitedMemberId -> saveInvitedPerson(project, invitedMemberId))
+                .map(email -> saveInvitedPerson(project, email))
                 .collect(Collectors.toList());
     }
 
-    private String saveInvitedPerson(Project project, Long invitedMemberId) {
-        Member member = memberRepository.findMemberById(invitedMemberId).orElseThrow(NotExistsMemberException::new);
+    private String saveInvitedPerson(Project project, String email) {
+        Member member = memberRepository.findMemberByEmail(email).orElseThrow(NotExistsMemberException::new);
         projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), member.getId(), INVITED_PERSON));
         return member.getAuth().getEmail();
     }

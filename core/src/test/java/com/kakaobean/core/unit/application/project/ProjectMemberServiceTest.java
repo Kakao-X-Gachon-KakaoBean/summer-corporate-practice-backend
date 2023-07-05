@@ -98,10 +98,11 @@ public class ProjectMemberServiceTest extends UnitTest {
         //given
         given(projectMemberRepository.findByMemberIdAndProjectId(Mockito.anyLong(), Mockito.anyLong())).willReturn(Optional.of(createAdmin()));
         given(projectRepository.findProjectById(Mockito.anyLong())).willReturn(Optional.of(ProjectFactory.create()));
-        given(memberRepository.findMemberById(Mockito.anyLong())).willReturn(Optional.of(MemberFactory.create()));
+        given(memberRepository.findMemberByEmail(Mockito.anyString())).willReturn(Optional.of(MemberFactory.create()));
 
         //when
-        ProjectMemberInvitedEvent event = projectMemberService.registerInvitedProjectPersons(new InviteProjectMemberRequestDto(List.of(1L, 2L), 3L, 4L));
+        ProjectMemberInvitedEvent event = projectMemberService.registerInvitedProjectPersons(
+                new InviteProjectMemberRequestDto(List.of("test@gmail.com", "123@gmail.com"), 3L, 4L));
 
         //then
         assertThat(event.getInvitedMemberEmails().size()).isEqualTo(2);
@@ -115,7 +116,7 @@ public class ProjectMemberServiceTest extends UnitTest {
 
         //when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
-            projectMemberService.registerInvitedProjectPersons(new InviteProjectMemberRequestDto(List.of(1L, 2L), 3L, 4L));
+            projectMemberService.registerInvitedProjectPersons(new InviteProjectMemberRequestDto(List.of("test@gmail.com", "123@gmail.com"), 3L, 4L));
         });
 
         //then

@@ -29,7 +29,11 @@ public class EmailSender {
     public String sendVerificationEmail(String receiveEmail) {
         String authKey = RandomUtils.creatRandomKey();
         String subject = "[코코노트] 인증 번호 발송 메일입니다.";
-        SesServiceRequest emailSenderDto = makeValidationEmailSenderDto(List.of(receiveEmail), subject, () -> ValidationEmailUtils.getEmailValidationHtml(authKey));
+        SesServiceRequest emailSenderDto = makeValidationEmailSenderDto(
+                List.of(receiveEmail),
+                subject,
+                () -> ValidationEmailUtils.getEmailValidationHtml(authKey)
+        );
         SendEmailResult sendEmailResult = amazonSimpleEmailService.sendEmail(emailSenderDto.toSendRequestDto());
         confirmSentEmail(sendEmailResult);
         return authKey;
@@ -40,9 +44,17 @@ public class EmailSender {
                                            String projectSecretKey){
         String subject = "[코코노트] "+ projectName  + " 프로젝트 초대 메일입니다.";
         String invitationUrl = "localhost:3000/invitation/" + projectSecretKey; //TODO 개발할 때 편의상 사용.
-        SesServiceRequest emailSenderDto = makeValidationEmailSenderDto(receiveEmail, subject, () -> ProjectInvitationEmailUtils.getProjectInvitationHtml(invitationUrl));
+        SesServiceRequest emailSenderDto = makeValidationEmailSenderDto(
+                receiveEmail,
+                subject,
+                () -> ProjectInvitationEmailUtils.getProjectInvitationHtml(invitationUrl)
+        );
         SendEmailResult sendEmailResult = amazonSimpleEmailService.sendEmail(emailSenderDto.toSendRequestDto());
         confirmSentEmail(sendEmailResult);
+    }
+
+    public void sendNotificationEmail(List<String> receiveEmail) {
+
     }
 
     private SesServiceRequest makeValidationEmailSenderDto(List<String> receiver,

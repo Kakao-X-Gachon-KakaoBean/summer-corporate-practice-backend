@@ -1,15 +1,19 @@
 package com.kakaobean.core.releasenote.domain;
 
+import com.kakaobean.core.common.domain.BaseEntity;
+import com.kakaobean.core.common.domain.BaseStatus;
+import com.kakaobean.core.common.event.Events;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Entity
-public class ReleaseNote {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class ReleaseNote extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,9 +21,30 @@ public class ReleaseNote {
 
     private String title;
 
+    @Column(columnDefinition = "TEXT")
+    private String content;
+
+    private Double version;
+
     private Long projectId;
 
-    private Double Version;
+    private Long memberId;
 
-    private String content;
+    public ReleaseNote(BaseStatus status,
+                       String title,
+                       String content,
+                       Double version,
+                       Long projectId,
+                       Long memberId) {
+        super(status);
+        this.title = title;
+        this.content = content;
+        this.version = version;
+        this.projectId = projectId;
+        this.memberId = memberId;
+    }
+
+    public void registered(List<ReleaseNoteRegisteredEvent.NotifiedTargetInfo> notifiedMails) {
+        Events.raise(new ReleaseNoteRegisteredEvent(projectId, id, title,  notifiedMails));
+    }
 }

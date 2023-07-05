@@ -48,12 +48,12 @@ public class ProjectMemberServiceIntegrationTest extends IntegrationTest {
     void 관리자가_프로젝트_멤버_초대_이메일_전송_도메인_이벤트를_만든다(){
         //given
         Member member = memberRepository.save(MemberFactory.create());
-        Member invitedMember = memberRepository.save(MemberFactory.create());
+        Member invitedMember = memberRepository.save(MemberFactory.createWithoutId());
         Project project = projectRepository.save(ProjectFactory.create());
         projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), member.getId(), ADMIN));
 
         //when
-        ProjectMemberInvitedEvent event = projectMemberService.registerInvitedProjectPersons(new InviteProjectMemberRequestDto(List.of(invitedMember.getId()), project.getId(), member.getId()));
+        ProjectMemberInvitedEvent event = projectMemberService.registerInvitedProjectPersons(new InviteProjectMemberRequestDto(List.of(invitedMember.getAuth().getEmail()), project.getId(), member.getId()));
 
         //then
         assertThat(event.getProject()).isSameAs(project);
@@ -71,7 +71,7 @@ public class ProjectMemberServiceIntegrationTest extends IntegrationTest {
 
         //when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
-            projectMemberService.registerInvitedProjectPersons(new InviteProjectMemberRequestDto(List.of(invitedMember.getId()), project.getId(), member.getId()));
+            projectMemberService.registerInvitedProjectPersons(new InviteProjectMemberRequestDto(List.of(invitedMember.getAuth().getEmail()), project.getId(), member.getId()));
         });
 
         //then
