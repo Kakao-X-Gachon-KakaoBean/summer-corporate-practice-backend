@@ -4,6 +4,7 @@ import com.kakaobean.core.project.application.ProjectService;
 import com.kakaobean.core.project.application.dto.request.RegisterProjectRequestDto;
 import com.kakaobean.core.project.application.dto.response.RegisterProjectResponseDto;
 import com.kakaobean.core.project.domain.Project;
+import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.unit.UnitTest;
@@ -15,6 +16,8 @@ import org.mockito.Mockito;
 import static com.kakaobean.core.factory.project.ProjectFactory.create;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class ProjectServiceTest extends UnitTest {
 
@@ -44,5 +47,6 @@ public class ProjectServiceTest extends UnitTest {
 
         //then
         assertThat(responseDto.getProjectId()).isEqualTo(1L);
+        verify(projectRepository, times(1)).save(Mockito.any(Project.class));
     }
 }
