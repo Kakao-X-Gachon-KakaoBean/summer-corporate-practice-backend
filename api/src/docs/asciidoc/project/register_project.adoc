@@ -1,0 +1,13 @@
+= 프로젝트 생성
+
+== 요청
+
+include::{snippets}/register_projects/http-request.adoc[]
+
+include::{snippets}/register_projects/request-fields.adoc[]
+
+== 응답
+
+include::{snippets}/register_projects/http-response.adoc[]
+
+include::{snippets}/register_projects/response-fields.adoc[]
