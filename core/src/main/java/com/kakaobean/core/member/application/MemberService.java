@@ -1,6 +1,7 @@
 package com.kakaobean.core.member.application;
 
 import com.kakaobean.core.member.application.dto.request.ModifyMemberPasswordRequestDto;
+import com.kakaobean.core.member.application.dto.request.ModifyMemberRequestDto;
 import com.kakaobean.core.member.domain.repository.MemberRepository;
 import com.kakaobean.core.member.domain.Member;
 import com.kakaobean.core.member.domain.MemberValidator;
@@ -42,5 +43,12 @@ public class MemberService {
         Member member = memberRepository.findMemberByEmail(dto.getEmail()).orElseThrow(NotExistsMemberException::new);
         member.verifyEmail(memberVerifiedEmailService, dto.getEmailAuthKey());
         member.modifyPassword(modifyMemberService, dto.getPasswordToChange(), dto.getCheckPasswordToChange());
+    }
+
+    //    TODO:
+    @Transactional
+    public void modifyMemberName(ModifyMemberRequestDto dto){
+        Member member = memberRepository.findMemberById(dto.getMemberId()).orElseThrow(NotExistsMemberException::new);
+        member.modifyMemberName(dto.getNameToChange());
     }
 }

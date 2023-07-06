@@ -6,11 +6,8 @@ import com.kakaobean.core.member.application.MemberService;
 import com.kakaobean.core.member.application.dto.response.FindEmailResponseDto;
 import com.kakaobean.core.member.application.dto.response.FindMemberInfoResponseDto;
 import com.kakaobean.core.member.application.dto.response.RegisterMemberResponseDto;
-import com.kakaobean.member.dto.FindEmailRequest;
-import com.kakaobean.member.dto.ModifyMemberPasswordRequest;
-import com.kakaobean.member.dto.RegisterMemberRequest;
+import com.kakaobean.member.dto.*;
 
-import com.kakaobean.member.dto.SendVerifiedEmailRequest;
 import com.kakaobean.security.UserPrincipal;
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
@@ -57,5 +54,13 @@ public class MemberController {
     public ResponseEntity modifyMemberPassword(@RequestBody @Validated ModifyMemberPasswordRequest request){
         memberService.modifyMemberPassword(request.toServiceDto());
         return new ResponseEntity(CommandSuccessResponse.from("비밀번호 변경에 성공하셨습니다."), OK);
+    }
+
+    //TODO:
+    // public ResponseEntity modifyMemberName(){}
+    @PatchMapping("/members/name")
+    public ResponseEntity modifyMemberName(@RequestBody @Validated ModifyMemberRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal){
+        memberService.modifyMemberName(request.toServiceDto(userPrincipal.getId()));
+        return new ResponseEntity(CommandSuccessResponse.from("멤버 이름 변경에 성공하셨습니다."), OK);
     }
 }
