@@ -86,4 +86,8 @@ public class Member extends BaseEntity {
     public void updatePassword(String newPassword) {
         this.auth = new Auth(this.auth.getEmail(), newPassword);
     }
+
+// TODO:
+//  modifyMemberName(String newUsername)
+    public void modifyMemberName(String newName) { this.name = newName; }
 }
