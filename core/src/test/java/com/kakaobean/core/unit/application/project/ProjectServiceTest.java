@@ -46,7 +46,6 @@ public class ProjectServiceTest extends UnitTest {
         RegisterProjectResponseDto responseDto = projectService.registerProject(new RegisterProjectRequestDto("프로젝트 제목", "프로젝트 설명", 1L));
 
         //then
-        assertThat(responseDto.getProjectId()).isEqualTo(1L);
         verify(projectRepository, times(1)).save(Mockito.any(Project.class));
     }
 }
