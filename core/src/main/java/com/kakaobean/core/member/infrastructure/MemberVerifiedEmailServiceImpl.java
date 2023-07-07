@@ -1,20 +1,17 @@
 package com.kakaobean.core.member.infrastructure;
 
-import com.kakaobean.common.RandomUtils;
 import com.kakaobean.core.member.domain.Email;
 import com.kakaobean.core.member.domain.repository.EmailRepository;
 import com.kakaobean.core.member.domain.service.VerifiedEmailService;
 import com.kakaobean.core.member.exception.member.NotExistsEmailException;
 import com.kakaobean.core.member.exception.member.WrongEmailAuthKeyException;
-import com.kakaobean.core.member.utils.ValidationEmailUtils;
 import com.kakaobean.independentlysystem.email.EmailSender;
-import com.kakaobean.independentlysystem.email.dto.SesServiceRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-import static com.kakaobean.core.member.utils.ValidationEmailUtils.*;
+import static com.kakaobean.common.EmailHtmlUtils.*;
 
 @Component
 @RequiredArgsConstructor
@@ -25,7 +22,19 @@ public class MemberVerifiedEmailServiceImpl implements VerifiedEmailService {
 
     public void sendVerificationEmail(String receiveEmail, String authKey) {
         String subject = "[코코노트] 인증 번호 발송 메일입니다.";
-        emailSender.sendEmail(List.of(receiveEmail), subject, () -> getEmailValidationHtml(authKey));
+        emailSender.sendEmail(
+                List.of(receiveEmail),
+                subject,
+                () -> getBoardHtml(
+                        "메일인증",
+                        "메일 인증을 위한 인증번호를 알려드립니다.",
+                        "아래 인증 번호를 ",
+                        "5분이내",
+                        "에 입력하시면 인증이 완료됩니다.",
+                        "인증번호",
+                        authKey
+                )
+        );
         saveAuthKeyInRedis(new Email(receiveEmail, authKey));
     }
 

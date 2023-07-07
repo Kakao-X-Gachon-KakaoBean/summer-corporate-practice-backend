@@ -1,9 +1,9 @@
 package com.kakaobean.core.notification.infrastructure;
 
+import com.kakaobean.common.EmailHtmlUtils;
 import com.kakaobean.core.notification.domain.event.SendDeploymentReleaseNoteNotificationEvent;
 import com.kakaobean.core.notification.domain.event.SendNotificationEvent;
 import com.kakaobean.core.notification.domain.service.send.email.SendEmailNotificationStrategy;
-import com.kakaobean.core.notification.utils.ReleaseNoteDeploymentNotificationEmailUtils;
 import com.kakaobean.independentlysystem.email.EmailSender;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +26,15 @@ public class SendDeploymentReleaseNoteNotificationStrategy implements SendEmailN
         emailSender.sendEmail(
                 event.getEmails(),
                 title,
-                () -> ReleaseNoteDeploymentNotificationEmailUtils.getHtml(notificationEvent.getTitle(), url)
+                () -> EmailHtmlUtils.makeLinkHtml(
+                        "릴리즈 노트 배포",
+                        event.getTitle() + "릴리즈 노트가 배포되었습니다."
+                        "아래 링크",
+                        "에서 확인하실 수 있습니다",
+                        "링크",
+                        url,
+                        url
+                )
         );
 
     }
