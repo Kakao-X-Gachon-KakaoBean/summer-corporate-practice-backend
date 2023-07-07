@@ -14,7 +14,7 @@ import java.util.List;
 
 @Getter
 @Entity
-@Where(clause = "status = ACTIVE")
+@Where(clause = "status = 'ACTIVE'")
 @SQLDelete(sql = "UPDATE release_note SET status = INACTIVE WHERE id = ?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReleaseNote extends BaseEntity {
