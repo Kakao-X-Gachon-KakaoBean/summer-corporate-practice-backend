@@ -59,5 +59,37 @@ public class ProjectServiceIntegrationTest extends IntegrationTest {
         assertThat(projectMember.getProjectRole()).isSameAs(ADMIN);
     }
 
+    @Test
+    void 어드민이_프로젝트_정보를_수정에_성공한다() {
+        // given
+        Member member = memberRepository.save(MemberFactory.create());
+        Project project = projectRepository.save(ProjectFactory.create());
+        projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), member.getId(), ADMIN));
+        ModifyProjectInfoReqeustDto responseDto = new ModifyProjectInfoReqeustDto(member.getId(), project.getId(), "새로운 제목", "새로운 설명");
+
+        // when
+        projectService.modifyProjectInfo(responseDto);
+
+        // then
+        assertThat(project.getTitle()).isEqualTo("새로운 제목");
+    }
+
+    @Test
+    void 일반유저는_프로젝트_정보를_수정에_실패한다() {
+        // given
+        Member member = memberRepository.save(MemberFactory.create());
+        Project project = projectRepository.save(ProjectFactory.create());
+        projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), member.getId(), MEMBER));
+        ModifyProjectInfoReqeustDto responseDto = new ModifyProjectInfoReqeustDto(member.getId(), project.getId(), "새로운 제목", "새로운 설명");
+
+        // when
+        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
+            projectService.modifyProjectInfo(responseDto);
+        });
+
+        // then
+        result.isInstanceOf(NotProjectAdminException.class);
+    }
+
 
 }
