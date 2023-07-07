@@ -1,13 +1,17 @@
 package com.kakaobean.project;
 
+import com.kakaobean.common.dto.CommandSuccessResponse;
 import com.kakaobean.core.project.application.ProjectService;
 import com.kakaobean.core.project.application.dto.response.FindProjectResponseDto;
 import com.kakaobean.core.project.application.dto.response.RegisterProjectResponseDto;
 import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
+import com.kakaobean.project.dto.request.ModifyProjectInfoRequest;
 import com.kakaobean.project.dto.request.RegisterProjectRequest;
 import com.kakaobean.security.UserPrincipal;
+import io.lettuce.core.protocol.Command;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -37,5 +41,13 @@ public class ProjectController {
     public ResponseEntity findParticipatedProjects(@AuthenticationPrincipal UserPrincipal userPrincipal){
         List<FindProjectResponseDto> response = projectQueryRepository.findProjects(userPrincipal.getId());
         return new ResponseEntity(response, OK);
+    }
+
+    @PatchMapping("/projects/{projectId}")
+    public ResponseEntity modifyProjectInfo(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                            @PathVariable Long projectId,
+                                            @Validated @RequestBody ModifyProjectInfoRequest request){
+        projectService.modifyProjectInfo(request.toServiceDto(userPrincipal.getId(), projectId));
+        return new ResponseEntity(CommandSuccessResponse.from("프로젝트 정보가 변경 되었습니다."), OK);
     }
 }

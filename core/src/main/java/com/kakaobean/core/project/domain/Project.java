@@ -54,4 +54,9 @@ public class Project extends BaseEntity {
     public ProjectMemberInvitedEvent createInvitationProjectMemberEvent(List<String> invitedMemberEmails) {
         return new ProjectMemberInvitedEvent(invitedMemberEmails, this);
     }
+
+    public void modifyInfo(String newTitle, String newContent){
+        this.title = newTitle;
+        this.content = newContent;
+    }
 }
