@@ -1,8 +1,5 @@
 package com.kakaobean.core.unit.application.project;
 
-import com.kakaobean.core.factory.project.ModifyProjectMembersRolesRequestDtoFactory;
-import com.kakaobean.core.factory.project.ProjectFactory;
-import com.kakaobean.core.factory.project.ProjectMemberFactory;
 import com.kakaobean.core.project.application.ProjectService;
 import com.kakaobean.core.project.application.dto.request.ModifyProjectInfoReqeustDto;
 import com.kakaobean.core.project.application.dto.request.RegisterProjectRequestDto;
@@ -13,9 +10,7 @@ import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.project.exception.NotProjectAdminException;
 import com.kakaobean.core.unit.UnitTest;
-import com.mysema.commons.lang.Assert;
 import org.assertj.core.api.AbstractThrowableAssert;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -24,8 +19,10 @@ import org.mockito.Mockito;
 import java.util.Optional;
 
 import static com.kakaobean.core.factory.project.ProjectFactory.create;
-import static com.kakaobean.core.factory.project.ProjectMemberFactory.*;
-import static org.assertj.core.api.Assertions.*;
+import static com.kakaobean.core.factory.project.ProjectMemberFactory.createAdmin;
+import static com.kakaobean.core.factory.project.ProjectMemberFactory.createMember;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
