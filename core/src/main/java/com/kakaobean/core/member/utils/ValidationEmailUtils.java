@@ -1,4 +1,4 @@
-package com.kakaobean.independentlysystem.utils;
+package com.kakaobean.core.member.utils;
 
 public class ValidationEmailUtils {
 
@@ -13,7 +13,7 @@ public class ValidationEmailUtils {
                 " <div" +
                         "	style=\"font-family: 'Apple SD Gothic Neo', 'sans-serif' !important; width: 700px; height: 900px; border-top: 4px solid #29ABE2; margin: 100px auto; padding: 30px 0; box-sizing: border-box;\">" +
                         "	<h1 style=\"margin: 0; padding: 0 5px; font-size: 28px; font-weight: 400;\">" +
-                        "		<span style=\"font-size: 50px; margin: 0 0 10px 3px;\">카카오빈</span><br/>" +
+                        "		<span style=\"font-size: 50px; margin: 0 0 10px 3px;\">코코노트</span><br/>" +
                         "		<span style=\"color: #29ABE2\">메일인증</span> 안내입니다." +
                         "	</h1>\n" +
                         "	<p style=\"font-size: 16px; line-height: 26px; margin-top: 50px; padding: 0 5px;\">" +

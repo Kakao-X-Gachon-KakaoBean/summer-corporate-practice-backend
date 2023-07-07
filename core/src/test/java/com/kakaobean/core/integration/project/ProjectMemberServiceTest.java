@@ -24,13 +24,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 import static com.kakaobean.core.common.domain.BaseStatus.ACTIVE;
-import static com.kakaobean.core.factory.project.ModifyProjectMembersRolesRequestDtoFactory.create;
+import static com.kakaobean.core.factory.project.dto.ModifyProjectMembersRolesRequestDtoFactory.create;
 import static com.kakaobean.core.factory.project.ProjectMemberFactory.*;
 import static com.kakaobean.core.project.domain.ProjectRole.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class ProjectMemberServiceIntegrationTest extends IntegrationTest {
+public class ProjectMemberServiceTest extends IntegrationTest {
 
     @Autowired
     ProjectMemberService projectMemberService;

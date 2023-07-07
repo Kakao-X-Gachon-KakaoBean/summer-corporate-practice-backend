@@ -32,15 +32,8 @@ public class ReleaseNoteService {
         ProjectMember writer = projectMemberRepository.findByMemberIdAndProjectId(dto.getWriterId(), dto.getProjectId())
                 .orElseThrow(NotExistsProjectMemberException::new);
         releaseNoteValidator.validWriterAccess(writer);
-        ReleaseNote releaseNote = releaseNoteRepository.save(dto.toEntity());
-        releaseNote.registered(findNotifiedProjectMemberInfos(releaseNote.getProjectId()));
-    }
-
-    private List<NotifiedTargetInfo> findNotifiedProjectMemberInfos(Long projectId) {
-        return projectQueryRepository
-                .findProjectMembers(projectId)
-                .stream()
-                .map(info -> new NotifiedTargetInfo(info.getProjectMemberId(), info.getProjectMemberEmail()))
-                .collect(toList());
+        ReleaseNote releaseNote = dto.toEntity();
+        releaseNoteRepository.save(releaseNote);
+        releaseNote.registered();
     }
 }

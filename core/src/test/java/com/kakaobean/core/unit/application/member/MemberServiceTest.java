@@ -29,6 +29,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -108,11 +109,13 @@ public class MemberServiceTest extends UnitTest {
     @Test
     void sendVerifiedEmail(){
 
-        //given
-        given(emailSender.sendVerificationEmail(Mockito.any(String.class))).willReturn("113336");
+        //when
+        memberService.sendVerificationEmail("example@gmail.com", "112233");
 
-        //when, then
-        memberService.sendVerificationEmail("example@gmail.com");
+        //then
+        verify(emailSender, times(1)).sendEmail(Mockito.any(List.class), Mockito.anyString(), Mockito.any());
+        verify(emailRepository, times(1)).save(Mockito.any());
+
     }
 
 
@@ -122,11 +125,12 @@ public class MemberServiceTest extends UnitTest {
         //given
         String email = "example@gmail.com";
         String authKey = "113336";
-        given(emailSender.sendVerificationEmail(Mockito.any(String.class))).willReturn(authKey);
         given(emailRepository.hasKey(Mockito.any(Email.class))).willReturn(true);
 
         //when
-        memberService.sendVerificationEmail(email);
+        memberService.sendVerificationEmail(email, authKey);
+        verify(emailSender, times(1)).sendEmail(Mockito.any(List.class), Mockito.anyString(), Mockito.any());
+        verify(emailRepository, times(1)).save(Mockito.any());
     }
 
     @DisplayName("레디스에 저장된 이메일과는 다른 이메일로 회원 가입을 진행한다.")

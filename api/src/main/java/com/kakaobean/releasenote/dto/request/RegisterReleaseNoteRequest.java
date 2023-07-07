@@ -18,16 +18,17 @@ public class RegisterReleaseNoteRequest {
     @NotEmpty
     private String content;
 
-    @NotEmpty
+    @NotNull
     private Double version;
 
     @NotNull
     private Long projectId;
 
-    public RegisterReleaseNoteRequest(String title, String content, Double version) {
+    public RegisterReleaseNoteRequest(String title, String content, Double version, Long projectId) {
         this.title = title;
         this.content = content;
         this.version = version;
+        this.projectId = projectId;
     }
 
     public RegisterReleaseNoteRequestDto toServiceDto(Long memberId) {

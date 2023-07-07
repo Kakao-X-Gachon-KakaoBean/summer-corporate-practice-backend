@@ -2,15 +2,12 @@ package com.kakaobean.core.unit.application.project;
 
 
 import com.kakaobean.core.factory.member.MemberFactory;
-import com.kakaobean.core.factory.project.ModifyProjectMembersRolesRequestDtoFactory;
 import com.kakaobean.core.factory.project.ProjectFactory;
 
 import com.kakaobean.core.member.domain.repository.MemberRepository;
 
 import com.kakaobean.core.project.application.ProjectMemberService;
 import com.kakaobean.core.project.application.dto.request.InviteProjectMemberRequestDto;
-import com.kakaobean.core.project.application.dto.request.ModifyProjectMemberRoleRequestDto;
-import com.kakaobean.core.project.application.dto.request.ModifyProjectMembersRolesRequestDto;
 import com.kakaobean.core.project.application.dto.request.RegisterProjectMemberRequestDto;
 import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.ProjectValidator;
@@ -29,7 +26,7 @@ import org.mockito.Mockito;
 import java.util.List;
 import java.util.Optional;
 
-import static com.kakaobean.core.factory.project.ModifyProjectMembersRolesRequestDtoFactory.*;
+import static com.kakaobean.core.factory.project.dto.ModifyProjectMembersRolesRequestDtoFactory.*;
 import static com.kakaobean.core.factory.project.ProjectMemberFactory.*;
 import static com.kakaobean.core.project.domain.ProjectRole.*;
 import static org.assertj.core.api.Assertions.assertThat;

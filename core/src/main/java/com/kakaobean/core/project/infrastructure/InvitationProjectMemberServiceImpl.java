@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static com.kakaobean.core.project.utiils.ProjectInvitationEmailUtils.*;
+
 @Component
 public class InvitationProjectMemberServiceImpl implements InvitationProjectMemberService {
 
@@ -18,6 +20,9 @@ public class InvitationProjectMemberServiceImpl implements InvitationProjectMemb
 
     @Override
     public void sendInvitationMails(List<String> invitedMemberEmail, Project project) {
-        emailSender.sendProjectInvitationEmail(invitedMemberEmail, project.getTitle(), project.getSecretKey());
+        String subject = "[코코노트] "+ project.getTitle()  + " 프로젝트 초대 메일입니다.";
+        String invitationUrl = "localhost:3000/invitations/" + project.getSecretKey(); //TODO 개발할 때 편의상 사용.
+        emailSender.sendEmail(invitedMemberEmail, subject, () -> getProjectInvitationHtml(invitationUrl)
+        );
     }
 }
