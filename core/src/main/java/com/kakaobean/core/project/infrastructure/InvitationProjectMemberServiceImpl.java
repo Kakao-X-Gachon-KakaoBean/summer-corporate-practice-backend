@@ -32,7 +32,6 @@ public class InvitationProjectMemberServiceImpl implements InvitationProjectMemb
                         "아래 링크",
                         "로 입장하시면 프로젝트에 참여 가능합니다.",
                         "링크",
-                        invitationUrl,
                         invitationUrl
                 )
         );

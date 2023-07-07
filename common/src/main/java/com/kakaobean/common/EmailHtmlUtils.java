@@ -11,7 +11,6 @@ public class EmailHtmlUtils {
                                       String boldKeyword,
                                       String text2,
                                       String boxTitle,
-                                      String boxContent,
                                       String url
     ) {
         StringBuilder emailContent = new StringBuilder();
@@ -31,7 +30,7 @@ public class EmailHtmlUtils {
                         "	    <br/> " +
                         text1 + " <strong style=\"color:#29ABE2\">" + boldKeyword + " </strong>" + text2   + "<br/>" +
                         "  <a href=\"http://" + url + "\" style=\"text-decoration: none;\">" +
-                        "      <div style=\"width: 576px;height: 90px; margin-top: 50px; padding: 0 27px;color: #242424;font-size: 16px;font-weight: bold;background-color: #F9F9F9;vertical-align: middle;line-height: 90px;\">초대 링크 : " +
+                        "      <div style=\"width: 576px;height: 90px; margin-top: 50px; padding: 0 27px;color: #242424;font-size: 16px;font-weight: bold;background-color: #F9F9F9;vertical-align: middle;line-height: 90px;\"> "+ boxTitle + " : " +
                         "          <strong style=\"font-style: normal;font-weight: bold;color: #29ABE2\"> " + url + "</strong>" +
                         "      </div>" +
                         "  </a>" +

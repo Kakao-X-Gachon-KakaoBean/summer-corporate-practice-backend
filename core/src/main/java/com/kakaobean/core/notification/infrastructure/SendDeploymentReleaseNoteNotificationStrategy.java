@@ -28,7 +28,7 @@ public class SendDeploymentReleaseNoteNotificationStrategy implements SendEmailN
                 title,
                 () -> EmailHtmlUtils.makeLinkHtml(
                         "릴리즈 노트 배포",
-                        event.getTitle() + "릴리즈 노트가 배포되었습니다."
+                        event.getTitle() + "릴리즈 노트가 배포되었습니다.",
                         "아래 링크",
                         "에서 확인하실 수 있습니다",
                         "링크",
