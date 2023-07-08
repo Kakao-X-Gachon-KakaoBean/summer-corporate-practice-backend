@@ -33,10 +33,10 @@ public class ProjectService {
     }
 
     @Transactional(readOnly = false)
-    public void modifyProjectInfo(ModifyProjectInfoReqeustDto dto){
+    public void modifyProject(ModifyProjectInfoReqeustDto dto){
         ProjectMember projectAdmin = projectMemberRepository.findByMemberIdAndProjectId(dto.getAdminId(), dto.getProjectId()).orElseThrow(NotExistsProjectMemberException::new);
         projectValidator.validAdmin(projectAdmin);
         Project project = projectRepository.findProjectById(dto.getProjectId()).orElseThrow(NotExistsProjectException::new);
-        project.modifyInfo(dto.getNewTitle(),dto.getNewContent());
+        project.modify(dto.getNewTitle(),dto.getNewContent());
     }
 }

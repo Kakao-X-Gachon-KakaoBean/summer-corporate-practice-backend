@@ -65,7 +65,7 @@ public class ProjectServiceIntegrationTest extends IntegrationTest {
         ModifyProjectInfoReqeustDto responseDto = new ModifyProjectInfoReqeustDto(member.getId(), project.getId(), "새로운 제목", "새로운 설명");
 
         // when
-        projectService.modifyProjectInfo(responseDto);
+        projectService.modifyProject(responseDto);
 
         // then
         assertThat(project.getTitle()).isEqualTo("새로운 제목");
@@ -81,7 +81,7 @@ public class ProjectServiceIntegrationTest extends IntegrationTest {
 
         // when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
-            projectService.modifyProjectInfo(responseDto);
+            projectService.modifyProject(responseDto);
         });
 
         // then

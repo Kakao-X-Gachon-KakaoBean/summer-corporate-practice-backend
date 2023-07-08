@@ -2,7 +2,6 @@ package com.kakaobean.core.project.domain;
 
 import com.kakaobean.core.common.domain.BaseEntity;
 import com.kakaobean.core.common.domain.BaseStatus;
-import com.kakaobean.core.common.event.Events;
 import com.kakaobean.core.project.domain.event.ProjectMemberInvitedEvent;
 import lombok.Getter;
 
@@ -11,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Entity
@@ -55,7 +53,7 @@ public class Project extends BaseEntity {
         return new ProjectMemberInvitedEvent(invitedMemberEmails, this);
     }
 
-    public void modifyInfo(String newTitle, String newContent){
+    public void modify(String newTitle, String newContent){
         this.title = newTitle;
         this.content = newContent;
     }

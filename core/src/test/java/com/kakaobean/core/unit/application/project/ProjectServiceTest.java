@@ -65,7 +65,7 @@ public class ProjectServiceTest extends UnitTest {
         given(projectMemberRepository.findByMemberIdAndProjectId(Mockito.anyLong(), Mockito.anyLong())).willReturn(Optional.of(createAdmin()));
         given(projectRepository.findProjectById(Mockito.anyLong())).willReturn(Optional.of(testProject));
         // when
-        projectService.modifyProjectInfo(new ModifyProjectInfoReqeustDto(1L, 2L, "새로운 프로젝트 제목", "새로운 프로젝트 내용"));
+        projectService.modifyProject(new ModifyProjectInfoReqeustDto(1L, 2L, "새로운 프로젝트 제목", "새로운 프로젝트 내용"));
         // then
         assertThat(testProject.getTitle()).isEqualTo("새로운 프로젝트 제목");
     }
@@ -76,7 +76,7 @@ public class ProjectServiceTest extends UnitTest {
         given(projectMemberRepository.findByMemberIdAndProjectId(Mockito.anyLong(), Mockito.anyLong())).willReturn(Optional.of(createMember()));
         // when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
-            projectService.modifyProjectInfo(new ModifyProjectInfoReqeustDto(1L, 2L, "새로운 프로젝트 제목", "새로운 프로젝트 내용"));
+            projectService.modifyProject(new ModifyProjectInfoReqeustDto(1L, 2L, "새로운 프로젝트 제목", "새로운 프로젝트 내용"));
         });
         // then
         result.isInstanceOf(NotProjectAdminException.class);
