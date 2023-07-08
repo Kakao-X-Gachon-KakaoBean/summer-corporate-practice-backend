@@ -1,21 +1,14 @@
 package com.kakaobean.acceptance.project;
 
 import com.kakaobean.acceptance.AcceptanceTest;
-import com.kakaobean.acceptance.TestMember;
-import com.kakaobean.acceptance.auth.AuthAcceptanceTask;
-import com.kakaobean.acceptance.member.MemberAcceptanceTask;
 import com.kakaobean.core.project.domain.Project;
-import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
-import com.kakaobean.member.dto.RegisterMemberRequest;
 import com.kakaobean.project.dto.request.InviteProjectMemberRequest;
+import com.kakaobean.project.dto.request.ModifyProjectInfoRequest;
 import com.kakaobean.project.dto.request.RegisterProjectMemberRequest;
 import com.kakaobean.project.dto.request.RegisterProjectRequest;
-import com.kakaobean.unit.controller.factory.member.RegisterMemberRequestFactory;
 import io.restassured.response.ExtractableResponse;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -76,6 +69,21 @@ public class ProjectAcceptanceTest extends AcceptanceTest {
 
         //then
         assertThat(response.statusCode()).isEqualTo(201);
+    }
+
+    @Test
+    void 어드민이_프로젝트_정보를_변경한다(){
+        //given
+        RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
+        ProjectAcceptanceTask.registerProjectTask(givenRequest);
+        Project project = projectRepository.findAll().get(0);
+        ModifyProjectInfoRequest request = new ModifyProjectInfoRequest("새로운 프로젝트 제목", "새로운 프로젝트 내용");
+
+        //when
+        ExtractableResponse response = ProjectAcceptanceTask.modifyProjectInfoTask(request, project.getId());
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(200);
     }
 }
 
