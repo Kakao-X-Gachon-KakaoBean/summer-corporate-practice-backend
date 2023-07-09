@@ -2,6 +2,7 @@ package com.kakaobean.unit.controller.member;
 
 import com.kakaobean.core.member.application.dto.response.FindMemberInfoResponseDto;
 import com.kakaobean.member.dto.ModifyMemberPasswordRequest;
+import com.kakaobean.member.dto.ModifyMemberRequest;
 import com.kakaobean.member.dto.SendVerifiedEmailRequest;
 import com.kakaobean.unit.controller.ControllerTest;
 import com.kakaobean.unit.controller.factory.member.RegisterMemberRequestFactory;
@@ -150,6 +151,39 @@ public class MemberControllerTest extends ControllerTest {
                         fieldWithPath("emailAuthKey").type(STRING).description("이메일 검증 키"),
                         fieldWithPath("passwordToChange").type(STRING).description("변경할 비밀번호"),
                         fieldWithPath("checkPasswordToChange").type(STRING).description("변경할 비밀번호를 체크할 비밀번호")
+                ),
+                responseFields(
+                        fieldWithPath("message").type(STRING).description("성공메시지")
+                )
+        ));
+    }
+
+    //TODO: test modifyMember - Controller
+    @Test
+    @WithMockUser
+    @DisplayName("멤버 정보 수정(현재는 이름만 수정 가능)")
+    void modifyMember() throws Exception {
+
+        ModifyMemberRequest request =
+                new ModifyMemberRequest("newName");
+        String requestBody = objectMapper.writeValueAsString(request);
+
+
+        //when
+        ResultActions perform = mockMvc.perform(patch("/members/name")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+        );
+
+        //then
+        perform.andDo(print());
+        perform.andExpect(status().is2xxSuccessful());
+        perform.andDo(document("modify_member_info",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestFields(
+                        fieldWithPath("passwordToChange").type(STRING).description("변경할 이름")
                 ),
                 responseFields(
                         fieldWithPath("message").type(STRING).description("성공메시지")

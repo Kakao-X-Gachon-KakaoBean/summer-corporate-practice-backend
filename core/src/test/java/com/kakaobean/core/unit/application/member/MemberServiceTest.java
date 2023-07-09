@@ -278,4 +278,89 @@ public class MemberServiceTest extends UnitTest {
         result.isInstanceOf(OAuthMemberCanNotChangePasswordException.class);
     }
 
+    //TODO: scenario for name changes
+    @DisplayName("멤버 이름 변경을 성공한다.")
+    @Test
+    void successModifyMemberName(){
+
+        //given
+        String newName = "Hiki New";
+        Member member = MemberFactory.create();
+        given(memberRepository.findMemberById(Mockito.anyLong())).willReturn(Optional.of(member));
+
+        //when
+        memberService.modifyMemberName(new ModifyMemberPasswordRequestDto(email.getEmail(), email.getAuthKey(), newPwd, newCheckPwd));
+
+        //then
+        assertThat(passwordEncoder.matches(newPwd, member.getAuth().getPassword())).isTrue();
+    }
+
+    @DisplayName("로그인이 되어 있지 않아 인증에 실패하여 이름 변경에 실패한다")
+    @Test
+    void failModifyMemberNameCase1(){
+
+        //given
+        String newPwd = "1q2w3e4r!";
+        String newCheckPwd = "1q2w3e4r!";
+        Email email = new Email("123@gmail.com", "111336");
+        Member member = MemberFactory.create();
+        given(memberRepository.findMemberByEmail(Mockito.anyString())).willReturn(Optional.of(member));
+        given(emailRepository.hasKey(Mockito.any(Email.class))).willReturn(true);
+        given(emailRepository.getEmailCertification(Mockito.any(Email.class))).willReturn(email);
+
+        //when
+        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
+            memberService.modifyMemberPassword(new ModifyMemberPasswordRequestDto(member.getAuth().getEmail(), "X", newPwd, newCheckPwd));
+        });
+
+        //then
+        result.isInstanceOf(WrongEmailAuthKeyException.class);
+    }
+
+    @DisplayName("이름 변경에서 기존 이름과 바꿀 이름이 동일하여 변경에 실패한다")
+    @Test
+    void failModifyMemberNameCase2(){
+
+        //given
+        String newPwd = "1q2w3e4r!";
+        String newCheckPwd = "1q2w3e4r!!";
+        Email email = new Email("123@gmail.com", "111336");
+        Member member = MemberFactory.create();
+        given(memberRepository.findMemberByEmail(Mockito.anyString())).willReturn(Optional.of(member));
+        given(emailRepository.hasKey(Mockito.any(Email.class))).willReturn(true);
+        given(emailRepository.getEmailCertification(Mockito.any(Email.class))).willReturn(email);
+
+        //when
+        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
+            memberService.modifyMemberPassword(new ModifyMemberPasswordRequestDto(member.getAuth().getEmail(), email.getAuthKey(), newPwd, newCheckPwd));
+        });
+
+        //then
+        result.isInstanceOf(PasswordAndCheckPasswordNotSameException.class);
+    }
+
+    @DisplayName("로컬 회원 가입만 비밀번호 변경을 진행할 수 있다.")
+    @Test
+    void failModifyMemberPasswordCase4(){
+
+        //given
+        String newPwd = "1q2w3e4r!";
+        String newCheckPwd = "1q2w3e4r!!";
+        Email email = new Email("123@gmail.com", "111336");
+        Member member = Member.builder()
+                .authProvider(AuthProvider.google)
+                .auth(new Auth(email.getEmail(), "x"))
+                .build();
+        given(memberRepository.findMemberByEmail(Mockito.anyString())).willReturn(Optional.of(member));
+        given(emailRepository.hasKey(Mockito.any(Email.class))).willReturn(true);
+        given(emailRepository.getEmailCertification(Mockito.any(Email.class))).willReturn(email);
+
+        //when
+        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
+            memberService.modifyMemberPassword(new ModifyMemberPasswordRequestDto(member.getAuth().getEmail(), email.getAuthKey(), newPwd, newCheckPwd));
+        });
+
+        //then
+        result.isInstanceOf(OAuthMemberCanNotChangePasswordException.class);
+    }
 }
