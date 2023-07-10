@@ -56,7 +56,7 @@ public class ReleaseNoteServiceTest extends IntegrationTest {
         projectMemberRepository.save(createWithMemberIdAndProjectId(3L, project.getId(), MEMBER));
 
         //when
-        releaseNoteService.registerReleaseNote(createWithProjectIdAndWriterId(project.getId(), admin.getMemberId()));
+        releaseNoteService.deployReleaseNote(createWithProjectIdAndWriterId(project.getId(), admin.getMemberId()));
 
         //then
         assertThat(releaseNoteRepository.findAll().size()).isEqualTo(1);

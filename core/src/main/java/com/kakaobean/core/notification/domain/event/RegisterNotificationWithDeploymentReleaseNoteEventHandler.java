@@ -17,7 +17,7 @@ public class RegisterNotificationWithDeploymentReleaseNoteEventHandler {
     private final SaveNotificationService saveNotificationService;
     private final SendEmailNotificationService sendEmailNotificationService;
 
-    @Async
+    //@Async 비동기로 진행하면 테스트 진행이 불가능.
     @TransactionalEventListener(value = ReleaseNoteRegisteredEvent.class)
     public void handle(ReleaseNoteRegisteredEvent event){
         if(event != null){

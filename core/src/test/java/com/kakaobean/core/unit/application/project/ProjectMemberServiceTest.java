@@ -94,7 +94,7 @@ public class ProjectMemberServiceTest extends UnitTest {
     void 관리자가_프로젝트_멤버_초대_이메일_전송_도메인_이벤트를_만든다(){
         //given
         given(projectMemberRepository.findByMemberIdAndProjectId(Mockito.anyLong(), Mockito.anyLong())).willReturn(Optional.of(createAdmin()));
-        given(projectRepository.findProjectById(Mockito.anyLong())).willReturn(Optional.of(ProjectFactory.create()));
+        given(projectRepository.findById(Mockito.anyLong())).willReturn(Optional.of(ProjectFactory.create()));
         given(memberRepository.findMemberByEmail(Mockito.anyString())).willReturn(Optional.of(MemberFactory.create()));
 
         //when

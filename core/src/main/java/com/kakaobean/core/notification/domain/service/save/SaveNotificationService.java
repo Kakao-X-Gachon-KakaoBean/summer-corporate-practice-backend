@@ -3,6 +3,7 @@ package com.kakaobean.core.notification.domain.service.save;
 import com.kakaobean.core.notification.domain.NotificationType;
 import com.kakaobean.core.notification.domain.event.SendNotificationEvent;
 import com.kakaobean.core.notification.domain.service.save.strategy.SaveNotificationStrategy;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -15,8 +16,7 @@ public class SaveNotificationService {
         this.notificationStrategies = notificationStrategies;
     }
 
-
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public SendNotificationEvent save(Long sourceId, NotificationType notificationType){
         for (SaveNotificationStrategy notificationStrategy : notificationStrategies) {
             if(notificationStrategy.support(notificationType)){

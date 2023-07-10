@@ -69,7 +69,7 @@ public class ProjectMemberService {
         projectValidator.validAdmin(projectAdmin);
 
         //프로젝트를 찾고
-        Project project = projectRepository.findProjectById(dto.getProjectId()).orElseThrow(NotExistsProjectException::new);
+        Project project = projectRepository.findById(dto.getProjectId()).orElseThrow(NotExistsProjectException::new);
 
         //초대 멤버로 저장하고 도메인 이벤트를 발행
         List<String> invitedEmails = saveInvitedPersons(dto, project);

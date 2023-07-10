@@ -1,6 +1,5 @@
 package com.kakaobean.core.releasenote.application.dto.request;
 
-import com.kakaobean.core.common.domain.BaseStatus;
 import com.kakaobean.core.releasenote.domain.ReleaseNote;
 import lombok.Getter;
 
@@ -8,7 +7,7 @@ import static com.kakaobean.core.common.domain.BaseStatus.*;
 
 
 @Getter
-public class RegisterReleaseNoteRequestDto {
+public class DeployReleaseNoteRequestDto {
 
     private final String title;
     private final String content;
@@ -16,11 +15,11 @@ public class RegisterReleaseNoteRequestDto {
     private final Long projectId;
     private final Long writerId;
 
-    public RegisterReleaseNoteRequestDto(String title,
-                                         String content,
-                                         Double version,
-                                         Long projectId,
-                                         Long writerId) {
+    public DeployReleaseNoteRequestDto(String title,
+                                       String content,
+                                       Double version,
+                                       Long projectId,
+                                       Long writerId) {
         this.title = title;
         this.content = content;
         this.version = version;

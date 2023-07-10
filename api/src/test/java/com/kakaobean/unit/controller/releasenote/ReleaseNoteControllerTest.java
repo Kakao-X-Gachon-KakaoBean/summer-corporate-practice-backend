@@ -1,7 +1,7 @@
 package com.kakaobean.unit.controller.releasenote;
 
 
-import com.kakaobean.releasenote.dto.request.RegisterReleaseNoteRequest;
+import com.kakaobean.releasenote.dto.request.DeployReleaseNoteRequest;
 import com.kakaobean.unit.controller.ControllerTest;
 import com.kakaobean.unit.controller.factory.releasenote.RegisterReleaseNoteRequestFactory;
 import com.kakaobean.unit.controller.security.WithMockUser;
@@ -27,7 +27,7 @@ public class ReleaseNoteControllerTest extends ControllerTest {
     void 릴리즈_노트_작성() throws Exception {
 
         //given
-        RegisterReleaseNoteRequest request = RegisterReleaseNoteRequestFactory.create();
+        DeployReleaseNoteRequest request = RegisterReleaseNoteRequestFactory.create();
         String requestBody = objectMapper.writeValueAsString(request);
 
         //when

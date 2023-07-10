@@ -1,6 +1,6 @@
 package com.kakaobean.releasenote.dto.request;
 
-import com.kakaobean.core.releasenote.application.dto.request.RegisterReleaseNoteRequestDto;
+import com.kakaobean.core.releasenote.application.dto.request.DeployReleaseNoteRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor
-public class RegisterReleaseNoteRequest {
+public class DeployReleaseNoteRequest {
 
     @NotEmpty
     private String title;
@@ -24,14 +24,14 @@ public class RegisterReleaseNoteRequest {
     @NotNull
     private Long projectId;
 
-    public RegisterReleaseNoteRequest(String title, String content, Double version, Long projectId) {
+    public DeployReleaseNoteRequest(String title, String content, Double version, Long projectId) {
         this.title = title;
         this.content = content;
         this.version = version;
         this.projectId = projectId;
     }
 
-    public RegisterReleaseNoteRequestDto toServiceDto(Long memberId) {
-        return new RegisterReleaseNoteRequestDto(title, content, version, projectId, memberId);
+    public DeployReleaseNoteRequestDto toServiceDto(Long memberId) {
+        return new DeployReleaseNoteRequestDto(title, content, version, projectId, memberId);
     }
 }

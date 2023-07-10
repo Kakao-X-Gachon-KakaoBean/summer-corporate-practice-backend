@@ -35,9 +35,6 @@ public class ReleaseNoteServiceTest extends UnitTest {
     @Mock
     private ReleaseNoteRepository releaseNoteRepository;
 
-    @Mock
-    private ProjectQueryRepository projectQueryRepository;
-
     private static MockedStatic<Events> mockEvents;
 
 
@@ -46,7 +43,6 @@ public class ReleaseNoteServiceTest extends UnitTest {
         releaseNoteService = new ReleaseNoteService(
                 releaseNoteRepository,
                 projectMemberRepository,
-                projectQueryRepository,
                 new ReleaseNoteValidator()
         );
         mockEvents = mockStatic(Events.class);
@@ -67,7 +63,7 @@ public class ReleaseNoteServiceTest extends UnitTest {
                 .willReturn(Optional.of(writer));
 
         //when
-        releaseNoteService.registerReleaseNote(RegisterReleaseNoteRequestDtoFactory.create());
+        releaseNoteService.deployReleaseNote(RegisterReleaseNoteRequestDtoFactory.create());
 
         //then
         verify(releaseNoteRepository, times(1)).save(Mockito.any(ReleaseNote.class));

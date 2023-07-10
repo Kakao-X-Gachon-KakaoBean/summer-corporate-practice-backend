@@ -46,10 +46,10 @@ public abstract class AcceptanceTest {
     private void createMember(String name, TestMember member) {
         memberRepository.save(new Member(
                 name,
-                        member.getEmail(),
-                        ROLE_USER,
-                        passwordEncoder.encode(member.getPassword()),
-                        AuthProvider.local, ACTIVE
+                member.getEmail(),
+                ROLE_USER,
+                passwordEncoder.encode(member.getPassword()),
+                AuthProvider.local, ACTIVE
                 )
         );
     }
