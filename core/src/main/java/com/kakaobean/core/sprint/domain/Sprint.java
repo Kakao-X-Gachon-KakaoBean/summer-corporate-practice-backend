@@ -22,6 +22,8 @@ public class Sprint extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long projectId;
+
     private String title;
 
     private String description;

@@ -44,7 +44,7 @@ public class ProjectService {
     public void removeProject(Long adminId, Long projectId) {
         ProjectMember projectAdmin = projectMemberRepository.findByMemberIdAndProjectId(adminId, projectId).orElseThrow(NotExistsProjectMemberException::new);
         projectValidator.validAdmin(projectAdmin);
-        Project project = projectRepository.findProjectById(projectId).orElseThrow(NotExistsProjectException::new);
+        Project project = projectRepository.findById(projectId).orElseThrow(NotExistsProjectException::new);
         project.remove();
     }
 }
