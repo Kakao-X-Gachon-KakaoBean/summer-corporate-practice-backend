@@ -18,6 +18,8 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -52,6 +54,9 @@ public class ImageControllerTest extends ControllerTest {
                 .andDo(document("upload_image",
                         getDocumentRequest(),
                         getDocumentResponse(),
+                        requestParts(
+                                partWithName("image").description("The uploaded file")
+                        ),
                         responseFields(
                                 fieldWithPath("imageUrl").type(STRING).description("업로드한 이미지의 URL.")
                         )

@@ -28,6 +28,8 @@ import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -189,9 +191,13 @@ public class MemberControllerTest extends ControllerTest {
                 )
                 .andExpect(status().is2xxSuccessful())
                 .andDo(print())
-                .andDo(document("upload_member_image",
+                .andDo(document("upload_member_profile",
                         getDocumentRequest(),
                         getDocumentResponse(),
+                        requestParts(
+                                partWithName("profileImg").description("업로드할 프로필 이미지"),
+                                partWithName("thumbnailImg").description("업로드할 썸네일 이미지")
+                        ),
                         responseFields(
                                 fieldWithPath("message").type(STRING).description("이미지 업로드 성공 메시지")
                         )

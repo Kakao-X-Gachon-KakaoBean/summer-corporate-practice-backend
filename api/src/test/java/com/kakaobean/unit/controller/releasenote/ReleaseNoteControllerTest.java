@@ -40,7 +40,7 @@ public class ReleaseNoteControllerTest extends ControllerTest {
         //then
         perform.andDo(print());
         perform.andExpect(status().is2xxSuccessful());
-        perform.andDo(document("register_release_note",
+        perform.andDo(document("deploy_release_note",
                 getDocumentRequest(),
                 getDocumentResponse(),
                 requestFields(
