@@ -50,7 +50,8 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                         FindProjectResponseDto.class,
                         project.id,
                         project.title,
-                        project.content
+                        project.content,
+                        project.status
                 ))
                 .from(project)
                 .join(projectMember).on(projectMember.id.eq(project.id))

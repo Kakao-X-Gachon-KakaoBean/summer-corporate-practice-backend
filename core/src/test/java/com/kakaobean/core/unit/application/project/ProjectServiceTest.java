@@ -63,7 +63,7 @@ public class ProjectServiceTest extends UnitTest {
         // given
         Project testProject = create();
         given(projectMemberRepository.findByMemberIdAndProjectId(Mockito.anyLong(), Mockito.anyLong())).willReturn(Optional.of(createAdmin()));
-        given(projectRepository.findProjectById(Mockito.anyLong())).willReturn(Optional.of(testProject));
+        given(projectRepository.findById(Mockito.anyLong())).willReturn(Optional.of(testProject));
         // when
         projectService.modifyProject(new ModifyProjectInfoReqeustDto(1L, 2L, "새로운 프로젝트 제목", "새로운 프로젝트 내용"));
         // then

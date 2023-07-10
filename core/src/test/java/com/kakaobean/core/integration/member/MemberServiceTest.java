@@ -3,7 +3,6 @@ package com.kakaobean.core.integration.member;
 import com.kakaobean.core.factory.member.MemberFactory;
 import com.kakaobean.core.member.application.MemberProvider;
 import com.kakaobean.core.member.application.dto.request.ModifyMemberPasswordRequestDto;
-import com.kakaobean.core.member.application.dto.response.FindEmailResponseDto;
 import com.kakaobean.core.member.application.dto.response.FindMemberInfoResponseDto;
 import com.kakaobean.core.member.domain.*;
 import com.kakaobean.core.member.domain.Email;
@@ -14,7 +13,6 @@ import com.kakaobean.core.factory.member.RegisterMemberServiceDtoFactory;
 import com.kakaobean.core.integration.IntegrationTest;
 import com.kakaobean.core.member.application.MemberService;
 import com.kakaobean.core.member.application.dto.request.RegisterMemberRequestDto;
-import com.kakaobean.core.member.application.dto.response.RegisterMemberResponseDto;
 import com.kakaobean.independentlysystem.email.EmailSender;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,14 +26,11 @@ import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 
-public class MemberServiceIntegrationTest extends IntegrationTest {
+public class MemberServiceTest extends IntegrationTest {
 
     @Autowired
     MemberService memberService;
@@ -102,10 +97,9 @@ public class MemberServiceIntegrationTest extends IntegrationTest {
         //given
         String email = "example@gmail.com";
         String authKey = "113336";
-        given(mailSender.sendVerificationEmail(Mockito.any(String.class))).willReturn(authKey);
 
         //when
-        memberService.sendVerificationEmail(email);
+        memberService.sendVerificationEmail(email, authKey);
 
         //then
         Email result = emailRepository.getEmailCertification(new Email(email, authKey));
@@ -120,11 +114,10 @@ public class MemberServiceIntegrationTest extends IntegrationTest {
         String email = "example@gmail.com";
         String authKey = "113336";
         String authKey2 = "112233";
-        given(mailSender.sendVerificationEmail(Mockito.any(String.class))).willReturn(authKey, authKey2);
-        memberService.sendVerificationEmail(email);
+        memberService.sendVerificationEmail(email, authKey);
 
         //when
-        memberService.sendVerificationEmail(email);
+        memberService.sendVerificationEmail(email, authKey2);
 
         //then
         Email result = emailRepository.getEmailCertification(new Email(email, authKey2));
@@ -137,8 +130,7 @@ public class MemberServiceIntegrationTest extends IntegrationTest {
     void failRegisterMemberCase1(){
         //given
         RegisterMemberRequestDto dto = RegisterMemberServiceDtoFactory.createSuccessCaseRequestDto();
-        given(mailSender.sendVerificationEmail(Mockito.any(String.class))).willReturn(dto.getEmailAuthKey());
-        memberService.sendVerificationEmail("123@gmail.com");
+        memberService.sendVerificationEmail("123@gmail.com", "111333");
 
         //when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
@@ -157,8 +149,7 @@ public class MemberServiceIntegrationTest extends IntegrationTest {
     void failRegisterMemberCase2(){
         //given
         RegisterMemberRequestDto dto = RegisterMemberServiceDtoFactory.createSuccessCaseRequestDto();
-        given(mailSender.sendVerificationEmail(Mockito.any(String.class))).willReturn("000000");
-        memberService.sendVerificationEmail(dto.getEmail());
+        memberService.sendVerificationEmail(dto.getEmail(), "12345");
 
         //when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {

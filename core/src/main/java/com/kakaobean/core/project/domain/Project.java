@@ -6,6 +6,8 @@ import com.kakaobean.core.common.event.Events;
 import com.kakaobean.core.project.domain.event.ProjectMemberInvitedEvent;
 import com.kakaobean.core.project.domain.event.RemovedProjectEvent;
 import lombok.Getter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +16,8 @@ import javax.persistence.Id;
 import java.util.List;
 
 @Getter
+@Where(clause = "status = 'ACTIVE'")
+@SQLDelete(sql = "UPDATE project SET status = INACTIVE WHERE id = ?")
 @Entity
 public class Project extends BaseEntity {
 
