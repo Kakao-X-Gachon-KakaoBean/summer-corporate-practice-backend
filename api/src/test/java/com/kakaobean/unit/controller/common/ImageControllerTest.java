@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 
@@ -38,9 +39,7 @@ public class ImageControllerTest extends ControllerTest {
                 "Hello, World!".getBytes()
         );
 
-        given(imageService.upload(Mockito.any(InputStream.class), Mockito.any(String.class), Mockito.any(Long.class), Mockito.any(String.class)))
-                .willReturn(url);
-
+        given(imageService.upload(Mockito.any(MultipartFile.class))).willReturn(url);
 
         //when
         mockMvc.perform(RestDocumentationRequestBuilders.multipart("/images")

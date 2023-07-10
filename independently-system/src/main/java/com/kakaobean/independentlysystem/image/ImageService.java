@@ -24,17 +24,14 @@ public class ImageService {
 
     private final AmazonS3Client s3Client;
 
-    public String upload(InputStream inputStream,
-                         String originFileName,
-                         Long fileSize,
-                         String contentType) {
-        String s3FileName = UUID.randomUUID() + "-" + originFileName;
+    public String upload(MultipartFile image) throws IOException {
+        String s3FileName = UUID.randomUUID() + "-" + image.getOriginalFilename();
 
         ObjectMetadata objMeta = new ObjectMetadata();
-        objMeta.setContentType(contentType); //이 부분을 넣어야 자동 저장이 안됨.
-        objMeta.setContentLength(fileSize); //그리고 Spring Server에서 S3로 파일을 업로드해야 하는데, 이 때 파일의 사이즈를 ContentLength로 S3에 알려주기 위해서 ObjectMetadata를 사용
+        objMeta.setContentType(image.getContentType()); //이 부분을 넣어야 자동 저장이 안됨.
+        objMeta.setContentLength(image.getSize()); //그리고 Spring Server에서 S3로 파일을 업로드해야 하는데, 이 때 파일의 사이즈를 ContentLength로 S3에 알려주기 위해서 ObjectMetadata를 사용
 
-        s3Client.putObject(bucket, dir + "/" + s3FileName, inputStream, objMeta);
+        s3Client.putObject(bucket, dir + "/" + s3FileName, image.getInputStream(), objMeta);
 
         //그리고 이제 S3 API 메소드인 putObject를 이용하여 파일 Stream을 열어서 S3에 파일을 업로드 합니다.
 

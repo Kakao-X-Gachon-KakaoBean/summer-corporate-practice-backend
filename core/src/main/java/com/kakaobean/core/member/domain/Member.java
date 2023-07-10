@@ -37,6 +37,10 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private AuthProvider authProvider;
 
+    private String profileImg;
+
+    private String thumbnailImg;
+
 
     /**
      * 프로덕션 생성자
@@ -89,5 +93,10 @@ public class Member extends BaseEntity {
 
     public void updatePassword(String newPassword) {
         this.auth = new Auth(this.auth.getEmail(), newPassword);
+    }
+
+    public void modifyProfileImg(String profileImg, String thumbnailImg) {
+        this.profileImg = profileImg;
+        this.thumbnailImg = thumbnailImg;
     }
 }

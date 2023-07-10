@@ -12,7 +12,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.multipart.MultipartFile;
 
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentRequest;
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentResponse;
@@ -155,5 +158,43 @@ public class MemberControllerTest extends ControllerTest {
                         fieldWithPath("message").type(STRING).description("성공메시지")
                 )
         ));
+    }
+
+
+    @Test
+    @WithMockUser
+    void 멤버_이미지를_업로드한다() throws Exception {
+
+        //given
+        MockMultipartFile image1 = new MockMultipartFile(
+                "profileImg", //requestParam
+                "hello.txt", //original file name
+                MediaType.TEXT_PLAIN_VALUE,
+                "Hello, World!".getBytes()
+        );
+
+        MockMultipartFile image2 = new MockMultipartFile(
+                "thumbnailImg", //requestParam
+                "hello.txt", //original file name
+                MediaType.TEXT_PLAIN_VALUE,
+                "Hello, World!".getBytes()
+        );
+
+        //when
+        mockMvc.perform(RestDocumentationRequestBuilders.multipart("/members/images")
+                        .file(image1)
+                        .file(image2)
+                        .contentType(MediaType.MULTIPART_FORM_DATA)
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().is2xxSuccessful())
+                .andDo(print())
+                .andDo(document("upload_member_image",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        responseFields(
+                                fieldWithPath("message").type(STRING).description("이미지 업로드 성공 메시지")
+                        )
+                ));
     }
 }
