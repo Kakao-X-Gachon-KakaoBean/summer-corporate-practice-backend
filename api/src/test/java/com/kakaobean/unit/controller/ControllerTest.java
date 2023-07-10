@@ -1,6 +1,7 @@
 package com.kakaobean.unit.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kakaobean.common.ImageController;
 import com.kakaobean.config.AppProperties;
 import com.kakaobean.config.SecurityConfig;
 import com.kakaobean.config.WebMvcConfig;
@@ -11,9 +12,12 @@ import com.kakaobean.core.project.application.ProjectMemberFacade;
 import com.kakaobean.core.project.application.ProjectMemberService;
 import com.kakaobean.core.project.application.ProjectService;
 import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
+import com.kakaobean.core.releasenote.application.ReleaseNoteService;
+import com.kakaobean.independentlysystem.image.ImageService;
 import com.kakaobean.member.MemberController;
 import com.kakaobean.project.ProjectController;
 import com.kakaobean.project.ProjectMemberController;
+import com.kakaobean.releasenote.ReleaseNoteController;
 import com.kakaobean.security.token.RefreshTokenRepository;
 import com.kakaobean.security.token.TokenProvider;
 
@@ -37,7 +41,9 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(controllers = {
         MemberController.class,
         ProjectController.class,
-        ProjectMemberController.class
+        ProjectMemberController.class,
+        ReleaseNoteController.class,
+        ImageController.class
 })
 @AutoConfigureRestDocs
 @MockBean(JpaMetamodelMappingContext.class)
@@ -83,4 +89,9 @@ public abstract class ControllerTest {
     @MockBean
     protected RefreshTokenRepository refreshTokenRepository;
 
+    @MockBean
+    protected ReleaseNoteService releaseNoteService;
+
+    @MockBean
+    protected ImageService imageService;
 }

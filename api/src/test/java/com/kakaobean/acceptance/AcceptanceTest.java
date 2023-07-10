@@ -6,6 +6,7 @@ import com.kakaobean.core.member.domain.Member;
 import com.kakaobean.core.member.domain.repository.EmailRepository;
 import com.kakaobean.core.member.domain.repository.MemberRepository;
 import io.restassured.RestAssured;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -45,10 +46,10 @@ public abstract class AcceptanceTest {
     private void createMember(String name, TestMember member) {
         memberRepository.save(new Member(
                 name,
-                        member.getEmail(),
-                        ROLE_USER,
-                        passwordEncoder.encode(member.getPassword()),
-                        AuthProvider.local, ACTIVE
+                member.getEmail(),
+                ROLE_USER,
+                passwordEncoder.encode(member.getPassword()),
+                AuthProvider.local, ACTIVE
                 )
         );
     }

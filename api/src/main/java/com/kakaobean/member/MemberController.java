@@ -1,5 +1,6 @@
 package com.kakaobean.member;
 
+import com.kakaobean.common.RandomUtils;
 import com.kakaobean.common.dto.CommandSuccessResponse;
 import com.kakaobean.core.member.application.MemberProvider;
 import com.kakaobean.core.member.application.MemberService;
@@ -22,7 +23,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.List;
+
+import static com.kakaobean.common.RandomUtils.*;
 import static org.springframework.http.HttpStatus.*;
 
 //@Timed("api.member")
@@ -43,7 +49,7 @@ public class MemberController {
 
     @PostMapping("/emails")
     public ResponseEntity sendVerificationEmail(@RequestBody @Validated SendVerifiedEmailRequest request){
-        memberService.sendVerificationEmail(request.getEmail());
+        memberService.sendVerificationEmail(request.getEmail(), creatRandomKey());
         return new ResponseEntity(CommandSuccessResponse.from("인증 이메일 발송을 성공했습니다."), OK);
     }
 
@@ -57,5 +63,13 @@ public class MemberController {
     public ResponseEntity modifyMemberPassword(@RequestBody @Validated ModifyMemberPasswordRequest request){
         memberService.modifyMemberPassword(request.toServiceDto());
         return new ResponseEntity(CommandSuccessResponse.from("비밀번호 변경에 성공하셨습니다."), OK);
+    }
+
+    @PostMapping("/members/images")
+    public ResponseEntity updateProfileImages(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                              @RequestParam MultipartFile profileImg,
+                                              @RequestParam MultipartFile thumbnailImg) throws IOException {
+        memberService.uploadProfileImages(userPrincipal.getId(), profileImg, thumbnailImg);
+        return new ResponseEntity(CommandSuccessResponse.from("프로필 이미지 업로드를 성공하셨습니다."), OK);
     }
 }

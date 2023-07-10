@@ -8,12 +8,16 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.net.PasswordAuthentication;
 import java.time.LocalDate;
 
 @Getter
+@Where(clause = "status = 'ACTIVE'")
+@SQLDelete(sql = "UPDATE member SET status = INACTIVE WHERE id = ?")
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
@@ -32,6 +36,10 @@ public class Member extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private AuthProvider authProvider;
+
+    private String profileImg;
+
+    private String thumbnailImg;
 
 
     /**
@@ -85,5 +93,10 @@ public class Member extends BaseEntity {
 
     public void updatePassword(String newPassword) {
         this.auth = new Auth(this.auth.getEmail(), newPassword);
+    }
+
+    public void modifyProfileImg(String profileImg, String thumbnailImg) {
+        this.profileImg = profileImg;
+        this.thumbnailImg = thumbnailImg;
     }
 }

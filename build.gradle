@@ -68,8 +68,6 @@ subprojects {
 						"**/util*",
 						"**/exception*",
 						"**/Q*",
-						"**/chatbot*",
-						"**/event*"
 				])
 			}))
 		}
@@ -99,8 +97,6 @@ subprojects {
 						"**.util*",
 						"**.common*",
 						"**.Q*",
-						"**.chatbot*",
-						"**.event*"
 				]
 			}
 		}

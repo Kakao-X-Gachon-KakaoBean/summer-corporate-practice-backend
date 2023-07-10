@@ -36,7 +36,7 @@ public class ProjectService {
     public void modifyProject(ModifyProjectInfoReqeustDto dto){
         ProjectMember projectAdmin = projectMemberRepository.findByMemberIdAndProjectId(dto.getAdminId(), dto.getProjectId()).orElseThrow(NotExistsProjectMemberException::new);
         projectValidator.validAdmin(projectAdmin);
-        Project project = projectRepository.findProjectById(dto.getProjectId()).orElseThrow(NotExistsProjectException::new);
+        Project project = projectRepository.findById(dto.getProjectId()).orElseThrow(NotExistsProjectException::new);
         project.modify(dto.getNewTitle(),dto.getNewContent());
     }
 }
