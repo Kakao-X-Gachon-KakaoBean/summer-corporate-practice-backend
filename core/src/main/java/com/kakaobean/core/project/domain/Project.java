@@ -2,7 +2,9 @@ package com.kakaobean.core.project.domain;
 
 import com.kakaobean.core.common.domain.BaseEntity;
 import com.kakaobean.core.common.domain.BaseStatus;
+import com.kakaobean.core.common.event.Events;
 import com.kakaobean.core.project.domain.event.ProjectMemberInvitedEvent;
+import com.kakaobean.core.project.domain.event.RemovedProjectEvent;
 import lombok.Getter;
 
 import javax.persistence.Entity;
@@ -56,5 +58,10 @@ public class Project extends BaseEntity {
     public void modify(String newTitle, String newContent){
         this.title = newTitle;
         this.content = newContent;
+    }
+
+    public void remove() {
+        super.delete();
+        Events.raise(new RemovedProjectEvent(this.id));
     }
 }
