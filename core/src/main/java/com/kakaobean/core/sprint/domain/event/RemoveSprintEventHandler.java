@@ -21,10 +21,11 @@ public class RemoveSprintEventHandler {
     @Async
     @TransactionalEventListener(RemovedProjectEvent.class)
     public void handler(RemovedProjectEvent event){
-        List<Sprint> removedSprints = sprintRepository.deleteByProjectId(event.getProjectId());
-        for (Sprint sprint: removedSprints) {
+        List<Sprint> sprints = sprintRepository.findSprintByProjectId(event.getProjectId());
+        for (Sprint sprint: sprints) {
             taskRepository.deleteBySprintId(sprint.getId());
         }
+        sprintRepository.deleteByProjectId(event.getProjectId());
     }
 
 }

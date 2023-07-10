@@ -4,13 +4,17 @@ import com.kakaobean.core.sprint.domain.Sprint;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 public interface SprintRepository extends JpaRepository<Sprint, Long> {
 
+    @Transactional
     @Modifying
-    @Query("update Sprint s set s.status = 'INACTIVE' where s.status = 'ACTIVE' and s.projectId = :projectId")
-    List<Sprint> deleteByProjectId(Long projectId);
+    @Query("update Sprint s set s.status = 'INACTIVE' where s.projectId = :projectId and s.status = 'ACTIVE'")
+    void deleteByProjectId(Long projectId);
 
+    @Query("select s from Sprint s where s.projectId = :projectId")
+    List<Sprint> findSprintByProjectId(Long projectId);
 }

@@ -25,9 +25,10 @@ public class RemoveReleaseNoteEventHandler {
     @Async
     @TransactionalEventListener(RemovedProjectEvent.class)
     public void handle(RemovedProjectEvent event){
-        List<ReleaseNote> removedReleaseNotes = releaseNoteRepository.deleteByProjectId(event.getProjectId());
-        for (ReleaseNote releaseNote: removedReleaseNotes) {
+        List<ReleaseNote> releaseNotes = releaseNoteRepository.findByProjectId(event.getProjectId());
+        for (ReleaseNote releaseNote: releaseNotes) {
             historyRepository.deleteByReleaseNoteId(releaseNote.getId());
         }
+        releaseNoteRepository.deleteByProjectId(event.getProjectId());
     }
 }
