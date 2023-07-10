@@ -72,5 +72,4 @@ public class ProjectAcceptanceTask {
                 .then().log().all()
                 .extract();
     }
-
 }

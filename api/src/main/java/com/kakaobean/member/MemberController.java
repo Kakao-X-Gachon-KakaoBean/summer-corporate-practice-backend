@@ -1,5 +1,6 @@
 package com.kakaobean.member;
 
+import com.kakaobean.common.RandomUtils;
 import com.kakaobean.common.dto.CommandSuccessResponse;
 import com.kakaobean.core.member.application.MemberProvider;
 import com.kakaobean.core.member.application.MemberService;
@@ -23,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import static com.kakaobean.common.RandomUtils.*;
 import static org.springframework.http.HttpStatus.*;
 
 //@Timed("api.member")
@@ -43,7 +45,7 @@ public class MemberController {
 
     @PostMapping("/emails")
     public ResponseEntity sendVerificationEmail(@RequestBody @Validated SendVerifiedEmailRequest request){
-        memberService.sendVerificationEmail(request.getEmail());
+        memberService.sendVerificationEmail(request.getEmail(), creatRandomKey());
         return new ResponseEntity(CommandSuccessResponse.from("인증 이메일 발송을 성공했습니다."), OK);
     }
 

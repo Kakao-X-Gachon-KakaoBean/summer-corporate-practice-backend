@@ -25,7 +25,6 @@ public class ProjectAcceptanceTest extends AcceptanceTest {
     @Autowired
     ProjectMemberRepository projectMemberRepository;
 
-
     @Test
     void 프로젝트를_만든다(){
 

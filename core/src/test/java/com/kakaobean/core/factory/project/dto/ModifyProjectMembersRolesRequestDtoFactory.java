@@ -1,4 +1,4 @@
-package com.kakaobean.core.factory.project;
+package com.kakaobean.core.factory.project.dto;
 
 import com.kakaobean.core.project.application.dto.request.ModifyProjectMemberRoleRequestDto;
 import com.kakaobean.core.project.application.dto.request.ModifyProjectMembersRolesRequestDto;

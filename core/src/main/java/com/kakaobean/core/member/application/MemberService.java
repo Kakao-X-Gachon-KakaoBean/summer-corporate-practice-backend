@@ -33,8 +33,8 @@ public class MemberService {
         Member savedMember = memberRepository.save(member);
     }
 
-    public void sendVerificationEmail(String email) {
-        memberVerifiedEmailService.sendVerificationEmail(email);
+    public void sendVerificationEmail(String email, String authKey) {
+        memberVerifiedEmailService.sendVerificationEmail(email, authKey);
     }
 
     @Transactional(readOnly = false)
