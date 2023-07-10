@@ -3,7 +3,7 @@ jar { enabled = true }
 
 dependencies {
 	implementation 'com.amazonaws:aws-java-sdk-ses:1.12.3'
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 	implementation project(':common')
-
 }
 

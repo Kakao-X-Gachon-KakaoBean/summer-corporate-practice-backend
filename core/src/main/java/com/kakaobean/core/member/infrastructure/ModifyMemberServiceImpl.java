@@ -31,7 +31,8 @@ public class ModifyMemberServiceImpl implements ModifyMemberService {
         member.updatePassword(passwordEncoder.encode(passwordToChange));
     }
 
-    private boolean passwordChangeValidationFailed(String passwordToChange, String checkPasswordToChange) {
+    private boolean passwordChangeValidationFailed(String passwordToChange,
+                                                   String checkPasswordToChange) {
         return !passwordToChange.equals(checkPasswordToChange);
     }
 }

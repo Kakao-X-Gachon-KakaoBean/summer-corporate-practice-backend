@@ -39,6 +39,8 @@
 * link:/docs/member/register_member.html[로컬 멤버 생성 API, window=_blank ]
 * link:/docs/member/find_member_info.html[멤버 정보 찾기 API, window=_blank ]
 * link:/docs/member/modify_member_password.html[멤버 비밀번호 변경 API, window=_blank ]
+* link:/docs/member/upload_member_profile.html[멤버 프로필 이미지 업로드 API, window=_blank ]
+
 
 == 인증 API
 
@@ -56,3 +58,10 @@
 * link:/docs/project/modify_project_members_roles.html[프로젝트 멤버 역할(권한) 수정 API, window=_blank ]
 * link:/docs/project/modify_project_info.html[프로젝트 정보(제목&내용) 수정 API, window=_blank ]
 
+== 공통 API
+
+* link:/docs/common/upload_image.html[단일 이미지 업로드 API, window=_blank ]
+
+== 릴리즈 노트 API
+
+* link:/docs/release_note/deploy_release_note.html[릴리즈 노트 배포 API, window=_blank ]

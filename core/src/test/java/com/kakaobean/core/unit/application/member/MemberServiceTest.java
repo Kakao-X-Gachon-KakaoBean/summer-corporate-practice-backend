@@ -17,6 +17,7 @@ import com.kakaobean.core.member.infrastructure.ModifyMemberServiceImpl;
 import com.kakaobean.core.unit.UnitTest;
 
 import com.kakaobean.independentlysystem.email.EmailSender;
+import com.kakaobean.independentlysystem.image.ImageService;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -52,6 +53,9 @@ public class MemberServiceTest extends UnitTest {
     @Mock
     EmailRepository emailRepository;
 
+    @Mock
+    ImageService imageService;
+
     @BeforeEach
     void beforeEach(){
         memberVerifiedEmailService = new MemberVerifiedEmailServiceImpl(
@@ -63,7 +67,8 @@ public class MemberServiceTest extends UnitTest {
                 memberRepository,
                 new MemberValidator(memberRepository),
                 memberVerifiedEmailService,
-                new ModifyMemberServiceImpl()
+                new ModifyMemberServiceImpl(),
+                imageService
         );
 
     }
