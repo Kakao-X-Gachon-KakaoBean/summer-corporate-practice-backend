@@ -54,6 +54,7 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                         project.status
                 ))
                 .from(project)
+                .join(projectMember).on(projectMember.id.eq(project.id))
                 .where(
                         project.status.eq(ACTIVE),
                         projectMember.memberId.eq(memberId)
