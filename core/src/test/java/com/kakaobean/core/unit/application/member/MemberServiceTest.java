@@ -288,10 +288,9 @@ public class MemberServiceTest extends UnitTest {
         result.isInstanceOf(OAuthMemberCanNotChangePasswordException.class);
     }
 
-    //TODO: scenarios_unit for name changes
     @DisplayName("멤버 이름 변경을 성공한다.")
     @Test
-    void successModifyMemberName(){
+    void successModifyMemberInfo(){
 
         //given
         String newName = "newHiki";
@@ -307,7 +306,7 @@ public class MemberServiceTest extends UnitTest {
 
     @DisplayName("로컬 회원 가입만 이름 변경을 진행할 수 있다.")
     @Test
-    void failModifyMemberNameCase1(){
+    void failModifyMemberInfoCase1(){
 
         //given
         String newName = "newHiki";
@@ -330,7 +329,7 @@ public class MemberServiceTest extends UnitTest {
 
     @DisplayName("바꾸려는 이름이 기존 이름과 같은 경우 변경할 수 없다.")
     @Test
-    void failModifyMemberNameCase2(){
+    void failModifyMemberInfoCase2(){
 
         //given
         String newName = "kakoBean";

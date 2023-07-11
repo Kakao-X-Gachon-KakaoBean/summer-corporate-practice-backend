@@ -4,7 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class ModifyMemberRequestDto {
-    //TODO: parse date for name change
 
     private Long memberId;
     private String nameToChange;

@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class ModifyMemberRequest {
-    //TODO: send data to core(API)
 
     private String nameToChange;
 
