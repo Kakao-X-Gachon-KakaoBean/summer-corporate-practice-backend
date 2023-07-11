@@ -37,6 +37,7 @@ public class MemberService {
         member.validate(memberValidator);
         member.verifyEmail(memberVerifiedEmailService, dto.getEmailAuthKey());
         memberRepository.save(member);
+        member.registered();
     }
 
     public void sendVerificationEmail(String email, String authKey) {

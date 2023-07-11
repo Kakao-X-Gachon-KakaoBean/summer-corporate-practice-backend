@@ -5,7 +5,7 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class SendDeploymentReleaseNoteNotificationEvent extends SendNotificationEvent {
+public class SendDeploymentReleaseNoteNotificationEvent extends NotificationSendedEvent {
 
     private Long releaseNoteId;
 

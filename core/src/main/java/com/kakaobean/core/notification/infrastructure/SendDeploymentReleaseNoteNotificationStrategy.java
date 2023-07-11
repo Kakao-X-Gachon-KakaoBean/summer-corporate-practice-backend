@@ -2,7 +2,7 @@ package com.kakaobean.core.notification.infrastructure;
 
 import com.kakaobean.common.EmailHtmlUtils;
 import com.kakaobean.core.notification.domain.event.SendDeploymentReleaseNoteNotificationEvent;
-import com.kakaobean.core.notification.domain.event.SendNotificationEvent;
+import com.kakaobean.core.notification.domain.event.NotificationSendedEvent;
 import com.kakaobean.core.notification.domain.service.send.email.SendEmailNotificationStrategy;
 import com.kakaobean.independentlysystem.email.EmailSender;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ public class SendDeploymentReleaseNoteNotificationStrategy implements SendEmailN
     }
 
     @Override
-    public void send(SendNotificationEvent event) {
+    public void send(NotificationSendedEvent event) {
         SendDeploymentReleaseNoteNotificationEvent notificationEvent = (SendDeploymentReleaseNoteNotificationEvent) event;
         String title = notificationEvent.getProjectTitle() + " 프로젝트 릴리즈 노트 배포 안내입니다.";
         String url = "localhost:3000/projects/" + notificationEvent.getProjectId() + "/release-notes/" + notificationEvent.getReleaseNoteId();
@@ -38,7 +38,7 @@ public class SendDeploymentReleaseNoteNotificationStrategy implements SendEmailN
     }
 
     @Override
-    public boolean support(Class<? extends SendNotificationEvent> eventClass) {
+    public boolean support(Class<? extends NotificationSendedEvent> eventClass) {
         return eventClass == SendDeploymentReleaseNoteNotificationEvent.class;
     }
 }

@@ -10,7 +10,6 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Getter
 @Entity
@@ -48,7 +47,7 @@ public class ReleaseNote extends BaseEntity {
         this.memberId = memberId;
     }
 
-    public void registered() {
-        Events.raise(new ReleaseNoteRegisteredEvent(id));
+    public void deployed() {
+        Events.raise(new ReleaseNoteDeployedEvent(id));
     }
 }

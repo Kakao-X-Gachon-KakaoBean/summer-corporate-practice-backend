@@ -2,7 +2,9 @@ package com.kakaobean.core.project.domain;
 
 import com.kakaobean.core.common.domain.BaseEntity;
 import com.kakaobean.core.common.domain.BaseStatus;
+import com.kakaobean.core.common.event.Events;
 import com.kakaobean.core.project.domain.event.ProjectMemberInvitedEvent;
+import com.kakaobean.core.project.domain.event.ProjectRegisteredEvent;
 import lombok.Getter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -60,5 +62,9 @@ public class Project extends BaseEntity {
     public void modify(String newTitle, String newContent){
         this.title = newTitle;
         this.content = newContent;
+    }
+
+    public void registered(Long adminId){
+        Events.raise(new ProjectRegisteredEvent(id, adminId));
     }
 }

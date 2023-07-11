@@ -1,11 +1,11 @@
-package com.kakaobean.core.notification.domain.service.save.strategy;
+package com.kakaobean.core.notification.domain.service.register.strategy;
 
 import com.kakaobean.core.notification.domain.Notification;
 import com.kakaobean.core.notification.domain.NotificationRepository;
 import com.kakaobean.core.notification.domain.NotificationType;
 
 import com.kakaobean.core.notification.domain.event.SendDeploymentReleaseNoteNotificationEvent;
-import com.kakaobean.core.notification.domain.event.SendNotificationEvent;
+import com.kakaobean.core.notification.domain.event.NotificationSendedEvent;
 import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
@@ -22,7 +22,7 @@ import static com.kakaobean.core.common.domain.BaseStatus.*;
 import static com.kakaobean.core.notification.domain.NotificationType.*;
 
 @RequiredArgsConstructor
-public class SaveDeploymentReleaseNoteNotificationStrategy implements SaveNotificationStrategy {
+public class RegisterDeploymentReleaseNoteNotificationStrategy implements RegisterNotificationStrategy {
 
     private final ReleaseNoteRepository releaseNoteRepository;
     private final NotificationRepository notificationRepository;
@@ -30,7 +30,7 @@ public class SaveDeploymentReleaseNoteNotificationStrategy implements SaveNotifi
     private final ProjectRepository projectRepository;
 
     @Override
-    public SendNotificationEvent save(Long releaseNoteId) {
+    public NotificationSendedEvent register(Long releaseNoteId) {
         ReleaseNote releaseNote = releaseNoteRepository.findById(releaseNoteId)
                 .orElseThrow(NotExistsReleaseNoteException::new);
         Project project = projectRepository.findById(releaseNote.getProjectId())

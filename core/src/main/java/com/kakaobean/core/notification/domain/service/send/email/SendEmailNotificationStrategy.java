@@ -1,9 +1,8 @@
 package com.kakaobean.core.notification.domain.service.send.email;
 
-import com.kakaobean.core.notification.domain.NotificationType;
-import com.kakaobean.core.notification.domain.event.SendNotificationEvent;
+import com.kakaobean.core.notification.domain.event.NotificationSendedEvent;
 
 public interface SendEmailNotificationStrategy {
-    void send(SendNotificationEvent event);
-    boolean support(Class<? extends SendNotificationEvent> eventClass);
+    void send(NotificationSendedEvent event);
+    boolean support(Class<? extends NotificationSendedEvent> eventClass);
 }
