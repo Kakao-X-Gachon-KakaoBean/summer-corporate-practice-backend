@@ -290,7 +290,7 @@ public class MemberServiceTest extends UnitTest {
 
     @DisplayName("멤버 이름 변경을 성공한다.")
     @Test
-    void successModifyMemberInfo(){
+    void successModifyMember(){
 
         //given
         String newName = "newHiki";
@@ -298,7 +298,7 @@ public class MemberServiceTest extends UnitTest {
         given(memberRepository.findMemberById(Mockito.anyLong())).willReturn(Optional.of(member));
 
         //when
-        memberService.modifyMemberInfo(new ModifyMemberRequestDto(member.getId(), newName));
+        memberService.modifyMember(new ModifyMemberRequestDto(member.getId(), newName));
 
         //then
         assertThat(newName.equals(member.getName())).isTrue();
@@ -306,7 +306,7 @@ public class MemberServiceTest extends UnitTest {
 
     @DisplayName("로컬 회원 가입만 이름 변경을 진행할 수 있다.")
     @Test
-    void failModifyMemberInfoCase1(){
+    void failModifyMemberCase1(){
 
         //given
         String newName = "newHiki";
@@ -320,7 +320,7 @@ public class MemberServiceTest extends UnitTest {
 
         //when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
-            memberService.modifyMemberInfo(new ModifyMemberRequestDto(member.getId(), newName));
+            memberService.modifyMember(new ModifyMemberRequestDto(member.getId(), newName));
         });
 
         //then
@@ -329,7 +329,7 @@ public class MemberServiceTest extends UnitTest {
 
     @DisplayName("바꾸려는 이름이 기존 이름과 같은 경우 변경할 수 없다.")
     @Test
-    void failModifyMemberInfoCase2(){
+    void failModifyMemberCase2(){
 
         //given
         String newName = "kakoBean";
@@ -339,7 +339,7 @@ public class MemberServiceTest extends UnitTest {
 
         //when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
-            memberService.modifyMemberInfo(new ModifyMemberRequestDto(member.getId(), newName));
+            memberService.modifyMember(new ModifyMemberRequestDto(member.getId(), newName));
         });
 
         //then

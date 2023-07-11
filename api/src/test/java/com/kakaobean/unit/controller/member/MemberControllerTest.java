@@ -166,7 +166,7 @@ public class MemberControllerTest extends ControllerTest {
     @Test
     @WithMockUser
     @DisplayName("멤버 정보 수정(현재는 이름만 수정 가능)")
-    void modifyMemberInfo() throws Exception {
+    void modifyMember() throws Exception {
 
         ModifyMemberRequest request =
                 new ModifyMemberRequest("newName");
