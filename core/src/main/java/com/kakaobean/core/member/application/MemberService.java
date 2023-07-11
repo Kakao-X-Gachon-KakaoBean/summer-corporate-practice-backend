@@ -45,10 +45,10 @@ public class MemberService {
         member.modifyPassword(modifyMemberService, dto.getPasswordToChange(), dto.getCheckPasswordToChange());
     }
 
-    //    TODO:
+    //TODO: modifyMemberName
     @Transactional
     public void modifyMemberName(ModifyMemberRequestDto dto){
         Member member = memberRepository.findMemberById(dto.getMemberId()).orElseThrow(NotExistsMemberException::new);
-        member.modifyMemberName(dto.getNameToChange());
+        member.modifyName(modifyMemberService, dto.getNameToChange());
     }
 }

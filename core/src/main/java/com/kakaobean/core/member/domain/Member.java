@@ -88,6 +88,9 @@ public class Member extends BaseEntity {
     }
 
 // TODO:
-//  modifyMemberName(String newUsername)
-    public void modifyMemberName(String newName) { this.name = newName; }
+
+    public void modifyName(ModifyMemberService modifyMemberService, String newName){
+        modifyMemberService.modifyName(this, newName);
+    }
+    public void updateMemberName(String newName) { this.name = newName; }
 }

@@ -158,7 +158,7 @@ public class MemberControllerTest extends ControllerTest {
         ));
     }
 
-    //TODO: test modifyMember - Controller
+    //TODO: test modifyMember - Controller - 아마 끝?
     @Test
     @WithMockUser
     @DisplayName("멤버 정보 수정(현재는 이름만 수정 가능)")
@@ -183,7 +183,7 @@ public class MemberControllerTest extends ControllerTest {
                 getDocumentRequest(),
                 getDocumentResponse(),
                 requestFields(
-                        fieldWithPath("passwordToChange").type(STRING).description("변경할 이름")
+                        fieldWithPath("nameToChange").type(STRING).description("변경할 이름")
                 ),
                 responseFields(
                         fieldWithPath("message").type(STRING).description("성공메시지")

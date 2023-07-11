@@ -309,4 +309,5 @@ public class MemberServiceIntegrationTest extends IntegrationTest {
         //then
         result.isInstanceOf(OAuthMemberCanNotChangePasswordException.class);
     }
+
 }
