@@ -1,0 +1,15 @@
+= 프로젝트 멤버 정보(제목, 내용) 수정
+
+== 요청
+
+include::{snippets}/modify_projects_info/http-request.adoc[]
+
+include::{snippets}/modify_projects_info/request-fields.adoc[]
+
+include::{snippets}/modify_projects_info/path-parameters.adoc[]
+
+== 응답
+
+include::{snippets}/modify_projects_info/http-response.adoc[]
+
+include::{snippets}/modify_projects_info/response-fields.adoc[]

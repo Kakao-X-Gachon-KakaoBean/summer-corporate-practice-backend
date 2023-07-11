@@ -1,0 +1,15 @@
+= 멤버 프로필 이미지 업로드
+
+**로그인한 유저만 사용할 수 있다.**
+
+== 요청
+
+include::{snippets}/upload_member_profile/http-request.adoc[]
+
+include::{snippets}/upload_member_profile/request-parts.adoc[]
+
+== 응답
+
+include::{snippets}/upload_member_profile/http-response.adoc[]
+
+include::{snippets}/upload_member_profile/response-fields.adoc[]

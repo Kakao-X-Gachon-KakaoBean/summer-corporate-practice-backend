@@ -3,6 +3,8 @@ package com.kakaobean.core.project.domain;
 import com.kakaobean.core.common.domain.BaseEntity;
 import com.kakaobean.core.common.domain.BaseStatus;
 import lombok.Getter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,6 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Getter
+@Where(clause = "status = 'ACTIVE'")
+@SQLDelete(sql = "UPDATE project_member SET status = INACTIVE WHERE id = ?")
 @Entity
 public class ProjectMember extends BaseEntity {
 

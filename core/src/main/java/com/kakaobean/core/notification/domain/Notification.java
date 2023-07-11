@@ -5,10 +5,14 @@ import com.kakaobean.core.common.domain.BaseStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
 @Getter
+@Where(clause = "status = 'ACTIVE'")
+@SQLDelete(sql = "UPDATE notification SET status = INACTIVE WHERE id = ?")
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Notification extends BaseEntity {

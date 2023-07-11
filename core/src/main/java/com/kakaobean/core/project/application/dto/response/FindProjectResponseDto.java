@@ -1,5 +1,6 @@
 package com.kakaobean.core.project.application.dto.response;
 
+import com.kakaobean.core.common.domain.BaseStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
