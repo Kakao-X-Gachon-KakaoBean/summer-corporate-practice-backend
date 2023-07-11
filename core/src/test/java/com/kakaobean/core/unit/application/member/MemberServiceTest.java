@@ -290,7 +290,7 @@ public class MemberServiceTest extends UnitTest {
         given(memberRepository.findMemberById(Mockito.anyLong())).willReturn(Optional.of(member));
 
         //when
-        memberService.modifyMemberName(new ModifyMemberRequestDto(member.getId(), newName));
+        memberService.modifyMemberInfo(new ModifyMemberRequestDto(member.getId(), newName));
 
         //then
         assertThat(newName.equals(member.getName())).isTrue();
@@ -312,10 +312,29 @@ public class MemberServiceTest extends UnitTest {
 
         //when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
-            memberService.modifyMemberName(new ModifyMemberRequestDto(member.getId(), newName));
+            memberService.modifyMemberInfo(new ModifyMemberRequestDto(member.getId(), newName));
         });
 
         //then
         result.isInstanceOf(OAuthMemberCanNotChangeNameException.class);
+    }
+
+    @DisplayName("바꾸려는 이름이 기존 이름과 같은 경우 변경할 수 없다.")
+    @Test
+    void failModifyMemberNameCase2(){
+
+        //given
+        String newName = "kakoBean";
+        //일단 같은 이름으로 하려고 이렇게 했는데, 혹시 생성자를 써서 하는 다른 방법으로 바꿔야하나요?
+        Member member = MemberFactory.create();
+        given(memberRepository.findMemberById(member.getId())).willReturn(Optional.of(member));
+
+        //when
+        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
+            memberService.modifyMemberInfo(new ModifyMemberRequestDto(member.getId(), newName));
+        });
+
+        //then
+        result.isInstanceOf(ChangingNameToSameNameException.class);
     }
 }

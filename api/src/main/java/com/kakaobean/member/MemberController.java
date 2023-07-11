@@ -59,8 +59,8 @@ public class MemberController {
     //TODO:
     // public ResponseEntity modifyMemberName(){}
     @PatchMapping("/members/name")
-    public ResponseEntity modifyMemberName(@RequestBody @Validated ModifyMemberRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal){
-        memberService.modifyMemberName(request.toServiceDto(userPrincipal.getId()));
+    public ResponseEntity modifyMemberInfo(@RequestBody @Validated ModifyMemberRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal){
+        memberService.modifyMemberInfo(request.toServiceDto(userPrincipal.getId()));
         return new ResponseEntity(CommandSuccessResponse.from("멤버 이름 변경에 성공하셨습니다."), OK);
     }
 }

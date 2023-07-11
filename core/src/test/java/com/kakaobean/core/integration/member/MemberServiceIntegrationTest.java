@@ -3,6 +3,7 @@ package com.kakaobean.core.integration.member;
 import com.kakaobean.core.factory.member.MemberFactory;
 import com.kakaobean.core.member.application.MemberProvider;
 import com.kakaobean.core.member.application.dto.request.ModifyMemberPasswordRequestDto;
+import com.kakaobean.core.member.application.dto.request.ModifyMemberRequestDto;
 import com.kakaobean.core.member.application.dto.response.FindEmailResponseDto;
 import com.kakaobean.core.member.application.dto.response.FindMemberInfoResponseDto;
 import com.kakaobean.core.member.domain.*;
@@ -310,4 +311,63 @@ public class MemberServiceIntegrationTest extends IntegrationTest {
         result.isInstanceOf(OAuthMemberCanNotChangePasswordException.class);
     }
 
+    @DisplayName("멤버 정보(이름) 변경을 성공한다.")
+    @Test
+    void successModifyMemberInfo(){
+
+        //given
+        String newName = "newHiki";
+        Member member = MemberFactory.create();
+        memberRepository.save(member);
+
+        //when
+        memberService.modifyMemberInfo(new ModifyMemberRequestDto(member.getId(), newName));
+
+        //then
+        Member result = memberRepository.findMemberById(member.getId()).get();
+        assertThat(newName.equals(result.getName())).isTrue();
+    }
+
+    @DisplayName("로컬 회원 가입만 회원 정보 변경을 진행할 수 있다.")
+    @Test
+    void failModifyMemberInfoCase1(){
+
+        //given
+        String newName="newHiki";
+        String authKey = "111336";
+        String email = "123@gmail.com";
+        Member member = Member.builder()
+                .authProvider(AuthProvider.google)
+                .auth(new Auth(email, authKey))
+                .build();
+        memberRepository.save(member);
+        emailRepository.save(new Email(member.getAuth().getEmail(), authKey));
+
+        //when
+        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
+            memberService.modifyMemberInfo(new ModifyMemberRequestDto(member.getId(), newName));
+        });
+
+        //then
+        result.isInstanceOf(OAuthMemberCanNotChangeNameException.class);
+    }
+
+    @DisplayName("바꾸려는 이름이 기존 이름과 같은 경우 변경할 수 없다.")
+    @Test
+    void failModifyMemberInfoCase2(){
+
+        //given
+        String newName = "kakoBean";
+        //일단 같은 이름으로 하려고 이렇게 했는데, 혹시 생성자를 써서 하는 다른 방법으로 바꿔야하나요?
+        Member member = MemberFactory.create();
+        memberRepository.save(member);
+
+        //when
+        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
+            memberService.modifyMemberInfo(new ModifyMemberRequestDto(member.getId(), newName));
+        });
+
+        //then
+        result.isInstanceOf(ChangingNameToSameNameException.class);
+    }
 }
