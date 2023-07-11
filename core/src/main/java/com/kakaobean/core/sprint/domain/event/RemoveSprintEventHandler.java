@@ -7,6 +7,7 @@ import com.kakaobean.core.sprint.domain.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class RemoveSprintEventHandler {
     private final TaskRepository taskRepository;
 
     @Async
+    @Transactional
     @TransactionalEventListener(RemovedProjectEvent.class)
     public void handler(RemovedProjectEvent event){
         List<Sprint> sprints = sprintRepository.findSprintByProjectId(event.getProjectId());

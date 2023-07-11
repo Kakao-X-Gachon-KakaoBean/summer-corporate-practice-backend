@@ -2,15 +2,13 @@ package com.kakaobean.core.unit.application.releasenote;
 
 
 import com.kakaobean.core.common.event.Events;
-import com.kakaobean.core.factory.project.dto.FindProjectMemberResponseDtoFactory;
 import com.kakaobean.core.factory.project.dto.RegisterReleaseNoteRequestDtoFactory;
 import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
-import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
 import com.kakaobean.core.releasenote.application.ReleaseNoteService;
 import com.kakaobean.core.releasenote.domain.ReleaseNote;
 import com.kakaobean.core.releasenote.domain.ReleaseNoteRegisteredEvent;
-import com.kakaobean.core.releasenote.domain.ReleaseNoteRepository;
+import com.kakaobean.core.releasenote.domain.repository.ReleaseNoteRepository;
 import com.kakaobean.core.releasenote.domain.ReleaseNoteValidator;
 import com.kakaobean.core.unit.UnitTest;
 import org.junit.jupiter.api.AfterEach;

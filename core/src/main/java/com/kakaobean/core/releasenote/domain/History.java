@@ -1,6 +1,8 @@
 package com.kakaobean.core.releasenote.domain;
 
 import com.kakaobean.core.common.domain.BaseEntity;
+import com.kakaobean.core.common.domain.BaseStatus;
+import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -22,6 +24,17 @@ public class History extends BaseEntity {
 
     private Long releaseNoteId;
 
+    /**
+     * 테스트용
+     */
+    @Builder
+    public History(BaseStatus status,
+                   Long id,
+                   Long releaseNoteId) {
+        super(BaseStatus.ACTIVE);
+        this.id = id;
+        this.releaseNoteId = releaseNoteId;
+    }
 
-
+    public History() {}
 }

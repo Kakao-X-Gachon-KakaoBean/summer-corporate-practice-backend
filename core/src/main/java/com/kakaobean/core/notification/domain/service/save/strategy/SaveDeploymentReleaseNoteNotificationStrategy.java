@@ -11,7 +11,7 @@ import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.project.exception.NotExistsProjectException;
 import com.kakaobean.core.releasenote.domain.ReleaseNote;
-import com.kakaobean.core.releasenote.domain.ReleaseNoteRepository;
+import com.kakaobean.core.releasenote.domain.repository.ReleaseNoteRepository;
 import com.kakaobean.core.releasenote.exception.NotExistsReleaseNoteException;
 import lombok.RequiredArgsConstructor;
 

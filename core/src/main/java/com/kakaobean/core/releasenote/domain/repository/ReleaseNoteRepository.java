@@ -1,16 +1,15 @@
-package com.kakaobean.core.releasenote.domain;
+package com.kakaobean.core.releasenote.domain.repository;
 
 
+import com.kakaobean.core.releasenote.domain.ReleaseNote;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 public interface ReleaseNoteRepository extends JpaRepository<ReleaseNote, Long> {
 
-    @Transactional
     @Modifying
     @Query("update ReleaseNote rn set rn.status = 'INACTIVE' where rn.projectId = :projectId and rn.status = 'ACTIVE'")
     void deleteByProjectId(Long projectId);

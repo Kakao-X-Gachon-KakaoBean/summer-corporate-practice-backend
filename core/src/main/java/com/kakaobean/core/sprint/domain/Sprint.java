@@ -2,6 +2,8 @@ package com.kakaobean.core.sprint.domain;
 
 
 import com.kakaobean.core.common.domain.BaseEntity;
+import com.kakaobean.core.common.domain.BaseStatus;
+import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -32,5 +34,23 @@ public class Sprint extends BaseEntity {
 
     private LocalDate endDate;
 
-
+    /**
+     * 테스트용
+     */
+    @Builder
+    public Sprint(BaseStatus status,
+                  Long id,
+                  Long projectId,
+                  String title,
+                  String description,
+                  LocalDate startDate,
+                  LocalDate endDate) {
+        super(status);
+        this.id = id;
+        this.projectId = projectId;
+        this.title = title;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 }

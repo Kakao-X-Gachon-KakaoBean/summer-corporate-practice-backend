@@ -5,7 +5,7 @@ import com.kakaobean.core.notification.domain.service.save.SaveNotificationServi
 import com.kakaobean.core.notification.domain.service.save.strategy.SaveDeploymentReleaseNoteNotificationStrategy;
 import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
-import com.kakaobean.core.releasenote.domain.ReleaseNoteRepository;
+import com.kakaobean.core.releasenote.domain.repository.ReleaseNoteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

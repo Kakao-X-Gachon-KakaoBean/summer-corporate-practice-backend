@@ -15,7 +15,6 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectMember, Lo
     @Query("select pm from ProjectMember pm where pm.memberId = :memberId and pm.projectId = :projectId")
     Optional<ProjectMember> findByMemberIdAndProjectId(@Param("memberId") Long memberId, @Param("projectId") Long ProjectId);
 
-    @Transactional
     @Modifying
     @Query("update ProjectMember pm set pm.status = 'INACTIVE' where pm.projectId = :projectId and pm.status = 'ACTIVE'")
     void deleteByProjectId(Long projectId);
