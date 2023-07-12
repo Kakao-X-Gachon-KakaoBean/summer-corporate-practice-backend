@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 public class TaskFactory {
 
-    public TaskFactory() {}
+    private TaskFactory() {}
 
     public static Task createTask(Long sprintId, Long workerId){
         return Task.builder()

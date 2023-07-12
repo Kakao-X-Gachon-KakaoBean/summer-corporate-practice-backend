@@ -3,7 +3,7 @@ package com.kakaobean.core.factory.issue;
 import com.kakaobean.core.issue.domain.Issue;
 
 public class IssueFactory {
-    public IssueFactory() {}
+    private IssueFactory() {}
 
     public static Issue create(Long projectId){
         return Issue.builder()

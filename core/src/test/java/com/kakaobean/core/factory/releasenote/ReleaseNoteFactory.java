@@ -4,9 +4,9 @@ import com.kakaobean.core.releasenote.domain.ReleaseNote;
 
 public class ReleaseNoteFactory {
 
-    public ReleaseNoteFactory() {}
+    private ReleaseNoteFactory() {}
 
-    public static ReleaseNote create(Long memberId, Long projectId){
+    private static ReleaseNote create(Long memberId, Long projectId){
         return ReleaseNote.builder()
                 .id(1L)
                 .title("릴리즈노트 제목")

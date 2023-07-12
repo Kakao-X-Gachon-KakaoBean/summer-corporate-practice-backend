@@ -5,7 +5,7 @@ import com.kakaobean.core.sprint.domain.Sprint;
 import java.time.LocalDate;
 
 public class SprintFactory {
-    public SprintFactory() {}
+    private SprintFactory() {}
 
     public static Sprint createSprint(Long projectId){
         return Sprint.builder()
