@@ -2,32 +2,22 @@ package com.kakaobean.core.integration.releasenote;
 
 
 import com.kakaobean.core.factory.project.ProjectFactory;
-import com.kakaobean.core.factory.project.ProjectMemberFactory;
 import com.kakaobean.core.integration.IntegrationTest;
 import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.ProjectMember;
-import com.kakaobean.core.project.domain.ProjectRole;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.releasenote.application.ReleaseNoteService;
-import com.kakaobean.core.releasenote.domain.ReleaseNote;
-import com.kakaobean.core.releasenote.domain.ReleaseNoteRepository;
-import com.kakaobean.core.releasenote.domain.ReleaseNoteValidator;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import com.kakaobean.core.releasenote.domain.repository.ReleaseNoteRepository;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
 import static com.kakaobean.core.factory.project.ProjectMemberFactory.*;
-import static com.kakaobean.core.factory.project.ProjectMemberFactory.createAdmin;
 import static com.kakaobean.core.factory.project.dto.RegisterReleaseNoteRequestDtoFactory.*;
 import static com.kakaobean.core.project.domain.ProjectRole.*;
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.BDDMockito.*;
 
 public class ReleaseNoteServiceTest extends IntegrationTest {
 

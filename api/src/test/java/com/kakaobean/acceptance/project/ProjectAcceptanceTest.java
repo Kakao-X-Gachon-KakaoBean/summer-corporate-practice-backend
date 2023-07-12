@@ -1,22 +1,29 @@
 package com.kakaobean.acceptance.project;
 
 import com.kakaobean.acceptance.AcceptanceTest;
+import com.kakaobean.acceptance.releasenote.ReleaseNoteAcceptanceTask;
 import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
+import com.kakaobean.core.releasenote.domain.ReleaseNote;
+import com.kakaobean.core.releasenote.domain.repository.ReleaseNoteRepository;
 import com.kakaobean.project.dto.request.InviteProjectMemberRequest;
 import com.kakaobean.project.dto.request.ModifyProjectInfoRequest;
 import com.kakaobean.project.dto.request.RegisterProjectMemberRequest;
 import com.kakaobean.project.dto.request.RegisterProjectRequest;
+import com.kakaobean.releasenote.dto.request.DeployReleaseNoteRequest;
 import io.restassured.response.ExtractableResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
 
 import static com.kakaobean.acceptance.TestMember.*;
 import static org.assertj.core.api.Assertions.*;
 
+@Slf4j
 public class ProjectAcceptanceTest extends AcceptanceTest {
 
     @Autowired
@@ -24,6 +31,9 @@ public class ProjectAcceptanceTest extends AcceptanceTest {
 
     @Autowired
     ProjectMemberRepository projectMemberRepository;
+
+    @Autowired
+    ReleaseNoteRepository releaseNoteRepository;
 
     @Test
     void 프로젝트를_만든다(){
@@ -83,6 +93,28 @@ public class ProjectAcceptanceTest extends AcceptanceTest {
 
         //then
         assertThat(response.statusCode()).isEqualTo(200);
+    }
+
+    @Test
+    @Rollback(value = false)
+    void 어드민이_프로젝트를_삭제한다(){
+        //given
+        RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
+        ProjectAcceptanceTask.registerProjectTask(givenRequest);
+        Project project = projectRepository.findAll().get(0);
+
+        DeployReleaseNoteRequest request = new DeployReleaseNoteRequest("코코노트 초기 릴리즈 노트", ".. 배포 내용", 1.1, project.getId());
+        ReleaseNoteAcceptanceTask.deployReleaseNoteTask(request);
+        ReleaseNote releaseNote = releaseNoteRepository.findByProjectId(project.getId()).get(0);
+
+        //when
+        ExtractableResponse response = ProjectAcceptanceTask.removeProjectTask(project.getId());
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(projectRepository.findAll().size()).isEqualTo(0);
+        assertThat(projectMemberRepository.findAll().size()).isEqualTo(0);
+        assertThat(releaseNoteRepository.findAll().size()).isEqualTo(0);
     }
 }
 
