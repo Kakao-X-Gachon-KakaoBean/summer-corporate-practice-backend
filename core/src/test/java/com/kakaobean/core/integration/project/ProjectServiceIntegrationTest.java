@@ -26,6 +26,9 @@ import com.kakaobean.core.releasenote.domain.repository.ReleaseNoteRepository;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
+
+import java.util.concurrent.TimeUnit;
 
 import static com.kakaobean.core.common.domain.BaseStatus.ACTIVE;
 import static com.kakaobean.core.factory.member.MemberFactory.create;
@@ -108,14 +111,28 @@ public class ProjectServiceIntegrationTest extends IntegrationTest {
         Member member = memberRepository.save(MemberFactory.create());
         Project project = projectRepository.save(ProjectFactory.create());
         ProjectMember projectMember = projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), member.getId(), ADMIN));
-        ReleaseNote releaseNote = releaseNoteRepository.save(ReleaseNoteFactory.create(member.getId(), project.getId()));
-        History history = historyRepository.save(HistoryFactory.create(releaseNote.getId()));
+//        ReleaseNote releaseNote = ReleaseNoteFactory.create(member.getId(), project.getId());
+//        History history = HistoryFactory.create(releaseNote.getId());
 
         //when
         projectService.removeProject(member.getId(), project.getId());
 
         //then
         assertThat(project.getStatus()).isSameAs(BaseStatus.INACTIVE);
+    }
+
+    @Test
+    void 일반유저는_프로젝트_정보를_삭제에_실패한다() throws InterruptedException {
+        //given
+        Member member = memberRepository.save(MemberFactory.create());
+        Project project = projectRepository.save(ProjectFactory.create());
+        ProjectMember projectMember = projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), member.getId(), MEMBER));
+        //when
+        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(()->{
+           projectService.removeProject(member.getId(), project.getId());
+        });
+        //then
+        result.isInstanceOf(NotProjectAdminException.class);
     }
 
 

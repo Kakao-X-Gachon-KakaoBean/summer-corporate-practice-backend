@@ -1,0 +1,13 @@
+= 프로젝트 삭제
+
+== 요청
+
+include::{snippets}/remove_projects/http-request.adoc[]
+
+include::{snippets}/remove_projects/path-parameters.adoc[]
+
+== 응답
+
+include::{snippets}/remove_projects/http-response.adoc[]
+
+include::{snippets}/remove_projects/response-fields.adoc[]

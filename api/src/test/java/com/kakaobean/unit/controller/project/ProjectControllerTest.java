@@ -119,6 +119,30 @@ public class ProjectControllerTest extends ControllerTest {
                         fieldWithPath("message").type(STRING).description("프로젝트 정보가 변경 되었습니다.")
                 )
         ));
+    }
 
+    @Test
+    @WithMockUser
+    void 프로젝트_삭제_api_테스트() throws Exception{
+
+        // when
+        ResultActions perform = mockMvc.perform(delete("/projects/{projectId}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        // then
+        perform.andDo(print());
+        perform.andExpect(status().is2xxSuccessful());
+        perform.andDo(document("remove_projects",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                pathParameters(
+                        parameterWithName("projectId").description("삭제할 프로젝트 id")
+                ),
+                responseFields(
+                        fieldWithPath("message").type(STRING).description("프로젝트가 삭제 되었습니다.")
+                )
+        ));
     }
 }

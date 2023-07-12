@@ -28,8 +28,7 @@ public class History extends BaseEntity {
      * 테스트용
      */
     @Builder
-    public History(BaseStatus status,
-                   Long id,
+    public History(Long id,
                    Long releaseNoteId) {
         super(BaseStatus.ACTIVE);
         this.id = id;

@@ -64,7 +64,7 @@ public class Project extends BaseEntity {
         this.content = newContent;
     }
 
-    public void remove() {
+    public void removed() {
         super.delete();
         Events.raise(new RemovedProjectEvent(this.id));
     }

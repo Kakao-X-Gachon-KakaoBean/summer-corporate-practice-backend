@@ -52,6 +52,6 @@ public class ProjectController {
     public ResponseEntity removeProject(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                         @PathVariable Long projectId){
         projectService.removeProject(userPrincipal.getId(), projectId);
-        return new ResponseEntity(CommandSuccessResponse.from("프로젝트가 삭제되었습니다."), OK);
+        return new ResponseEntity(CommandSuccessResponse.from("프로젝트가 삭제 되었습니다."), OK);
     }
 }
