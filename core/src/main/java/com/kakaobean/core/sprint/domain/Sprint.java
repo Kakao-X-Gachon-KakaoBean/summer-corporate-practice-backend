@@ -16,7 +16,7 @@ import java.time.LocalDate;
 
 @Getter
 @Where(clause = "status = 'ACTIVE'")
-@SQLDelete(sql = "UPDATE sprint SET status = INACTIVE WHERE id = ?")
+@SQLDelete(sql = "UPDATE sprint SET status = 'INACTIVE' WHERE id = ?")
 @Entity
 public class Sprint extends BaseEntity {
 

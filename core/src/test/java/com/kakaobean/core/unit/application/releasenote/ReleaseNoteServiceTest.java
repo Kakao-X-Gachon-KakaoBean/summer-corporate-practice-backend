@@ -7,8 +7,8 @@ import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.releasenote.application.ReleaseNoteService;
 import com.kakaobean.core.releasenote.domain.ReleaseNote;
-import com.kakaobean.core.releasenote.domain.ReleaseNoteRegisteredEvent;
 import com.kakaobean.core.releasenote.domain.repository.ReleaseNoteRepository;
+import com.kakaobean.core.releasenote.domain.ReleaseNoteDeployedEvent;
 import com.kakaobean.core.releasenote.domain.ReleaseNoteValidator;
 import com.kakaobean.core.unit.UnitTest;
 import org.junit.jupiter.api.AfterEach;
@@ -65,6 +65,6 @@ public class ReleaseNoteServiceTest extends UnitTest {
 
         //then
         verify(releaseNoteRepository, times(1)).save(Mockito.any(ReleaseNote.class));
-        mockEvents.verify(() -> Events.raise(Mockito.any(ReleaseNoteRegisteredEvent.class)), times(1));
+        mockEvents.verify(() -> Events.raise(Mockito.any(ReleaseNoteDeployedEvent.class)), times(1));
     }
 }

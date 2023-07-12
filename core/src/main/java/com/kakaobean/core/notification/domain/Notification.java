@@ -12,7 +12,7 @@ import javax.persistence.*;
 
 @Getter
 @Where(clause = "status = 'ACTIVE'")
-@SQLDelete(sql = "UPDATE notification SET status = INACTIVE WHERE id = ?")
+@SQLDelete(sql = "UPDATE notification SET status = 'INACTIVE' WHERE id = ?")
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Notification extends BaseEntity {

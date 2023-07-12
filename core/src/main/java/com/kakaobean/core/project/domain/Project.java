@@ -5,6 +5,7 @@ import com.kakaobean.core.common.domain.BaseStatus;
 import com.kakaobean.core.common.event.Events;
 import com.kakaobean.core.project.domain.event.ProjectMemberInvitedEvent;
 import com.kakaobean.core.project.domain.event.RemovedProjectEvent;
+import com.kakaobean.core.project.domain.event.ProjectRegisteredEvent;
 import lombok.Getter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -17,7 +18,7 @@ import java.util.List;
 
 @Getter
 @Where(clause = "status = 'ACTIVE'")
-@SQLDelete(sql = "UPDATE project SET status = INACTIVE WHERE id = ?")
+@SQLDelete(sql = "UPDATE project SET status = 'INACTIVE' WHERE id = ?")
 @Entity
 public class Project extends BaseEntity {
 
@@ -31,7 +32,8 @@ public class Project extends BaseEntity {
 
     private String secretKey;
 
-    protected Project() {}
+    protected Project() {
+    }
 
     public Project(String title,
                    String content,
@@ -59,7 +61,7 @@ public class Project extends BaseEntity {
         return new ProjectMemberInvitedEvent(invitedMemberEmails, this);
     }
 
-    public void modify(String newTitle, String newContent){
+    public void modify(String newTitle, String newContent) {
         this.title = newTitle;
         this.content = newContent;
     }
@@ -67,5 +69,9 @@ public class Project extends BaseEntity {
     public void removed() {
         super.delete();
         Events.raise(new RemovedProjectEvent(this.id));
+    }
+
+    public void registered(Long adminId) {
+        Events.raise(new ProjectRegisteredEvent(id, adminId));
     }
 }

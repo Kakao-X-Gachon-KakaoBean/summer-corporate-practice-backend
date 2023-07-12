@@ -12,7 +12,7 @@ import java.time.LocalDate;
 
 @Getter
 @Where(clause = "status = 'ACTIVE'")
-@SQLDelete(sql = "UPDATE task SET status = INACTIVE WHERE id = ?")
+@SQLDelete(sql = "UPDATE task SET status = 'INACTIVE' WHERE id = ?")
 @Entity
 public class Task extends BaseEntity {
 

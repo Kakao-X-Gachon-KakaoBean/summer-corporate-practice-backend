@@ -1,6 +1,7 @@
 package com.kakaobean.core.member.application;
 
 import com.kakaobean.core.member.application.dto.request.ModifyMemberPasswordRequestDto;
+import com.kakaobean.core.member.application.dto.request.ModifyMemberRequestDto;
 import com.kakaobean.core.member.domain.repository.MemberRepository;
 import com.kakaobean.core.member.domain.Member;
 import com.kakaobean.core.member.domain.MemberValidator;
@@ -17,8 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
 
 
 @Service
@@ -37,6 +36,7 @@ public class MemberService {
         member.validate(memberValidator);
         member.verifyEmail(memberVerifiedEmailService, dto.getEmailAuthKey());
         memberRepository.save(member);
+        member.registered();
     }
 
     public void sendVerificationEmail(String email, String authKey) {
@@ -48,6 +48,12 @@ public class MemberService {
         Member member = memberRepository.findMemberByEmail(dto.getEmail()).orElseThrow(NotExistsMemberException::new);
         member.verifyEmail(memberVerifiedEmailService, dto.getEmailAuthKey());
         member.modifyPassword(modifyMemberService, dto.getPasswordToChange(), dto.getCheckPasswordToChange());
+    }
+
+    @Transactional
+    public void modifyMember(ModifyMemberRequestDto dto){
+        Member member = memberRepository.findMemberById(dto.getMemberId()).orElseThrow(NotExistsMemberException::new);
+        member.modify(modifyMemberService, dto.getNameToChange());
     }
 
     public void uploadProfileImages(Long id,
