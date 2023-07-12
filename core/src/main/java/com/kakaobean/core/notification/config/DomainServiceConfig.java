@@ -1,8 +1,10 @@
 package com.kakaobean.core.notification.config;
 
 import com.kakaobean.core.notification.domain.NotificationRepository;
-import com.kakaobean.core.notification.domain.service.save.SaveNotificationService;
-import com.kakaobean.core.notification.domain.service.save.strategy.SaveDeploymentReleaseNoteNotificationStrategy;
+import com.kakaobean.core.notification.domain.service.register.RegisterNotificationService;
+import com.kakaobean.core.notification.domain.service.register.strategy.RegisterDeploymentReleaseNoteNotificationStrategy;
+import com.kakaobean.core.notification.domain.service.send.message.SendMessageNotificationService;
+import com.kakaobean.core.notification.domain.service.send.message.SendMessageNotificationStrategy;
 import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.releasenote.domain.ReleaseNoteRepository;
@@ -22,10 +24,10 @@ public class DomainServiceConfig {
     private final ProjectRepository projectRepository;
 
     @Bean
-    SaveNotificationService saveNotificationService(){
-        return new SaveNotificationService(
+    RegisterNotificationService saveNotificationService(){
+        return new RegisterNotificationService(
                 List.of(
-                        new SaveDeploymentReleaseNoteNotificationStrategy(
+                        new RegisterDeploymentReleaseNoteNotificationStrategy(
                                 releaseNoteRepository,
                                 notificationRepository,
                                 projectQueryRepository,

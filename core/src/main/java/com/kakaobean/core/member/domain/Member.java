@@ -2,6 +2,8 @@ package com.kakaobean.core.member.domain;
 
 import com.kakaobean.core.common.domain.BaseEntity;
 import com.kakaobean.core.common.domain.BaseStatus;
+import com.kakaobean.core.common.event.Events;
+import com.kakaobean.core.member.domain.event.MemberRegisteredEvent;
 import com.kakaobean.core.member.domain.service.ModifyMemberService;
 import com.kakaobean.core.member.domain.service.VerifiedEmailService;
 import lombok.AccessLevel;
@@ -15,7 +17,7 @@ import javax.persistence.*;
 
 @Getter
 @Where(clause = "status = 'ACTIVE'")
-@SQLDelete(sql = "UPDATE member SET status = INACTIVE WHERE id = ?")
+@SQLDelete(sql = "UPDATE member SET status = 'INACTIVE' WHERE id = ?")
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
@@ -102,5 +104,9 @@ public class Member extends BaseEntity {
     public void modifyProfileImg(String profileImg, String thumbnailImg) {
         this.profileImg = profileImg;
         this.thumbnailImg = thumbnailImg;
+    }
+
+    public void registered() {
+        Events.raise(new MemberRegisteredEvent(id));
     }
 }

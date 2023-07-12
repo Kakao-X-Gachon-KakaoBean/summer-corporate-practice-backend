@@ -13,7 +13,7 @@ import javax.persistence.Id;
 
 @Getter
 @Where(clause = "status = 'ACTIVE'")
-@SQLDelete(sql = "UPDATE issue SET status = INACTIVE WHERE id = ?")
+@SQLDelete(sql = "UPDATE issue SET status = 'INACTIVE' WHERE id = ?")
 @Entity
 public class Issue extends BaseEntity {
 

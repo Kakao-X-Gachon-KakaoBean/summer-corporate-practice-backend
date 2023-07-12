@@ -27,9 +27,10 @@ public class ProjectService {
     @Transactional(readOnly = false)
     public RegisterProjectResponseDto registerProject(RegisterProjectRequestDto dto) {
         Project project = dto.toEntity();
-        Project savedProject = projectRepository.save(project);
-        projectMemberRepository.save(new ProjectMember(BaseStatus.ACTIVE, savedProject.getId(), dto.getAdminId(), ProjectRole.ADMIN));
-        return new RegisterProjectResponseDto(savedProject.getId());
+        projectRepository.save(project);
+        projectMemberRepository.save(new ProjectMember(BaseStatus.ACTIVE, project.getId(), dto.getAdminId(), ProjectRole.ADMIN));
+        project.registered(dto.getAdminId());
+        return new RegisterProjectResponseDto(project.getId());
     }
 
     @Transactional(readOnly = false)
