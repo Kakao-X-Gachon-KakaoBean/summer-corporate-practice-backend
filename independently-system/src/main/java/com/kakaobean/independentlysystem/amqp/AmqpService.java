@@ -41,7 +41,7 @@ public class AmqpService {
         amqpAdmin.declareBinding(binding);
     }
 
-    public void send(String exchangeName, String routingKey, DtoToQueue dto){
+    public void send(String exchangeName, String routingKey, String dto){
         rabbitTemplate.convertAndSend(exchangeName, routingKey, dto);
     }
 }
