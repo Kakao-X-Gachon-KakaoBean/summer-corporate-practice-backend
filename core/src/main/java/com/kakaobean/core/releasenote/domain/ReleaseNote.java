@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @Where(clause = "status = 'ACTIVE'")
-@SQLDelete(sql = "UPDATE release_note SET status = INACTIVE WHERE id = ?")
+@SQLDelete(sql = "UPDATE release_note SET status = 'INACTIVE' WHERE id = ?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReleaseNote extends BaseEntity {
 

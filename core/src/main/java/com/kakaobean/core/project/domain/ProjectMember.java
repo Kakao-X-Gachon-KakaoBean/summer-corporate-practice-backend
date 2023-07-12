@@ -10,7 +10,7 @@ import javax.persistence.*;
 
 @Getter
 @Where(clause = "status = 'ACTIVE'")
-@SQLDelete(sql = "UPDATE project_member SET status = INACTIVE WHERE id = ?")
+@SQLDelete(sql = "UPDATE project_member SET status = 'INACTIVE' WHERE id = ?")
 @Entity
 public class ProjectMember extends BaseEntity {
 

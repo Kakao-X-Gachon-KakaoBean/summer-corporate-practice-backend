@@ -49,10 +49,4 @@ public class SendMessageDeploymentReleaseNoteNotificationStrategy implements Sen
     public boolean support(Class<? extends NotificationSentEvent> eventClass) {
         return eventClass == SendDeploymentReleaseNoteNotificationEvent.class;
     }
-
-//    @PostConstruct
-//    void test(){
-//        String exchangeName = PROJECT_PREFIX.getPrefix() + 1L;
-//        amqpService.send(exchangeName, "", new DtoToQueue("1", LocalDateTime.now(), "2"));
-//    }
 }

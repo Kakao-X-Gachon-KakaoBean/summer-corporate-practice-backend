@@ -17,7 +17,7 @@ import java.util.List;
 
 @Getter
 @Where(clause = "status = 'ACTIVE'")
-@SQLDelete(sql = "UPDATE project SET status = INACTIVE WHERE id = ?")
+@SQLDelete(sql = "UPDATE project SET status = 'INACTIVE' WHERE id = ?")
 @Entity
 public class Project extends BaseEntity {
 
