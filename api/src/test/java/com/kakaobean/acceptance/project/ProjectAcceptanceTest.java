@@ -2,13 +2,10 @@ package com.kakaobean.acceptance.project;
 
 import com.kakaobean.acceptance.AcceptanceTest;
 import com.kakaobean.acceptance.releasenote.ReleaseNoteAcceptanceTask;
-import com.kakaobean.core.common.domain.BaseStatus;
 import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
-import com.kakaobean.core.releasenote.domain.History;
 import com.kakaobean.core.releasenote.domain.ReleaseNote;
-import com.kakaobean.core.releasenote.domain.repository.HistoryRepository;
 import com.kakaobean.core.releasenote.domain.repository.ReleaseNoteRepository;
 import com.kakaobean.project.dto.request.InviteProjectMemberRequest;
 import com.kakaobean.project.dto.request.ModifyProjectInfoRequest;
@@ -22,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.kakaobean.acceptance.TestMember.*;
 import static org.assertj.core.api.Assertions.*;
@@ -38,9 +34,6 @@ public class ProjectAcceptanceTest extends AcceptanceTest {
 
     @Autowired
     ReleaseNoteRepository releaseNoteRepository;
-
-    @Autowired
-    HistoryRepository historyRepository;
 
     @Test
     void 프로젝트를_만든다(){
