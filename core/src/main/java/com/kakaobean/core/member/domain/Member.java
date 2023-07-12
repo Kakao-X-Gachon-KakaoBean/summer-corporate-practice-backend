@@ -12,8 +12,6 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.net.PasswordAuthentication;
-import java.time.LocalDate;
 
 @Getter
 @Where(clause = "status = 'ACTIVE'")
@@ -94,6 +92,12 @@ public class Member extends BaseEntity {
     public void updatePassword(String newPassword) {
         this.auth = new Auth(this.auth.getEmail(), newPassword);
     }
+
+    public void modify(ModifyMemberService modifyMemberService, String newName){
+        modifyMemberService.modify(this, newName);
+    }
+
+    public void updateMemberName(String newName) { this.name = newName; }
 
     public void modifyProfileImg(String profileImg, String thumbnailImg) {
         this.profileImg = profileImg;
