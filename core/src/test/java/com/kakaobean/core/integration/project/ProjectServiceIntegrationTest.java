@@ -1,5 +1,6 @@
 package com.kakaobean.core.integration.project;
 
+import com.kakaobean.core.common.domain.BaseStatus;
 import com.kakaobean.core.factory.member.MemberFactory;
 import com.kakaobean.core.factory.project.ProjectFactory;
 import com.kakaobean.core.integration.IntegrationTest;
@@ -15,6 +16,7 @@ import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.project.exception.NotProjectAdminException;
+import com.kakaobean.core.releasenote.domain.repository.ReleaseNoteRepository;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,9 @@ public class ProjectServiceIntegrationTest extends IntegrationTest {
 
     @Autowired
     ProjectMemberRepository projectMemberRepository;
+
+    @Autowired
+    ReleaseNoteRepository releaseNoteRepository;
 
     @Test
     void 로그인한_유저가_프로젝트_생성에_성공한다() {
@@ -85,6 +90,36 @@ public class ProjectServiceIntegrationTest extends IntegrationTest {
         });
 
         // then
+        result.isInstanceOf(NotProjectAdminException.class);
+    }
+
+    @Test
+    void 어드민이_프로젝트_정보를_삭제에_성공한다() throws InterruptedException {
+        //given
+        Member member = memberRepository.save(MemberFactory.create());
+        Project project = projectRepository.save(ProjectFactory.create());
+        ProjectMember projectMember = projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), member.getId(), ADMIN));
+//        ReleaseNote releaseNote = ReleaseNoteFactory.create(member.getId(), project.getId());
+//        History history = HistoryFactory.create(releaseNote.getId());
+
+        //when
+        projectService.removeProject(member.getId(), project.getId());
+
+        //then
+        assertThat(project.getStatus()).isSameAs(BaseStatus.INACTIVE);
+    }
+
+    @Test
+    void 일반유저는_프로젝트_정보를_삭제에_실패한다() throws InterruptedException {
+        //given
+        Member member = memberRepository.save(MemberFactory.create());
+        Project project = projectRepository.save(ProjectFactory.create());
+        ProjectMember projectMember = projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), member.getId(), MEMBER));
+        //when
+        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(()->{
+           projectService.removeProject(member.getId(), project.getId());
+        });
+        //then
         result.isInstanceOf(NotProjectAdminException.class);
     }
 

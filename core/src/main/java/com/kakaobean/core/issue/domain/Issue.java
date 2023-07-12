@@ -2,6 +2,7 @@ package com.kakaobean.core.issue.domain;
 
 import com.kakaobean.core.common.domain.BaseEntity;
 import com.kakaobean.core.common.domain.BaseStatus;
+import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -34,6 +35,22 @@ public class Issue extends BaseEntity {
                  String title,
                  String content) {
         super(status);
+        this.projectId = projectId;
+        this.title = title;
+        this.content = content;
+    }
+
+    /**
+     * 테스트용
+     */
+    @Builder
+    public Issue(BaseStatus status,
+                 Long id,
+                 Long projectId,
+                 String title,
+                 String content) {
+        super(BaseStatus.ACTIVE);
+        this.id = id;
         this.projectId = projectId;
         this.title = title;
         this.content = content;

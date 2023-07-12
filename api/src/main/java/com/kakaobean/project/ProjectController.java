@@ -47,4 +47,11 @@ public class ProjectController {
         projectService.modifyProject(request.toServiceDto(userPrincipal.getId(), projectId));
         return new ResponseEntity(CommandSuccessResponse.from("프로젝트 정보가 변경 되었습니다."), OK);
     }
+
+    @DeleteMapping("/projects/{projectId}")
+    public ResponseEntity removeProject(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                        @PathVariable Long projectId){
+        projectService.removeProject(userPrincipal.getId(), projectId);
+        return new ResponseEntity(CommandSuccessResponse.from("프로젝트가 삭제 되었습니다."), OK);
+    }
 }
