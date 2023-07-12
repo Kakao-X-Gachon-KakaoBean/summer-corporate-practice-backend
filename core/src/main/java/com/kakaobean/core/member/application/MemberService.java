@@ -18,8 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
 
 
 @Service
@@ -54,7 +52,7 @@ public class MemberService {
     @Transactional
     public void modifyMember(ModifyMemberRequestDto dto){
         Member member = memberRepository.findMemberById(dto.getMemberId()).orElseThrow(NotExistsMemberException::new);
-        member.modifyName(modifyMemberService, dto.getNameToChange());
+        member.modify(modifyMemberService, dto.getNameToChange());
     }
 
     public void uploadProfileImages(Long id,

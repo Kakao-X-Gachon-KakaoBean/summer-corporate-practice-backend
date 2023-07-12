@@ -36,7 +36,7 @@ public class ModifyMemberServiceImpl implements ModifyMemberService {
     }
 
     @Override
-    public void modifyName(Member member, String newName){
+    public void modify(Member member, String newName){
         //로컬 로그인 유저만 이름 변경 가능
         if(member.getAuthProvider() != AuthProvider.local ){
             throw new OAuthMemberCanNotChangeNameException();

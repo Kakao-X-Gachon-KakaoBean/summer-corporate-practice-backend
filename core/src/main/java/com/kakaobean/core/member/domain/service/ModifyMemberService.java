@@ -8,5 +8,5 @@ public interface ModifyMemberService {
                         String passwordToChange,
                         String checkPasswordToChange);
 
-    void modifyName(Member member, String newName);
+    void modify(Member member, String newName);
 }
