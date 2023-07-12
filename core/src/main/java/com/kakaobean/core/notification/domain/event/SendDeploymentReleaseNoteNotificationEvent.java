@@ -5,16 +5,16 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class SendDeploymentReleaseNoteNotificationEvent extends SendNotificationEvent {
+public class SendDeploymentReleaseNoteNotificationEvent extends NotificationSentEvent {
 
-    private Long releaseNoteId;
+    private final Long releaseNoteId;
 
     public SendDeploymentReleaseNoteNotificationEvent(Long projectId,
                                                       String title,
-                                                      List<String> emails,
-                                                      Long releaseNoteId,
-                                                      String projectTitle) {
-        super(projectId, title, emails, projectTitle);
+                                                      List<NotificationTarget> infos,
+                                                      String projectTitle,
+                                                      Long releaseNoteId) {
+        super(projectId, title, infos, projectTitle);
         this.releaseNoteId = releaseNoteId;
     }
 }

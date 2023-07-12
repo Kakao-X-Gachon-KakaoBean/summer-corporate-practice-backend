@@ -26,6 +26,6 @@ public class ReleaseNoteService {
         releaseNoteValidator.validWriterAccess(writer);
         ReleaseNote releaseNote = dto.toEntity();
         releaseNoteRepository.save(releaseNote);
-        releaseNote.registered();
+        releaseNote.deployed();
     }
 }

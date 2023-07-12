@@ -2,6 +2,8 @@ package com.kakaobean.core.member.domain;
 
 import com.kakaobean.core.common.domain.BaseEntity;
 import com.kakaobean.core.common.domain.BaseStatus;
+import com.kakaobean.core.common.event.Events;
+import com.kakaobean.core.member.domain.event.MemberRegisteredEvent;
 import com.kakaobean.core.member.domain.service.ModifyMemberService;
 import com.kakaobean.core.member.domain.service.VerifiedEmailService;
 import lombok.AccessLevel;
@@ -12,12 +14,10 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.net.PasswordAuthentication;
-import java.time.LocalDate;
 
 @Getter
 @Where(clause = "status = 'ACTIVE'")
-@SQLDelete(sql = "UPDATE member SET status = INACTIVE WHERE id = ?")
+@SQLDelete(sql = "UPDATE member SET status = 'INACTIVE' WHERE id = ?")
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
@@ -95,8 +95,18 @@ public class Member extends BaseEntity {
         this.auth = new Auth(this.auth.getEmail(), newPassword);
     }
 
+    public void modify(ModifyMemberService modifyMemberService, String newName){
+        modifyMemberService.modify(this, newName);
+    }
+
+    public void updateMemberName(String newName) { this.name = newName; }
+
     public void modifyProfileImg(String profileImg, String thumbnailImg) {
         this.profileImg = profileImg;
         this.thumbnailImg = thumbnailImg;
+    }
+
+    public void registered() {
+        Events.raise(new MemberRegisteredEvent(id));
     }
 }
