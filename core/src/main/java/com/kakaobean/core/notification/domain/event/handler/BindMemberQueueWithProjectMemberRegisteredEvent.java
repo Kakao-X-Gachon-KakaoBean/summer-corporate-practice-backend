@@ -1,23 +1,22 @@
 package com.kakaobean.core.notification.domain.event.handler;
 
-import com.kakaobean.core.member.domain.event.MemberRegisteredEvent;
 import com.kakaobean.core.notification.domain.service.register.RegisterMessageQueueService;
+import com.kakaobean.core.project.domain.event.ProjectMemberRegisteredEvent;
 
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 @RequiredArgsConstructor
-public class RegisterMemberQueueWithMemberRegisteredEventHandler {
+public class BindMemberQueueWithProjectMemberRegisteredEvent {
 
     private final RegisterMessageQueueService registerMessageQueueService;
 
-    @TransactionalEventListener(MemberRegisteredEvent.class)
-    public void handle(MemberRegisteredEvent event){
+    @TransactionalEventListener(ProjectMemberRegisteredEvent.class)
+    public void handle(ProjectMemberRegisteredEvent event) {
         if(event != null){
-            registerMessageQueueService.registerPersonalQueue(event.getMemberId());
+            registerMessageQueueService.bindProjectExchangeAndPersonalQueue(event.getProjectId(), event.getMemberId());
         }
     }
 }

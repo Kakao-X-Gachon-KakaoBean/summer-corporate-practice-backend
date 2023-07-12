@@ -58,6 +58,7 @@ public class ProjectMemberService {
 
         projectValidator.validInvitedPerson(invitedPerson);
         invitedPerson.modifyProjectRole(VIEWER);
+        invitedPerson.registered();
     }
 
     public ProjectMemberInvitedEvent registerInvitedProjectPersons(InviteProjectMemberRequestDto dto) {

@@ -64,7 +64,7 @@ public class ReleaseNoteAcceptanceTest extends AcceptanceTest {
         ProjectAcceptanceTask.registerProjectTask(givenRequest);
         Project project = projectRepository.findAll().get(0);
 
-        //프로젝트멤버 가입
+        //프로젝트 멤버 가입
         InviteProjectMemberRequest givenDto = new InviteProjectMemberRequest(List.of(MEMBER.getEmail()));
         ProjectAcceptanceTask.inviteProjectMemberTask(givenDto, project.getId());
         ProjectAcceptanceTask.joinProjectMemberTask(new RegisterProjectMemberRequest(project.getSecretKey()));
