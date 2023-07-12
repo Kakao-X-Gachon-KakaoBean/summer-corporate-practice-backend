@@ -5,18 +5,17 @@ import com.kakaobean.independentlysystem.amqp.AmqpService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import static com.kakaobean.core.notification.infrastructure.QueueNameConfig.*;
+
 @Component
 @RequiredArgsConstructor
 public class RegisterMessageQueueServiceImpl implements RegisterMessageQueueService {
 
     private final AmqpService amqpService;
 
-    private static final String USER_PREFIX = "user:";
-    private static final String PROJECT_PREFIX = "project:";
-
     @Override
     public void registerPersonalQueue(Long memberId) {
-        String routingKey = USER_PREFIX + memberId;
+        String routingKey = USER_PREFIX.getPrefix() + memberId;
 
         //멤버 개인 키 등록
         amqpService.registerQueue(routingKey);
@@ -30,7 +29,7 @@ public class RegisterMessageQueueServiceImpl implements RegisterMessageQueueServ
 
     @Override
     public void registerProjectExchange(Long projectId) {
-        String exchangeName = PROJECT_PREFIX + projectId;
+        String exchangeName = PROJECT_PREFIX.getPrefix() + projectId;
 
         //프로젝트의 fanout exchange 등록
         amqpService.registerFanOutExchange(exchangeName);
@@ -38,8 +37,8 @@ public class RegisterMessageQueueServiceImpl implements RegisterMessageQueueServ
 
     @Override
     public void bindProjectExchangeAndPersonalQueue(Long projectId, Long memberId) {
-        String exchangeName = PROJECT_PREFIX + projectId;
-        String queueName = USER_PREFIX + memberId;
+        String exchangeName = PROJECT_PREFIX.getPrefix() + projectId;
+        String queueName = USER_PREFIX.getPrefix() + memberId;
 
         //프로젝트의 fanout exchange, 개인 큐 바인딩
         amqpService.bindWithFanOutExchange(exchangeName, queueName);

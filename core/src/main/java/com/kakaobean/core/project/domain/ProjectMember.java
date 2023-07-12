@@ -6,10 +6,7 @@ import lombok.Getter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Getter
 @Where(clause = "status = 'ACTIVE'")
@@ -28,6 +25,7 @@ public class ProjectMember extends BaseEntity {
 
     private Long memberId;
 
+    @Enumerated(EnumType.STRING)
     private ProjectRole projectRole;
 
     protected ProjectMember(){}

@@ -1,6 +1,6 @@
 package com.kakaobean.core.notification.domain.service.send.email;
 
-import com.kakaobean.core.notification.domain.event.NotificationSendedEvent;
+import com.kakaobean.core.notification.domain.event.NotificationSentEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -14,7 +14,7 @@ public class SendEmailNotificationService {
         this.strategies = strategies;
     }
 
-    public void sendEmail(NotificationSendedEvent event){
+    public void sendEmail(NotificationSentEvent event){
         for (SendEmailNotificationStrategy strategy : strategies) {
             if(strategy.support(event.getClass())){
                 strategy.send(event);

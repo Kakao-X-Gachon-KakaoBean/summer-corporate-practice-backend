@@ -1,4 +1,4 @@
-package com.kakaobean.core.notification.domain.event;
+package com.kakaobean.core.notification.domain.event.handler;
 
 import com.kakaobean.core.member.domain.event.MemberRegisteredEvent;
 import com.kakaobean.core.notification.domain.service.register.RegisterMessageQueueService;

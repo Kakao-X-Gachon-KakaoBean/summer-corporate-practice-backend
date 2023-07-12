@@ -2,10 +2,10 @@ package com.kakaobean.independentlysystem.amqp;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
-import java.util.HashMap;
 
 import static org.springframework.amqp.core.Binding.DestinationType.*;
 
@@ -14,6 +14,7 @@ import static org.springframework.amqp.core.Binding.DestinationType.*;
 public class AmqpService {
 
     private final AmqpAdmin amqpAdmin;
+    private final RabbitTemplate rabbitTemplate;
 
     public void registerQueue(String queueName){
         Queue queue = new Queue(queueName);
@@ -38,5 +39,9 @@ public class AmqpService {
     public void bindWithFanOutExchange(String exchangeName, String queueName) {
         Binding binding = new Binding(queueName, QUEUE, exchangeName, "", Collections.emptyMap());
         amqpAdmin.declareBinding(binding);
+    }
+
+    public void send(String exchangeName, String routingKey, DtoToQueue dto){
+        rabbitTemplate.convertAndSend(exchangeName, routingKey, dto);
     }
 }

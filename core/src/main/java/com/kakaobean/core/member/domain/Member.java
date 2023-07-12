@@ -19,7 +19,7 @@ import java.time.LocalDate;
 
 @Getter
 @Where(clause = "status = 'ACTIVE'")
-@SQLDelete(sql = "UPDATE member SET status = INACTIVE WHERE id = ?")
+@SQLDelete(sql = "UPDATE member SET status = 'INACTIVE' WHERE id = ?")
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
