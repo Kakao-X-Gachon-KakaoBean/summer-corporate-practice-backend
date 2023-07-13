@@ -4,7 +4,6 @@ import com.kakaobean.core.common.domain.BaseEntity;
 
 import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.ProjectRole;
-import com.kakaobean.core.project.domain.event.ProjectMemberRegisteredEvent;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.exception.NotExistsProjectMemberException;
 import com.kakaobean.core.releasenote.exception.DuplicateManuscriptVersionException;
