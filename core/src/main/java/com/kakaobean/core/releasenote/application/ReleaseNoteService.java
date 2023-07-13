@@ -5,7 +5,7 @@ import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.exception.NotExistsProjectMemberException;
 import com.kakaobean.core.releasenote.application.dto.request.DeployReleaseNoteRequestDto;
 import com.kakaobean.core.releasenote.domain.ReleaseNote;
-import com.kakaobean.core.releasenote.domain.ReleaseNoteRepository;
+import com.kakaobean.core.releasenote.domain.repository.ReleaseNoteRepository;
 import com.kakaobean.core.releasenote.domain.ReleaseNoteValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

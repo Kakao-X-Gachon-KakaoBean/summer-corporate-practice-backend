@@ -14,7 +14,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     void registerMember(){
 
         //given
-        RegisterMemberRequest request = RegisterMemberRequestFactory.createRequest();
+        RegisterMemberRequest request = RegisterMemberRequestFactory.createRequestV3();
 
         //when
         ExtractableResponse response = MemberAcceptanceTask.registerMemberTask(request, emailRepository);

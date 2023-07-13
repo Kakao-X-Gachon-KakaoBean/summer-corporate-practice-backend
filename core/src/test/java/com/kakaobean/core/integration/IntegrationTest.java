@@ -9,12 +9,14 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @Import({
         EmailSender.class,
         AwsSesConfig.class,
         ImageService.class,
         AmqpService.class
 })
+
 @SpringBootTest
 @Transactional
 @EnableJpaAuditing

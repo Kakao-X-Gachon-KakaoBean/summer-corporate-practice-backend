@@ -7,4 +7,6 @@ public interface ModifyMemberService {
     void modifyPassword(Member member,
                         String passwordToChange,
                         String checkPasswordToChange);
+
+    void modify(Member member, String newName);
 }

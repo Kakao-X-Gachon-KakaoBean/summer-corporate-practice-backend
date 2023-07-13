@@ -36,7 +36,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @Import({
         SecurityConfig.class,
-        WebMvcConfig.class
+        WebMvcConfig.class,
+        ImageService.class
 })
 @WebMvcTest(controllers = {
         MemberController.class,

@@ -40,4 +40,12 @@ public class ProjectService {
         Project project = projectRepository.findById(dto.getProjectId()).orElseThrow(NotExistsProjectException::new);
         project.modify(dto.getNewTitle(),dto.getNewContent());
     }
+
+    @Transactional(readOnly = false)
+    public void removeProject(Long adminId, Long projectId) {
+        ProjectMember projectAdmin = projectMemberRepository.findByMemberIdAndProjectId(adminId, projectId).orElseThrow(NotExistsProjectMemberException::new);
+        projectValidator.validAdmin(projectAdmin);
+        Project project = projectRepository.findById(projectId).orElseThrow(NotExistsProjectException::new);
+        project.removed();
+    }
 }
