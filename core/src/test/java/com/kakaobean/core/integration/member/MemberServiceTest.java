@@ -315,7 +315,7 @@ public class MemberServiceTest extends IntegrationTest {
         memberService.modifyMember(new ModifyMemberRequestDto(member.getId(), newName));
 
         //then
-        Member result = memberRepository.findMemberById(member.getId()).get();
+        Member result = memberRepository.findById(member.getId()).get();
         assertThat(newName.equals(result.getName())).isTrue();
     }
 

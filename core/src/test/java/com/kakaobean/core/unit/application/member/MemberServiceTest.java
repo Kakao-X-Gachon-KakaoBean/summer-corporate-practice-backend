@@ -295,7 +295,7 @@ public class MemberServiceTest extends UnitTest {
         //given
         String newName = "newHiki";
         Member member = MemberFactory.create();
-        given(memberRepository.findMemberById(Mockito.anyLong())).willReturn(Optional.of(member));
+        given(memberRepository.findById(Mockito.anyLong())).willReturn(Optional.of(member));
 
         //when
         memberService.modifyMember(new ModifyMemberRequestDto(member.getId(), newName));
@@ -316,7 +316,7 @@ public class MemberServiceTest extends UnitTest {
                 .authProvider(AuthProvider.google)
                 .auth(new Auth(email.getEmail(), "x"))
                 .build();
-        given(memberRepository.findMemberById(member.getId())).willReturn(Optional.of(member));
+        given(memberRepository.findById(member.getId())).willReturn(Optional.of(member));
 
         //when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
@@ -335,7 +335,7 @@ public class MemberServiceTest extends UnitTest {
         String newName = "kakoBean";
         //일단 같은 이름으로 하려고 이렇게 했는데, 혹시 생성자를 써서 하는 다른 방법으로 바꿔야하나요?
         Member member = MemberFactory.create();
-        given(memberRepository.findMemberById(member.getId())).willReturn(Optional.of(member));
+        given(memberRepository.findById(member.getId())).willReturn(Optional.of(member));
 
         //when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {

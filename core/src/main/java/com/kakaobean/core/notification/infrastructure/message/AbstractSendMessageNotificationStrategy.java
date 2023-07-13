@@ -33,5 +33,4 @@ public abstract class AbstractSendMessageNotificationStrategy implements SendMes
             throw new RuntimeException(e.getCause());
         }
     }
-
 }

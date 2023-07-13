@@ -52,7 +52,7 @@ public class MemberService {
 
     @Transactional
     public void modifyMember(ModifyMemberRequestDto dto){
-        Member member = memberRepository.findMemberById(dto.getMemberId()).orElseThrow(NotExistsMemberException::new);
+        Member member = memberRepository.findById(dto.getMemberId()).orElseThrow(NotExistsMemberException::new);
         member.modify(modifyMemberService, dto.getNameToChange());
     }
 
