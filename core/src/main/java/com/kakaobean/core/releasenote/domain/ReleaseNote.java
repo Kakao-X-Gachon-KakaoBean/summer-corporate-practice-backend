@@ -29,7 +29,7 @@ public class ReleaseNote extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    private Double version;
+    private String version;
 
     private Long projectId;
 
@@ -38,7 +38,7 @@ public class ReleaseNote extends BaseEntity {
     public ReleaseNote(BaseStatus status,
                        String title,
                        String content,
-                       Double version,
+                       String version,
                        Long projectId,
                        Long memberId) {
         super(status);
@@ -57,7 +57,7 @@ public class ReleaseNote extends BaseEntity {
                        Long id,
                        String title,
                        String content,
-                       Double version,
+                       String version,
                        Long projectId,
                        Long memberId) {
         super(BaseStatus.ACTIVE);

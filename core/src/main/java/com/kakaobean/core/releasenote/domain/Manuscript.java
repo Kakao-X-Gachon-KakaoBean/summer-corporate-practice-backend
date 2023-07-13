@@ -28,7 +28,7 @@ public class Manuscript extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    private Double version;
+    private String version;
 
     private Long lastEditedMemberId;
 
@@ -37,7 +37,7 @@ public class Manuscript extends BaseEntity {
     public Manuscript(BaseStatus status,
                       String title,
                       String content,
-                      Double version,
+                      String version,
                       Long lastEditedMemberId,
                       Long projectId) {
         super(status);
@@ -49,6 +49,6 @@ public class Manuscript extends BaseEntity {
     }
 
     public void registered() {
-        Events.raise(new ManuscriptRegisteredEvent(projectId, id, version, title));
+        Events.raise(new ManuscriptRegisteredEvent(projectId, id, title));
     }
 }

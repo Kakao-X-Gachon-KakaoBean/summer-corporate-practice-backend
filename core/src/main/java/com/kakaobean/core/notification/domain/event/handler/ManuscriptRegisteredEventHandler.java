@@ -28,8 +28,7 @@ public class ManuscriptRegisteredEventHandler {
                             event.getProjectId(),
                             project.getTitle(),
                             event.getTitle(),
-                            event.getManuscriptId(),
-                            event.getVersion()
+                            event.getManuscriptId()
                     )
             );
         }

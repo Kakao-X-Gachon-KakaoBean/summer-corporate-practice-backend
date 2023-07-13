@@ -9,11 +9,11 @@ public class RegisterManuscriptRequestDto {
 
     private final String title;
     private final String content;
-    private final Double version;
+    private final String version;
     private final Long memberId;
     private final Long projectId;
 
-    public RegisterManuscriptRequestDto(String title, String content, Double version, Long memberId, Long projectId) {
+    public RegisterManuscriptRequestDto(String title, String content, String version, Long memberId, Long projectId) {
         this.title = title;
         this.content = content;
         this.version = version;

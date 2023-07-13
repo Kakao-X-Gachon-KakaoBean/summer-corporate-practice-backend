@@ -8,13 +8,11 @@ public class ManuscriptRegisteredEvent extends Event {
 
     private final Long projectId;
     private final Long manuscriptId;
-    private final Double version;
     private final String title;
 
-    public ManuscriptRegisteredEvent(Long projectId, Long manuscriptId, Double version, String title) {
+    public ManuscriptRegisteredEvent(Long projectId, Long manuscriptId, String title) {
         this.projectId = projectId;
         this.manuscriptId = manuscriptId;
-        this.version = version;
         this.title = title;
     }
 }

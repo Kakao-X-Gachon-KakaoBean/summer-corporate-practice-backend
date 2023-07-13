@@ -18,13 +18,13 @@ public class DeployReleaseNoteRequest {
     @NotEmpty
     private String content;
 
-    @NotNull
-    private Double version;
+    @NotEmpty
+    private String version;
 
     @NotNull
     private Long projectId;
 
-    public DeployReleaseNoteRequest(String title, String content, Double version, Long projectId) {
+    public DeployReleaseNoteRequest(String title, String content, String version, Long projectId) {
         this.title = title;
         this.content = content;
         this.version = version;

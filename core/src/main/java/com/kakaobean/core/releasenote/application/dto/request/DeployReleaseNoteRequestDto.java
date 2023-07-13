@@ -11,13 +11,13 @@ public class DeployReleaseNoteRequestDto {
 
     private final String title;
     private final String content;
-    private final Double version;
+    private final String version;
     private final Long projectId;
     private final Long writerId;
 
     public DeployReleaseNoteRequestDto(String title,
                                        String content,
-                                       Double version,
+                                       String version,
                                        Long projectId,
                                        Long writerId) {
         this.title = title;
