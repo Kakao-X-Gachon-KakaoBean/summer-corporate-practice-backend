@@ -37,23 +37,23 @@ public class RegisterDeploymentReleaseNoteNotificationStrategy implements Regist
                 .orElseThrow(NotExistsReleaseNoteException::new);
         Project project = projectRepository.findById(releaseNote.getProjectId())
                 .orElseThrow(NotExistsProjectException::new);
-        List<NotificationSentEvent.NotificationTarget> infos = saveNotifications(releaseNote);
+        List<String> emails = saveNotifications(releaseNote);
         return new SendDeploymentReleaseNoteNotificationEvent(
                 releaseNote.getProjectId(),
                 releaseNote.getTitle(),
-                infos,
+                releaseNoteId,
                 project.getTitle(),
-                releaseNoteId
+                emails
         );
     }
 
-    private List<NotificationSentEvent.NotificationTarget> saveNotifications(ReleaseNote releaseNote) {
+    private List<String> saveNotifications(ReleaseNote releaseNote) {
         return projectQueryRepository
                 .findProjectMembers(releaseNote.getProjectId())
                 .stream()
                 .map((dto -> {
                     notificationRepository.save(new Notification(ACTIVE, dto.getProjectMemberId(), releaseNote.getProjectId(), releaseNote.getTitle(), RELEASE_NOTE_DEPLOYMENT, false));
-                    return new NotificationSentEvent.NotificationTarget(dto.getProjectMemberEmail(), dto.getProjectMemberId());
+                    return dto.getProjectMemberEmail();
                 }))
                 .collect(Collectors.toList());
     }

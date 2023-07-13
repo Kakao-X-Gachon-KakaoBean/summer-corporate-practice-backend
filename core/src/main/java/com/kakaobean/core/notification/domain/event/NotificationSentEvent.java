@@ -9,29 +9,14 @@ import java.util.List;
 public abstract class NotificationSentEvent extends Event {
 
     private final Long projectId;
-    private final String title;
-    private final List<NotificationTarget> targets;
     private final String projectTitle;
+    private final String targetTitle;
+    private final Long targetId;
 
-    public NotificationSentEvent(Long projectId,
-                                 String title,
-                                 List<NotificationTarget> targets,
-                                 String projectTitle) {
+    public NotificationSentEvent(Long projectId, String projectTitle, String targetTitle, Long targetId) {
         this.projectId = projectId;
-        this.title = title;
-        this.targets = targets;
         this.projectTitle = projectTitle;
-    }
-
-    @Getter
-    public static class NotificationTarget {
-
-        private final String email;
-        private final Long memberId;
-
-        public NotificationTarget(String email, Long memberId) {
-            this.email = email;
-            this.memberId = memberId;
-        }
+        this.targetTitle = targetTitle;
+        this.targetId = targetId;
     }
 }

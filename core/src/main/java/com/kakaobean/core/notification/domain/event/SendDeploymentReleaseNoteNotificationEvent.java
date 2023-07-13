@@ -7,14 +7,14 @@ import java.util.List;
 @Getter
 public class SendDeploymentReleaseNoteNotificationEvent extends NotificationSentEvent {
 
-    private final Long releaseNoteId;
+    private final List<String> emails;
 
     public SendDeploymentReleaseNoteNotificationEvent(Long projectId,
-                                                      String title,
-                                                      List<NotificationTarget> infos,
+                                                      String targetTitle,
+                                                      Long targetId,
                                                       String projectTitle,
-                                                      Long releaseNoteId) {
-        super(projectId, title, infos, projectTitle);
-        this.releaseNoteId = releaseNoteId;
+                                                      List<String> emails) {
+        super(projectId, projectTitle, targetTitle, targetId);
+        this.emails = emails;
     }
 }

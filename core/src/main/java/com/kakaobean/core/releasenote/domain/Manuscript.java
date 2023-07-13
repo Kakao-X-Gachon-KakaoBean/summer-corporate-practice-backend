@@ -49,6 +49,6 @@ public class Manuscript extends BaseEntity {
     }
 
     public void registered() {
-        //Events.raise(new ManuscriptRegisteredEvent(projectId, id, version, title));
+        Events.raise(new ManuscriptRegisteredEvent(projectId, id, version, title));
     }
 }
