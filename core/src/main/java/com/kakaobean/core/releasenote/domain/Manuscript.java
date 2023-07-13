@@ -3,7 +3,7 @@ package com.kakaobean.core.releasenote.domain;
 import com.kakaobean.core.common.domain.BaseEntity;
 import com.kakaobean.core.common.domain.BaseStatus;
 import com.kakaobean.core.common.event.Events;
-import com.kakaobean.core.releasenote.domain.event.ReleaseNoteDeployedEvent;
+import com.kakaobean.core.releasenote.domain.event.ManuscriptRegisteredEvent;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,11 +13,11 @@ import org.hibernate.annotations.Where;
 import javax.persistence.*;
 
 @Getter
-@Entity
-@Where(clause = "status = 'ACTIVE'")
-@SQLDelete(sql = "UPDATE release_note SET status = 'INACTIVE' WHERE id = ?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ReleaseNote extends BaseEntity {
+@Where(clause = "status = 'ACTIVE'")
+@SQLDelete(sql = "UPDATE manuscript SET status = 'INACTIVE' WHERE id = ?")
+@Entity
+public class Manuscript extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,25 +30,25 @@ public class ReleaseNote extends BaseEntity {
 
     private Double version;
 
+    private Long lastEditedMemberId;
+
     private Long projectId;
 
-    private Long memberId;
-
-    public ReleaseNote(BaseStatus status,
-                       String title,
-                       String content,
-                       Double version,
-                       Long projectId,
-                       Long memberId) {
+    public Manuscript(BaseStatus status,
+                      String title,
+                      String content,
+                      Double version,
+                      Long lastEditedMemberId,
+                      Long projectId) {
         super(status);
         this.title = title;
         this.content = content;
         this.version = version;
+        this.lastEditedMemberId = lastEditedMemberId;
         this.projectId = projectId;
-        this.memberId = memberId;
     }
 
-    public void deployed() {
-        Events.raise(new ReleaseNoteDeployedEvent(id));
+    public void registered() {
+        Events.raise(new ManuscriptRegisteredEvent(projectId, id, version, title));
     }
 }

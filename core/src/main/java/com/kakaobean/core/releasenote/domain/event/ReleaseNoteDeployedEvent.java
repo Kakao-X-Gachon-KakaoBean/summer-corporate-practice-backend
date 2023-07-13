@@ -1,4 +1,4 @@
-package com.kakaobean.core.releasenote.domain;
+package com.kakaobean.core.releasenote.domain.event;
 
 import com.kakaobean.core.common.event.Event;
 

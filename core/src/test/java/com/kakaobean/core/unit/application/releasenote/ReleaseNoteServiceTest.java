@@ -7,7 +7,7 @@ import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.releasenote.application.ReleaseNoteService;
 import com.kakaobean.core.releasenote.domain.ReleaseNote;
-import com.kakaobean.core.releasenote.domain.ReleaseNoteDeployedEvent;
+import com.kakaobean.core.releasenote.domain.event.ReleaseNoteDeployedEvent;
 import com.kakaobean.core.releasenote.domain.ReleaseNoteRepository;
 import com.kakaobean.core.releasenote.domain.ReleaseNoteValidator;
 import com.kakaobean.core.unit.UnitTest;
