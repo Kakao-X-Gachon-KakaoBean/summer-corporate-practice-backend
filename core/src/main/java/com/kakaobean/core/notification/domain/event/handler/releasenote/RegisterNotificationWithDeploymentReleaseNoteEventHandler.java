@@ -1,4 +1,4 @@
-package com.kakaobean.core.notification.domain.event.handler;
+package com.kakaobean.core.notification.domain.event.handler.releasenote;
 
 import com.kakaobean.core.notification.domain.event.NotificationSentEvent;
 import com.kakaobean.core.notification.domain.service.register.RegisterNotificationService;
@@ -19,6 +19,13 @@ public class RegisterNotificationWithDeploymentReleaseNoteEventHandler {
     private final SendEmailNotificationService sendEmailNotificationService;
     private final SendMessageNotificationService sendMessageNotificationService;
 
+    /**
+     * 릴리즈 노트가 배포되면 발생하는 메서드
+     *
+     * 1. 릴리즈 노트 배포 알림을 저장한다.
+     * 2. 이메일로 릴리즈 노트의 배포 알림을 발행한다.
+     * 3. 메시지로 릴리즈 노트의 배포 알림을 발행한다.
+     */
     //@Async 비동기로 진행하면 테스트 진행이 불가능.
     @TransactionalEventListener(value = ReleaseNoteDeployedEvent.class)
     public void handle(ReleaseNoteDeployedEvent event){

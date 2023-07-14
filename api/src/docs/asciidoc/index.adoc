@@ -66,3 +66,7 @@
 == 릴리즈 노트 API
 
 * link:/docs/release_note/deploy_release_note.html[릴리즈 노트 배포 API, window=_blank ]
+
+== 릴리즈 노트 원고 API
+
+* link:/docs/release_note/register_manuscript.html[릴리즈 노트 원고 생성 API, window=_blank ]

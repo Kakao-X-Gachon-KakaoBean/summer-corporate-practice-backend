@@ -8,6 +8,6 @@ public class RegisterReleaseNoteRequestFactory {
     private RegisterReleaseNoteRequestFactory() {}
 
     public static DeployReleaseNoteRequest create(){
-        return new DeployReleaseNoteRequest("3.1V Release Note", "Contents..", 1.0, 10L);
+        return new DeployReleaseNoteRequest("3.1V Release Note", "Contents..", "1.0", 10L);
     }
 }

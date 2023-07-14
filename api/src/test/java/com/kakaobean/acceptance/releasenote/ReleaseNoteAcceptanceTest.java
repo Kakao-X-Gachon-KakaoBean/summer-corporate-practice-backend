@@ -70,7 +70,7 @@ public class ReleaseNoteAcceptanceTest extends AcceptanceTest {
         ProjectAcceptanceTask.joinProjectMemberTask(new RegisterProjectMemberRequest(project.getSecretKey()));
 
         //릴리즈 노트 배포 요창
-        DeployReleaseNoteRequest request = new DeployReleaseNoteRequest("코코노트 초기 릴리즈 노트", ".. 배포 내용", 1.1, project.getId());
+        DeployReleaseNoteRequest request = new DeployReleaseNoteRequest("코코노트 초기 릴리즈 노트", ".. 배포 내용", "1.1", project.getId());
 
         //when
         ExtractableResponse response = ReleaseNoteAcceptanceTask.deployReleaseNoteTask(request);

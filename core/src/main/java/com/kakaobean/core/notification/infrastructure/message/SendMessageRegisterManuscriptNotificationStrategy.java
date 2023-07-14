@@ -25,13 +25,12 @@ public class SendMessageRegisterManuscriptNotificationStrategy extends AbstractS
     @Override
     public void send(NotificationSentEvent event) {
         SendRegisterManuscriptNotificationEvent notificationEvent = (SendRegisterManuscriptNotificationEvent) event;
-        String title = notificationEvent.getTargetTitle() + " 원고가 등록되었습니다.";
 
         //TODO 서버 배포하면 수정해야함
-        String url = "localhost:3000/projects/" + notificationEvent.getProjectId() + "/manuscripts/" + notificationEvent.getTargetId();
-        String exchangeName = PROJECT_PREFIX.getPrefix() + event.getProjectId();
+        String url = "localhost:3000" + notificationEvent.getUrl();
+        String exchangeName = PROJECT_PREFIX.getPrefix() + notificationEvent.getProjectId();
 
-        super.sendWithFanout(url, exchangeName, notificationEvent.getProjectTitle(), title);
+        super.sendWithFanout(url, exchangeName, notificationEvent.getProjectTitle(), notificationEvent.getContent());
     }
 
     @Override

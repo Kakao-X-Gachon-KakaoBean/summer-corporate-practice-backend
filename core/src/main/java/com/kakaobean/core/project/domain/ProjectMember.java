@@ -4,6 +4,7 @@ import com.kakaobean.core.common.domain.BaseEntity;
 import com.kakaobean.core.common.domain.BaseStatus;
 import com.kakaobean.core.common.event.Events;
 import com.kakaobean.core.project.domain.event.ProjectMemberRegisteredEvent;
+import com.kakaobean.core.project.domain.event.ProjectMemberRoleModifiedEvent;
 import lombok.Getter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
@@ -44,6 +45,7 @@ public class ProjectMember extends BaseEntity {
 
     public void modifyProjectRole(ProjectRole projectRole) {
         this.projectRole = projectRole;
+        Events.raise(new ProjectMemberRoleModifiedEvent(projectId, memberId, projectRole));
     }
 
     public void registered() {

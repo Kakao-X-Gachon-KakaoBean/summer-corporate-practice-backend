@@ -7,9 +7,6 @@ import com.kakaobean.core.notification.domain.service.send.email.SendEmailNotifi
 import com.kakaobean.independentlysystem.email.EmailSender;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Component
 public class SendEmailDeploymentReleaseNoteNotificationStrategy implements SendEmailNotificationStrategy {
 
@@ -23,13 +20,13 @@ public class SendEmailDeploymentReleaseNoteNotificationStrategy implements SendE
     public void send(NotificationSentEvent event) {
         SendDeploymentReleaseNoteNotificationEvent notificationEvent = (SendDeploymentReleaseNoteNotificationEvent) event;
         String title = notificationEvent.getProjectTitle() + " 프로젝트 릴리즈 노트 배포 안내입니다.";
-        String url = "localhost:3000/projects/" + notificationEvent.getProjectId() + "/release-notes/" + notificationEvent.getTargetId();
+        String url = "localhost:3000" + notificationEvent.getUrl();
         emailSender.sendEmail(
                 notificationEvent.getEmails(),
                 title,
                 () -> EmailHtmlUtils.makeLinkHtml(
                         "릴리즈 노트 배포",
-                        event.getTargetTitle() + "릴리즈 노트가 배포되었습니다.",
+                        notificationEvent.getContent(),
                         "",
                         "아래 링크",
                         "에서 확인하실 수 있습니다.",

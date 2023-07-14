@@ -1,0 +1,13 @@
+= 릴리즈 노트 원고 배포
+
+== 요청
+
+include::{snippets}/register_release_note_manuscript/http-request.adoc[]
+
+include::{snippets}/register_release_note_manuscript/request-fields.adoc[]
+
+== 응답
+
+include::{snippets}/register_release_note_manuscript/http-response.adoc[]
+
+include::{snippets}/register_release_note_manuscript/response-fields.adoc[]

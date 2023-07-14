@@ -3,20 +3,24 @@ package com.kakaobean.core.notification.domain.event;
 import com.kakaobean.core.common.event.Event;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 public abstract class NotificationSentEvent extends Event {
 
-    private final Long projectId;
+    private final String url;
     private final String projectTitle;
-    private final String targetTitle;
-    private final Long targetId;
+    private final String content;
+    private final LocalDateTime issuedAt;
 
-    public NotificationSentEvent(Long projectId, String projectTitle, String targetTitle, Long targetId) {
-        this.projectId = projectId;
+    public NotificationSentEvent(String url,
+                                 String projectTitle,
+                                 String content,
+                                 LocalDateTime localDateTime) {
+        this.url = url;
         this.projectTitle = projectTitle;
-        this.targetTitle = targetTitle;
-        this.targetId = targetId;
+        this.content = content;
+        this.issuedAt = localDateTime;
     }
 }
