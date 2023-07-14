@@ -2,7 +2,7 @@ package com.kakaobean.core.notification.infrastructure.message;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kakaobean.core.notification.domain.event.NotificationSentEvent;
-import com.kakaobean.core.notification.domain.event.SendDeploymentReleaseNoteNotificationEvent;
+import com.kakaobean.core.notification.domain.event.DeploymentReleaseNoteNotificationEvent;
 import com.kakaobean.independentlysystem.amqp.AmqpService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -19,17 +19,13 @@ public class SendMessageDeploymentReleaseNoteNotificationStrategy extends Abstra
 
     @Override
     public void send(NotificationSentEvent event) {
-        SendDeploymentReleaseNoteNotificationEvent notificationEvent = (SendDeploymentReleaseNoteNotificationEvent) event;
-        String title = notificationEvent.getProjectTitle() + " 릴리즈 노트가 배포되었습니다.";
-
-        //TODO 서버 배포하면 수정해야함.
-        String url = "localhost:3000" + event.getUrl();
+        DeploymentReleaseNoteNotificationEvent notificationEvent = (DeploymentReleaseNoteNotificationEvent) event;
         String exchangeName = PROJECT_PREFIX.getPrefix() + notificationEvent.getProjectId();
-        super.sendWithFanout(url, exchangeName, notificationEvent.getProjectTitle(), title);
+        super.sendWithFanout(notificationEvent.getUrl(), exchangeName, notificationEvent.getProjectTitle(), notificationEvent.getContent());
     }
 
     @Override
     public boolean support(Class<? extends NotificationSentEvent> eventClass) {
-        return eventClass == SendDeploymentReleaseNoteNotificationEvent.class;
+        return eventClass == DeploymentReleaseNoteNotificationEvent.class;
     }
 }

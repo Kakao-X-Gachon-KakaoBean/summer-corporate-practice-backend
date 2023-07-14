@@ -7,13 +7,9 @@ import lombok.Getter;
 @Getter
 public class ProjectMemberRoleModifiedEvent extends Event {
 
-    private final Long projectId;
-    private final Long memberId;
-    private final ProjectRole projectRole;
+    private final Long projectMemberId;
 
-    public ProjectMemberRoleModifiedEvent(Long projectId, Long memberId, ProjectRole projectRole) {
-        this.projectId = projectId;
-        this.memberId = memberId;
-        this.projectRole = projectRole;
+    public ProjectMemberRoleModifiedEvent(Long projectMemberId) {
+        this.projectMemberId = projectMemberId;
     }
 }

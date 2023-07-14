@@ -45,7 +45,7 @@ public class ProjectMember extends BaseEntity {
 
     public void modifyProjectRole(ProjectRole projectRole) {
         this.projectRole = projectRole;
-        Events.raise(new ProjectMemberRoleModifiedEvent(projectId, memberId, projectRole));
+        Events.raise(new ProjectMemberRoleModifiedEvent(id));
     }
 
     public void registered() {

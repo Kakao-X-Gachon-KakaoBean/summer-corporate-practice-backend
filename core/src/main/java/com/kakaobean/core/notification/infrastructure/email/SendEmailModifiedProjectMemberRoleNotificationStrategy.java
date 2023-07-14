@@ -2,30 +2,33 @@ package com.kakaobean.core.notification.infrastructure.email;
 
 import com.kakaobean.common.EmailHtmlUtils;
 import com.kakaobean.core.notification.domain.event.DeploymentReleaseNoteNotificationEvent;
+import com.kakaobean.core.notification.domain.event.ModifiedProjectMemberNotificationEvent;
 import com.kakaobean.core.notification.domain.event.NotificationSentEvent;
 import com.kakaobean.core.notification.domain.service.send.email.SendEmailNotificationStrategy;
 import com.kakaobean.independentlysystem.email.EmailSender;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
-public class SendEmailDeploymentReleaseNoteNotificationStrategy implements SendEmailNotificationStrategy {
+public class SendEmailModifiedProjectMemberRoleNotificationStrategy implements SendEmailNotificationStrategy {
 
     private final EmailSender emailSender;
 
-    public SendEmailDeploymentReleaseNoteNotificationStrategy(EmailSender emailSender) {
+    public SendEmailModifiedProjectMemberRoleNotificationStrategy(EmailSender emailSender) {
         this.emailSender = emailSender;
     }
 
     @Override
     public void send(NotificationSentEvent event) {
-        DeploymentReleaseNoteNotificationEvent notificationEvent = (DeploymentReleaseNoteNotificationEvent) event;
-        String title = notificationEvent.getProjectTitle() + " 프로젝트 릴리즈 노트 배포 안내입니다.";
+        ModifiedProjectMemberNotificationEvent notificationEvent = (ModifiedProjectMemberNotificationEvent) event;
+        String title = notificationEvent.getProjectTitle() + " 프로젝트 멤버 권한 변경 안내입니다.";
         String url = "localhost:3000" + notificationEvent.getUrl();
         emailSender.sendEmail(
-                notificationEvent.getEmails(),
+                List.of(notificationEvent.getEmail()),
                 title,
                 () -> EmailHtmlUtils.makeLinkHtml(
-                        "릴리즈 노트 배포",
+                        "프로젝트 멤버 권한 변경",
                         notificationEvent.getContent(),
                         "",
                         "아래 링크",
@@ -39,6 +42,6 @@ public class SendEmailDeploymentReleaseNoteNotificationStrategy implements SendE
 
     @Override
     public boolean support(Class<? extends NotificationSentEvent> eventClass) {
-        return eventClass == DeploymentReleaseNoteNotificationEvent.class;
+        return eventClass == ModifiedProjectMemberNotificationEvent.class;
     }
 }

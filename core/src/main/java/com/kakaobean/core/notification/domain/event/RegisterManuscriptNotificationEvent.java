@@ -5,11 +5,11 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class SendRegisterManuscriptNotificationEvent extends NotificationSentEvent {
+public class RegisterManuscriptNotificationEvent extends NotificationSentEvent {
 
     private final Long projectId;
 
-    public SendRegisterManuscriptNotificationEvent(String url, String projectTitle, String content, LocalDateTime localDateTime, Long projectId) {
+    public RegisterManuscriptNotificationEvent(String url, String projectTitle, String content, LocalDateTime localDateTime, Long projectId) {
         super(url, projectTitle, content, localDateTime);
         this.projectId = projectId;
     }

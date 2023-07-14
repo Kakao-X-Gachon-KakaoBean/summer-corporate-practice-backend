@@ -1,22 +1,24 @@
 package com.kakaobean.core.notification.domain.event.handler.project;
 
-import com.kakaobean.core.member.domain.Member;
-import com.kakaobean.core.member.domain.repository.MemberRepository;
-import com.kakaobean.core.member.exception.member.NotExistsMemberException;
-import com.kakaobean.core.project.domain.Project;
+import com.kakaobean.core.notification.domain.NotificationType;
+import com.kakaobean.core.notification.domain.event.NotificationSentEvent;
+import com.kakaobean.core.notification.domain.service.register.RegisterNotificationService;
+import com.kakaobean.core.notification.domain.service.send.email.SendEmailNotificationService;
+import com.kakaobean.core.notification.domain.service.send.message.SendMessageNotificationService;
 import com.kakaobean.core.project.domain.event.ProjectMemberRoleModifiedEvent;
-import com.kakaobean.core.project.domain.repository.ProjectRepository;
-import com.kakaobean.core.project.exception.NotExistsProjectException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionalEventListener;
+
+import static com.kakaobean.core.notification.domain.NotificationType.*;
 
 @Component
 @RequiredArgsConstructor
 public class ProjectMemberRoleModifiedEventHandler {
 
-    private final MemberRepository memberRepository;
-    private final ProjectRepository projectRepository;
+    private final RegisterNotificationService registerNotificationService;
+    private final SendEmailNotificationService sendEmailNotificationService;
+    private final SendMessageNotificationService sendMessageNotificationService;
 
     /**
      * 프로젝트 멤버의 권한이 바뀌었을 때 발생하는 메서드
@@ -26,11 +28,8 @@ public class ProjectMemberRoleModifiedEventHandler {
      */
     @TransactionalEventListener(ProjectMemberRoleModifiedEvent.class)
     public void handle(ProjectMemberRoleModifiedEvent event) {
-        Member member = memberRepository.findById(event.getMemberId())
-                .orElseThrow(NotExistsMemberException::new);
-        Project project = projectRepository.findById(event.getProjectId())
-                .orElseThrow(NotExistsProjectException::new);
-
-
+        NotificationSentEvent notificationSentEvent = registerNotificationService.register(event.getProjectMemberId(), MODIFIED_PROJECT_MEMBER_ROLE);
+        sendEmailNotificationService.sendEmail(notificationSentEvent);
+        sendMessageNotificationService.sendMessage(notificationSentEvent);
     }
 }

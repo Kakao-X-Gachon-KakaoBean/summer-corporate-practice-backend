@@ -4,7 +4,7 @@ import com.kakaobean.core.notification.domain.Notification;
 import com.kakaobean.core.notification.domain.NotificationRepository;
 import com.kakaobean.core.notification.domain.NotificationType;
 
-import com.kakaobean.core.notification.domain.event.SendDeploymentReleaseNoteNotificationEvent;
+import com.kakaobean.core.notification.domain.event.DeploymentReleaseNoteNotificationEvent;
 import com.kakaobean.core.notification.domain.event.NotificationSentEvent;
 import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
@@ -42,7 +42,7 @@ public class RegisterDeploymentReleaseNoteNotificationStrategy implements Regist
         String url = "/projects/" + releaseNote.getProjectId() + "/release-notes/" + releaseNote.getId();
         List<String> emails = saveNotifications(releaseNote, url);
         String content = releaseNote.getTitle() + "이 배포되었습니다.";
-        return new SendDeploymentReleaseNoteNotificationEvent(url, project.getTitle(), content, LocalDateTime.now(), emails, project.getId());
+        return new DeploymentReleaseNoteNotificationEvent(url, project.getTitle(), content, LocalDateTime.now(), emails, project.getId());
     }
 
     private List<String> saveNotifications(ReleaseNote releaseNote, String url) {

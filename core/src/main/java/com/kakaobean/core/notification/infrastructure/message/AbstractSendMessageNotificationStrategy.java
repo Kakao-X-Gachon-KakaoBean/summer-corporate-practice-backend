@@ -33,4 +33,19 @@ public abstract class AbstractSendMessageNotificationStrategy implements SendMes
             throw new RuntimeException(e.getCause());
         }
     }
+
+    protected void sendWithDirect(String url,
+                                  String exchangeName,
+                                  String projectTitle,
+                                  String title,
+                                  String routingKey){
+        DtoToQueue dto = new DtoToQueue(url, LocalDateTime.now(), projectTitle, title);
+        try {
+            amqpService.send(exchangeName, routingKey, objectMapper.writeValueAsString(dto));
+        }
+        catch(Exception e){
+            log.error("메세지 큐 전송 중 에러가 발생했습니다.");
+            throw new RuntimeException(e.getCause());
+        }
+    }
 }

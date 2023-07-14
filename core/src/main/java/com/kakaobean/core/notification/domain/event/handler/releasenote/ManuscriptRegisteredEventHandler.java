@@ -2,6 +2,7 @@ package com.kakaobean.core.notification.domain.event.handler.releasenote;
 
 import com.kakaobean.core.notification.domain.event.NotificationSentEvent;
 import com.kakaobean.core.notification.domain.service.register.RegisterNotificationService;
+import com.kakaobean.core.notification.domain.service.send.email.SendEmailNotificationService;
 import com.kakaobean.core.notification.domain.service.send.message.SendMessageNotificationService;
 import com.kakaobean.core.releasenote.domain.event.ManuscriptRegisteredEvent;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import static com.kakaobean.core.notification.domain.NotificationType.REGISTER_M
 public class ManuscriptRegisteredEventHandler {
 
     private final SendMessageNotificationService sendMessageNotificationService;
+    private final SendEmailNotificationService sendEmailNotificationService;
     private final RegisterNotificationService registerNotificationService;
 
     /**
@@ -24,6 +26,7 @@ public class ManuscriptRegisteredEventHandler {
     public void handle(ManuscriptRegisteredEvent event) {
         if(event != null){
             NotificationSentEvent notificationEvent = registerNotificationService.register(event.getManuscriptId(), REGISTER_MANUSCRIPT);
+            sendEmailNotificationService.sendEmail(notificationEvent);
             sendMessageNotificationService.sendMessage(notificationEvent);
         }
     }
