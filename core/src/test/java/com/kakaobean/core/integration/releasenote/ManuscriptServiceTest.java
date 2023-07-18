@@ -1,8 +1,10 @@
 package com.kakaobean.core.integration.releasenote;
 
+import com.kakaobean.core.factory.member.MemberFactory;
 import com.kakaobean.core.factory.project.ProjectFactory;
 import com.kakaobean.core.factory.project.ProjectMemberFactory;
 import com.kakaobean.core.integration.IntegrationTest;
+import com.kakaobean.core.member.domain.Member;
 import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.ProjectRole;
@@ -11,7 +13,7 @@ import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.releasenote.application.ManuscriptService;
 import com.kakaobean.core.releasenote.application.dto.request.RegisterManuscriptRequestDto;
 import com.kakaobean.core.releasenote.domain.Manuscript;
-import com.kakaobean.core.releasenote.domain.ManuscriptRepository;
+import com.kakaobean.core.releasenote.domain.repository.ManuscriptRepository;
 import com.kakaobean.core.releasenote.exception.DuplicateManuscriptVersionException;
 import com.kakaobean.core.releasenote.exception.ManuscriptWriterAccessException;
 import org.assertj.core.api.AbstractThrowableAssert;
