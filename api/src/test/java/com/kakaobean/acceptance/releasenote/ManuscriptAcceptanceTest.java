@@ -103,4 +103,26 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(200);
         assertThat(dto.isFinalPage()).isTrue();
     }
+
+    @Test
+    void 릴리즈_노트_원고_여러_개를_페이징을_사용해_조회한다_vp(){
+
+        //프로젝트 생성
+        RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
+        ProjectAcceptanceTask.registerProjectTask(givenRequest);
+        Project project = projectRepository.findAll().get(0);
+
+        //릴리즈 노트 원고 생성
+        for (int i = 1; i < 15; i++) {
+            RegisterManuscriptRequest request = new RegisterManuscriptRequest("1." + i + "v 노트" , ".. 배포 내용", "1." + i, project.getId());
+            ManuscriptAcceptanceTask.registerManuscriptTask(request);
+        }
+        //when
+        ExtractableResponse response = ManuscriptAcceptanceTask.findManuscriptsTask(project.getId(), 0);
+
+        //then
+        FindManuscriptsResponseDto dto = response.as(FindManuscriptsResponseDto.class);
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(dto.isFinalPage()).isFalse();
+    }
 }
