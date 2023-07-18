@@ -10,7 +10,7 @@ import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.project.exception.NotExistsProjectException;
 import com.kakaobean.core.releasenote.domain.Manuscript;
-import com.kakaobean.core.releasenote.domain.ManuscriptRepository;
+import com.kakaobean.core.releasenote.domain.repository.ManuscriptRepository;
 import com.kakaobean.core.releasenote.exception.NotExistsManuscriptException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

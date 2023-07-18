@@ -6,6 +6,7 @@ import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.ProjectRole;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.exception.NotExistsProjectMemberException;
+import com.kakaobean.core.releasenote.domain.repository.ManuscriptRepository;
 import com.kakaobean.core.releasenote.exception.DuplicateManuscriptVersionException;
 import com.kakaobean.core.releasenote.exception.ManuscriptWriterAccessException;
 import lombok.RequiredArgsConstructor;

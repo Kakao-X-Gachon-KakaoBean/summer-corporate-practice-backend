@@ -2,30 +2,24 @@ package com.kakaobean.core.unit.application.releasenote;
 
 import com.kakaobean.core.factory.project.ProjectMemberFactory;
 import com.kakaobean.core.factory.releasenote.ManuscriptFactory;
-import com.kakaobean.core.project.domain.event.ProjectMemberRegisteredEvent;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.releasenote.application.ManuscriptService;
 import com.kakaobean.core.releasenote.application.dto.request.RegisterManuscriptRequestDto;
 import com.kakaobean.core.releasenote.domain.Manuscript;
-import com.kakaobean.core.releasenote.domain.ManuscriptRepository;
+import com.kakaobean.core.releasenote.domain.repository.ManuscriptRepository;
 import com.kakaobean.core.releasenote.domain.ManuscriptValidator;
 import com.kakaobean.core.releasenote.exception.DuplicateManuscriptVersionException;
 import com.kakaobean.core.releasenote.exception.ManuscriptWriterAccessException;
 import com.kakaobean.core.unit.UnitTest;
 import org.assertj.core.api.AbstractThrowableAssert;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
-import static org.mockito.Mockito.*;
 
 public class ManuscriptServiceTest extends UnitTest {
 
