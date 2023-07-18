@@ -29,11 +29,12 @@ public class ManuscriptQueryRepositoryImpl implements ManuscriptQueryRepository 
                                 member.name,
                                 manuscript.id,
                                 manuscript.title,
-                                manuscript.content
+                                manuscript.content,
+                                manuscript.version
                         )
                 )
                 .from(manuscript)
-                .join(manuscript).on(manuscript.lastEditedMemberId.eq(member.id))
+                .join(member).on(manuscript.lastEditedMemberId.eq(member.id))
                 .where(manuscript.id.eq(manuscriptId))
                 .fetchFirst();
         return Optional.ofNullable(responseDto);

@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface ManuscriptRepository extends JpaRepository<Manuscript, Long> {
 
-    Optional<Manuscript> findManuscriptByVersion(String version);
+    Optional<Manuscript> findManuscriptByVersion (String version);
 }
