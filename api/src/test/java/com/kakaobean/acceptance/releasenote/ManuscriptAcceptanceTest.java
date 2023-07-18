@@ -13,6 +13,7 @@ import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.releasenote.domain.Manuscript;
 import com.kakaobean.core.releasenote.domain.repository.ManuscriptRepository;
 import com.kakaobean.core.releasenote.domain.repository.query.FindManuscriptResponseDto;
+import com.kakaobean.core.releasenote.domain.repository.query.FindManuscriptsResponseDto;
 import com.kakaobean.member.dto.RegisterMemberRequest;
 import com.kakaobean.project.dto.request.InviteProjectMemberRequest;
 import com.kakaobean.project.dto.request.RegisterProjectMemberRequest;
@@ -61,7 +62,7 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
 
 
     @Test
-    void 릴리즈_노트_원고를_조회한다(){
+    void 릴리즈_노트_원고_1개를_조회한다(){
 
         //프로젝트 생성
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
@@ -77,8 +78,29 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
         ExtractableResponse response = ManuscriptAcceptanceTask.findManuscriptTask(manuscript.getId());
 
         //then
-        assertThat(response.statusCode()).isEqualTo(201);
-        FindManuscriptResponseDto result = response.as(FindManuscriptResponseDto.class);
-        System.out.println("result = " + result);
+        assertThat(response.statusCode()).isEqualTo(200);
+    }
+
+    @Test
+    void 릴리즈_노트_원고_여러_개를_페이징을_사용해_조회한다(){
+
+        //프로젝트 생성
+        RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
+        ProjectAcceptanceTask.registerProjectTask(givenRequest);
+        Project project = projectRepository.findAll().get(0);
+
+        //릴리즈 노트 원고 생성
+        RegisterManuscriptRequest request = new RegisterManuscriptRequest("1.1V 코코노트 초기 릴리즈 노트", ".. 배포 내용", "1.1", project.getId());
+        RegisterManuscriptRequest request2 = new RegisterManuscriptRequest("1.2V 코코노트 초기 릴리즈 노트", ".. 배포 내용", "1.2", project.getId());
+
+        ManuscriptAcceptanceTask.registerManuscriptTask(request);
+        ManuscriptAcceptanceTask.registerManuscriptTask(request2);
+        //when
+        ExtractableResponse response = ManuscriptAcceptanceTask.findManuscriptsTask(project.getId(), 0);
+
+        //then
+        FindManuscriptsResponseDto dto = response.as(FindManuscriptsResponseDto.class);
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(dto.isFinalPage()).isTrue();
     }
 }

@@ -36,4 +36,18 @@ public class ManuscriptAcceptanceTask {
                 .then().log().all()
                 .extract();
     }
+
+    public static ExtractableResponse findManuscriptsTask(Long projectId, Integer page){
+        return RestAssured
+                .given()
+                .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
+                .accept(APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
+                .param("projectId", projectId)
+                .param("page", page)
+                .when()
+                .get("/manuscripts")
+                .then().log().all()
+                .extract();
+    }
 }
