@@ -77,6 +77,6 @@ public class ReleaseNoteAcceptanceTest extends AcceptanceTest {
 
         //then
         assertThat(response.statusCode()).isEqualTo(201);
-        assertThat(notificationRepository.findAll().size()).isEqualTo(2);
+        assertThat(notificationRepository.findAll().size()).isEqualTo(3);
     }
 }

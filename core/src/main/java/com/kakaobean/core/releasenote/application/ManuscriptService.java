@@ -2,7 +2,7 @@ package com.kakaobean.core.releasenote.application;
 
 import com.kakaobean.core.releasenote.application.dto.request.RegisterManuscriptRequestDto;
 import com.kakaobean.core.releasenote.domain.Manuscript;
-import com.kakaobean.core.releasenote.domain.ManuscriptRepository;
+import com.kakaobean.core.releasenote.domain.repository.ManuscriptRepository;
 import com.kakaobean.core.releasenote.domain.ManuscriptValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

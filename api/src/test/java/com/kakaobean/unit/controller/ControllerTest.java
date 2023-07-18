@@ -14,6 +14,7 @@ import com.kakaobean.core.project.application.ProjectService;
 import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
 import com.kakaobean.core.releasenote.application.ManuscriptService;
 import com.kakaobean.core.releasenote.application.ReleaseNoteService;
+import com.kakaobean.core.releasenote.domain.repository.query.ManuscriptQueryRepository;
 import com.kakaobean.independentlysystem.image.ImageService;
 import com.kakaobean.member.MemberController;
 import com.kakaobean.project.ProjectController;
@@ -101,4 +102,7 @@ public abstract class ControllerTest {
 
     @MockBean
     protected ManuscriptService manuscriptService;
+
+    @MockBean
+    protected ManuscriptQueryRepository manuscriptQueryRepository;
 }

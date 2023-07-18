@@ -70,3 +70,6 @@
 == 릴리즈 노트 원고 API
 
 * link:/docs/release_note/register_manuscript.html[릴리즈 노트 원고 생성 API, window=_blank ]
+* link:/docs/release_note/find_manuscript.html[릴리즈 노트 원고 단건 조회 API, window=_blank ]
+* link:/docs/release_note/find_manuscripts.html[페이징 적용 릴리즈 노트 원고 조회 API, window=_blank ]
+
