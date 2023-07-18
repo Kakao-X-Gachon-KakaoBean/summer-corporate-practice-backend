@@ -33,7 +33,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserById(
             Long id
     ) {
-        Member member = memberRepository.findMemberById(id).orElseThrow(NotExistsMemberException::new);
+        Member member = memberRepository.findById(id).orElseThrow(NotExistsMemberException::new);
         return UserPrincipal.create(member);
     }
 }
