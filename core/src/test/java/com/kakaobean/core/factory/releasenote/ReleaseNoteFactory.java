@@ -11,7 +11,7 @@ public class ReleaseNoteFactory {
                 .id(1L)
                 .title("릴리즈노트 제목")
                 .content("릴리즈노트 내용")
-                .version(1.0)
+                .version("1.3")
                 .memberId(memberId)
                 .projectId(projectId)
                 .build();

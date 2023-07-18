@@ -7,10 +7,10 @@ public class RegisterReleaseNoteRequestDtoFactory {
     private RegisterReleaseNoteRequestDtoFactory() {}
 
     public static DeployReleaseNoteRequestDto create(){
-        return new DeployReleaseNoteRequestDto("release note title", "contents", 3.1, 1L, 2L);
+        return new DeployReleaseNoteRequestDto("release note title", "contents", "3.1", 1L, 2L);
     }
 
     public static DeployReleaseNoteRequestDto createWithProjectIdAndWriterId(Long projectId, Long writerId){
-        return new DeployReleaseNoteRequestDto("release note title", "contents", 3.1, projectId, writerId);
+        return new DeployReleaseNoteRequestDto("release note title", "contents", "3.1", projectId, writerId);
     }
 }

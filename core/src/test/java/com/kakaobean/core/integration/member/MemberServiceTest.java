@@ -309,14 +309,13 @@ public class MemberServiceTest extends IntegrationTest {
 
         //given
         String newName = "newHiki";
-        Member member = MemberFactory.create();
-        memberRepository.save(member);
+        Member member = memberRepository.save(MemberFactory.create());
 
         //when
         memberService.modifyMember(new ModifyMemberRequestDto(member.getId(), newName));
 
         //then
-        Member result = memberRepository.findMemberById(member.getId()).get();
+        Member result = memberRepository.findById(member.getId()).get();
         assertThat(newName.equals(result.getName())).isTrue();
     }
 
@@ -350,9 +349,8 @@ public class MemberServiceTest extends IntegrationTest {
 
         //given
         String newName = "kakoBean";
-        //일단 같은 이름으로 하려고 이렇게 했는데, 혹시 생성자를 써서 하는 다른 방법으로 바꿔야하나요?
-        Member member = MemberFactory.create();
-        memberRepository.save(member);
+
+        Member member = memberRepository.save(MemberFactory.create());
 
         //when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {

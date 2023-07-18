@@ -21,7 +21,7 @@ public class MemberProvider {
 
 
     public FindMemberInfoResponseDto findMemberInfoByMemberId(Long memberId){
-        Member member = memberRepository.findMemberById(memberId)
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotExistsMembersInfoException());
         return FindMemberInfoResponseDto.returnInfo(member);
     }

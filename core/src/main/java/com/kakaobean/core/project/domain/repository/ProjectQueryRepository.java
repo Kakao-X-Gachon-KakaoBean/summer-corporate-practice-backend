@@ -4,6 +4,7 @@ import com.kakaobean.core.project.application.dto.response.FindProjectMemberResp
 import com.kakaobean.core.project.application.dto.response.FindProjectResponseDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProjectQueryRepository {
     List<FindProjectMemberResponseDto> findProjectMembers(Long projectId);
