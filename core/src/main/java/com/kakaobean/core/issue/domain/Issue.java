@@ -2,6 +2,9 @@ package com.kakaobean.core.issue.domain;
 
 import com.kakaobean.core.common.domain.BaseEntity;
 import com.kakaobean.core.common.domain.BaseStatus;
+import com.kakaobean.core.common.event.Events;
+import com.kakaobean.core.issue.domain.event.RegisterIssueEvent;
+import com.kakaobean.core.project.domain.event.ProjectRegisteredEvent;
 import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.SQLDelete;
@@ -28,16 +31,20 @@ public class Issue extends BaseEntity {
 
     private String content;
 
+    private Long writerId;
+
     protected Issue(){}
 
     public Issue(BaseStatus status,
                  Long projectId,
                  String title,
-                 String content) {
+                 String content,
+                 Long writerId) {
         super(status);
         this.projectId = projectId;
         this.title = title;
         this.content = content;
+        this.writerId = writerId;
     }
 
     /**
@@ -48,11 +55,16 @@ public class Issue extends BaseEntity {
                  Long id,
                  Long projectId,
                  String title,
-                 String content) {
+                 String content,
+                 Long writerId) {
         super(BaseStatus.ACTIVE);
         this.id = id;
         this.projectId = projectId;
         this.title = title;
         this.content = content;
+        this.writerId = writerId;
+    }
+    public void registered(Long issueId) {
+        Events.raise(new RegisterIssueEvent(issueId));
     }
 }

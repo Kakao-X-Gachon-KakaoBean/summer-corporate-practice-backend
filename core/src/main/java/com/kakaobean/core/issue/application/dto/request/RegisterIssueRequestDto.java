@@ -5,9 +5,13 @@ import com.kakaobean.core.issue.domain.Issue;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.UUID;
+
 
 @Getter
 public class RegisterIssueRequestDto {
+
+    private Long projectId;
 
     private String title;
 
@@ -15,10 +19,9 @@ public class RegisterIssueRequestDto {
 
     private Long writerId;
 
-    public Long projectId;
-
     @Builder
-    public RegisterIssueRequestDto(String title, String content, Long writerId) {
+    public RegisterIssueRequestDto(Long projectId, String title, String content, Long writerId) {
+        this.projectId = projectId;
         this.title = title;
         this.content = content;
         this.writerId = writerId;
@@ -28,10 +31,10 @@ public class RegisterIssueRequestDto {
 
         return new Issue(
                 BaseStatus.ACTIVE,
-                //TODO: project ID is needed.
                 projectId,
                 title,
-                content
+                content,
+                writerId
         );
     }
 
