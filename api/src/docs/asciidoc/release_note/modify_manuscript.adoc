@@ -1,0 +1,16 @@
+= 릴리즈 노트 원고 수정
+
+== 요청
+
+include::{snippets}/modify_manuscript/http-request.adoc[]
+
+include::{snippets}/modify_manuscript/path-parameters.adoc[]
+
+include::{snippets}/modify_manuscript/request-fields.adoc[]
+
+
+== 응답
+
+include::{snippets}/modify_manuscript/http-response.adoc[]
+
+include::{snippets}/modify_manuscript/response-fields.adoc[]

@@ -5,15 +5,13 @@ import com.kakaobean.core.factory.releasenote.ManuscriptFactory;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.exception.NotExistsProjectMemberException;
 import com.kakaobean.core.releasenote.application.ManuscriptService;
+import com.kakaobean.core.releasenote.application.dto.request.ModifyManuscriptRequestDto;
 import com.kakaobean.core.releasenote.application.dto.request.RegisterManuscriptRequestDto;
 import com.kakaobean.core.releasenote.domain.Manuscript;
 import com.kakaobean.core.releasenote.domain.ManuscriptStatus;
 import com.kakaobean.core.releasenote.domain.repository.ManuscriptRepository;
 import com.kakaobean.core.releasenote.domain.ManuscriptValidator;
-import com.kakaobean.core.releasenote.exception.AnotherMemberAlreadyModifyingException;
-import com.kakaobean.core.releasenote.exception.DuplicateManuscriptVersionException;
-import com.kakaobean.core.releasenote.exception.ManuscriptModificationAccessException;
-import com.kakaobean.core.releasenote.exception.ManuscriptWriterAccessException;
+import com.kakaobean.core.releasenote.exception.*;
 import com.kakaobean.core.unit.UnitTest;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.assertj.core.api.Assertions;
@@ -96,7 +94,7 @@ public class ManuscriptServiceTest extends UnitTest {
         Manuscript manuscript = ManuscriptFactory.create();
         given(manuscriptRepository.findByIdWithPESSIMISTICLock(Mockito.anyLong()))
                 .willReturn(Optional.ofNullable(manuscript));
-        given(projectMemberRepository.findByMemberId(Mockito.anyLong()))
+        given(projectMemberRepository.findByMemberIdAndProjectId(Mockito.anyLong(), Mockito.anyLong()))
                 .willReturn(Optional.ofNullable(ProjectMemberFactory.createAdmin()));
 
         manuscriptService.hasRightToModifyManuscript(1L, 2L);
@@ -110,9 +108,8 @@ public class ManuscriptServiceTest extends UnitTest {
         Manuscript manuscript = ManuscriptFactory.create();
         given(manuscriptRepository.findByIdWithPESSIMISTICLock(Mockito.anyLong()))
                 .willReturn(Optional.ofNullable(manuscript));
-        given(projectMemberRepository.findByMemberId(Mockito.anyLong()))
+        given(projectMemberRepository.findByMemberIdAndProjectId(Mockito.anyLong(), Mockito.anyLong()))
                 .willReturn(Optional.ofNullable(ProjectMemberFactory.createViewer()));
-
 
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
             manuscriptService.hasRightToModifyManuscript(1L, 2L);
@@ -126,7 +123,7 @@ public class ManuscriptServiceTest extends UnitTest {
         Manuscript manuscript = ManuscriptFactory.create();
         given(manuscriptRepository.findByIdWithPESSIMISTICLock(Mockito.anyLong()))
                 .willReturn(Optional.ofNullable(manuscript));
-        given(projectMemberRepository.findByMemberId(Mockito.anyLong()))
+        given(projectMemberRepository.findByMemberIdAndProjectId(Mockito.anyLong(), Mockito.anyLong()))
                 .willReturn(Optional.ofNullable(ProjectMemberFactory.createAdmin()));
         manuscriptService.hasRightToModifyManuscript(1L, 2L);
 
@@ -136,5 +133,58 @@ public class ManuscriptServiceTest extends UnitTest {
         });
 
         result.isInstanceOf(AnotherMemberAlreadyModifyingException.class);
+    }
+
+    @Test
+    void 릴리즈_노트_원고를_수정한다() {
+
+        Manuscript manuscript = ManuscriptFactory.create(Modifying);
+        ModifyManuscriptRequestDto dto = ManuscriptFactory.createServiceDto(1L, 2L);
+        given(manuscriptRepository.findById(Mockito.anyLong()))
+                .willReturn(Optional.ofNullable(manuscript));
+        given(projectMemberRepository.findByMemberIdAndProjectId(Mockito.anyLong(), Mockito.anyLong()))
+                .willReturn(Optional.ofNullable(ProjectMemberFactory.createAdmin()));
+
+        manuscriptService.modifyManuscript(dto);
+
+        assertThat(manuscript.getManuscriptStatus()).isSameAs(Modifiable);
+        assertThat(manuscript.getTitle()).isEqualTo(dto.getTitle());
+        assertThat(manuscript.getContent()).isEqualTo(dto.getContent());
+        assertThat(manuscript.getVersion()).isEqualTo(dto.getVersion());
+        assertThat(manuscript.getLastEditedMemberId()).isSameAs(dto.getEditingMemberId());
+    }
+
+    @Test
+    void 뷰어는_릴리즈_노트_원고를_수정할_수_없다() {
+
+        Manuscript manuscript = ManuscriptFactory.create(Modifying);
+        ModifyManuscriptRequestDto dto = ManuscriptFactory.createServiceDto(1L, 2L);
+        given(manuscriptRepository.findById(Mockito.anyLong()))
+                .willReturn(Optional.ofNullable(manuscript));
+        given(projectMemberRepository.findByMemberIdAndProjectId(Mockito.anyLong(), Mockito.anyLong()))
+                .willReturn(Optional.ofNullable(ProjectMemberFactory.createViewer()));
+
+
+        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
+            manuscriptService.modifyManuscript(dto);
+        });
+
+        result.isInstanceOf(ManuscriptModificationAccessException.class);
+    }
+
+    @Test
+    void 릴리즈_노트_원고_상태가_수정중이_아니면_수정할_수_없다() {
+        Manuscript manuscript = ManuscriptFactory.create(Modifiable);
+        ModifyManuscriptRequestDto dto = ManuscriptFactory.createServiceDto(1L, 2L);
+
+        given(manuscriptRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(manuscript));
+        given(projectMemberRepository.findByMemberIdAndProjectId(Mockito.anyLong(), Mockito.anyLong()))
+                .willReturn(Optional.ofNullable(ProjectMemberFactory.createAdmin()));
+
+        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
+            manuscriptService.modifyManuscript(dto);
+        });
+
+        result.isInstanceOf(CannotModifyManuscriptException.class);
     }
 }

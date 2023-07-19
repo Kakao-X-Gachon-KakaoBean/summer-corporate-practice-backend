@@ -1,5 +1,6 @@
 package com.kakaobean.core.releasenote.application;
 
+import com.kakaobean.core.releasenote.application.dto.request.ModifyManuscriptRequestDto;
 import com.kakaobean.core.releasenote.application.dto.request.RegisterManuscriptRequestDto;
 import com.kakaobean.core.releasenote.application.dto.response.ManuscriptResponseDto;
 import com.kakaobean.core.releasenote.domain.Manuscript;
@@ -30,8 +31,16 @@ public class ManuscriptService {
     public ManuscriptResponseDto hasRightToModifyManuscript(Long memberId, Long manuscriptId) {
         Manuscript manuscript = manuscriptRepository.findByIdWithPESSIMISTICLock(manuscriptId)
                 .orElseThrow(NotExistsManuscriptException::new);
-        manuscriptValidator.isModifiable(manuscript, memberId);
+        manuscriptValidator.validRightToModify(manuscript, memberId);
         manuscript.modifyManuscriptStatus(ManuscriptStatus.Modifying);
         return new ManuscriptResponseDto(manuscript.getId(), manuscript.getTitle(), manuscript.getContent(), manuscript.getVersion());
+    }
+
+    @Transactional
+    public void modifyManuscript(ModifyManuscriptRequestDto dto) {
+        Manuscript manuscript = manuscriptRepository.findById(dto.getManuscriptId())
+                .orElseThrow(NotExistsManuscriptException::new);
+        manuscriptValidator.isModifiable(manuscript, dto.getEditingMemberId());
+        manuscript.modify(dto.getTitle(), dto.getContent(), dto.getVersion(), dto.getEditingMemberId());
     }
 }

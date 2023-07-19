@@ -1,5 +1,6 @@
 package com.kakaobean.acceptance.releasenote;
 
+import com.kakaobean.releasenote.dto.request.ModifyManuscriptRequest;
 import com.kakaobean.releasenote.dto.request.RegisterManuscriptRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -59,6 +60,19 @@ public class ManuscriptAcceptanceTask {
                 .contentType(APPLICATION_JSON_VALUE)
                 .when()
                 .patch("/manuscripts/{manuscriptId}/access-status", manuscriptId)
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse modifyManuscriptTask(ModifyManuscriptRequest request, Long manuscriptId){
+        return RestAssured
+                .given()
+                .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
+                .accept(APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .patch("/manuscripts/{manuscriptId}", manuscriptId)
                 .then().log().all()
                 .extract();
     }

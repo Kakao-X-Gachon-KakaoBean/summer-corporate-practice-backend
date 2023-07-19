@@ -60,4 +60,12 @@ public class Manuscript extends BaseEntity {
     public void modifyManuscriptStatus(ManuscriptStatus status) {
         this.manuscriptStatus = status;
     }
+
+    public void modify(String title, String content, String version, Long editingMemberId) {
+        this.title = title;
+        this.content = content;
+        this.version = version;
+        this.lastEditedMemberId = editingMemberId;
+        modifyManuscriptStatus(ManuscriptStatus.Modifiable);
+    }
 }

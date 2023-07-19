@@ -4,6 +4,7 @@ package com.kakaobean.unit.controller.releasenote;
 import com.kakaobean.core.releasenote.application.dto.response.ManuscriptResponseDto;
 import com.kakaobean.core.releasenote.domain.repository.query.FindManuscriptResponseDto;
 import com.kakaobean.core.releasenote.domain.repository.query.FindManuscriptsResponseDto;
+import com.kakaobean.releasenote.dto.request.ModifyManuscriptRequest;
 import com.kakaobean.releasenote.dto.request.RegisterManuscriptRequest;
 import com.kakaobean.unit.controller.ControllerTest;
 import com.kakaobean.unit.controller.security.WithMockUser;
@@ -177,6 +178,41 @@ public class ManuscriptControllerTest extends ControllerTest {
                         fieldWithPath("manuscriptTitle").type(STRING).description("릴리즈 노트 원고 제목"),
                         fieldWithPath("manuscriptContent").type(STRING).description("릴리즈 노트 원고 내용"),
                         fieldWithPath("manuscriptVersion").type(STRING).description("릴리즈 노트 원고 버전")
+                )
+        ));
+    }
+
+
+    @Test
+    @WithMockUser
+    void 릴리즈_노트_원고_수정() throws Exception {
+
+        ModifyManuscriptRequest request = new ModifyManuscriptRequest("1.9V 코코노트 초기 릴리즈 노트", "수정된 배포 내용", "1.9V");
+        String requestBody = objectMapper.writeValueAsString(request);
+
+        //when
+        ResultActions perform = mockMvc.perform(patch("/manuscripts/{manuscriptId}", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+        );
+
+        //then
+        perform.andDo(print());
+        perform.andExpect(status().is2xxSuccessful());
+        perform.andDo(document("modify_manuscript",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                pathParameters(
+                        parameterWithName("manuscriptId").description("수정 권한을 얻을 릴리즈 노트 원고 id")
+                ),
+                requestFields(
+                        fieldWithPath("title").type(STRING).description("수정할 제목"),
+                        fieldWithPath("content").type(STRING).description("수정할 내용"),
+                        fieldWithPath("version").type(STRING).description("수정할 버전")
+                ),
+                responseFields(
+                        fieldWithPath("message").type(STRING).description("성공 메시지")
                 )
         ));
     }

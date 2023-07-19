@@ -7,10 +7,7 @@ import com.kakaobean.core.project.domain.ProjectRole;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.exception.NotExistsProjectMemberException;
 import com.kakaobean.core.releasenote.domain.repository.ManuscriptRepository;
-import com.kakaobean.core.releasenote.exception.AnotherMemberAlreadyModifyingException;
-import com.kakaobean.core.releasenote.exception.DuplicateManuscriptVersionException;
-import com.kakaobean.core.releasenote.exception.ManuscriptModificationAccessException;
-import com.kakaobean.core.releasenote.exception.ManuscriptWriterAccessException;
+import com.kakaobean.core.releasenote.exception.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -38,8 +35,8 @@ public class ManuscriptValidator extends BaseEntity {
         }
     }
 
-    public void isModifiable(Manuscript manuscript, Long memberId){
-        ProjectMember projectMember = projectMemberRepository.findByMemberId(memberId)
+    public void validRightToModify(Manuscript manuscript, Long memberId){
+        ProjectMember projectMember = projectMemberRepository.findByMemberIdAndProjectId(memberId, manuscript.getProjectId())
                 .orElseThrow(NotExistsProjectMemberException::new);
 
         if(projectMember.getProjectRole() != ADMIN & projectMember.getProjectRole() != MEMBER){
@@ -48,6 +45,19 @@ public class ManuscriptValidator extends BaseEntity {
 
         if(manuscript.getManuscriptStatus() == ManuscriptStatus.Modifying) {
             throw new AnotherMemberAlreadyModifyingException();
+        }
+    }
+
+    public void isModifiable(Manuscript manuscript, Long memberId){
+        ProjectMember projectMember = projectMemberRepository.findByMemberIdAndProjectId(memberId, manuscript.getProjectId())
+                .orElseThrow(NotExistsProjectMemberException::new);
+
+        if(projectMember.getProjectRole() != ADMIN & projectMember.getProjectRole() != MEMBER){
+            throw new ManuscriptModificationAccessException();
+        }
+
+        if(manuscript.getManuscriptStatus() != ManuscriptStatus.Modifying) {
+            throw new CannotModifyManuscriptException();
         }
     }
 }
