@@ -28,6 +28,16 @@ public class RegisterMemberRequestFactory {
                 .build();
     }
 
+    public static RegisterMemberRequest createRequestV3(){
+        return RegisterMemberRequest.builder()
+                .name("kakoBean2")
+                .email(TESTER.getEmail())
+                .password(TESTER.getPassword())
+                .checkPassword(TESTER.getPassword())
+                .emailAuthKey("113339")
+                .build();
+    }
+
 
 
     public static RegisterMemberResponseDto createResponseDto(){

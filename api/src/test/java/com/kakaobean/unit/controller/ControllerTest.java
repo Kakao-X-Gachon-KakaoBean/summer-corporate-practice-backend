@@ -12,11 +12,14 @@ import com.kakaobean.core.project.application.ProjectMemberFacade;
 import com.kakaobean.core.project.application.ProjectMemberService;
 import com.kakaobean.core.project.application.ProjectService;
 import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
+import com.kakaobean.core.releasenote.application.ManuscriptService;
 import com.kakaobean.core.releasenote.application.ReleaseNoteService;
+import com.kakaobean.core.releasenote.domain.repository.query.ManuscriptQueryRepository;
 import com.kakaobean.independentlysystem.image.ImageService;
 import com.kakaobean.member.MemberController;
 import com.kakaobean.project.ProjectController;
 import com.kakaobean.project.ProjectMemberController;
+import com.kakaobean.releasenote.ManuscriptController;
 import com.kakaobean.releasenote.ReleaseNoteController;
 import com.kakaobean.security.token.RefreshTokenRepository;
 import com.kakaobean.security.token.TokenProvider;
@@ -44,6 +47,7 @@ import org.springframework.test.web.servlet.MockMvc;
         ProjectController.class,
         ProjectMemberController.class,
         ReleaseNoteController.class,
+        ManuscriptController.class,
         ImageController.class
 })
 @AutoConfigureRestDocs
@@ -95,4 +99,10 @@ public abstract class ControllerTest {
 
     @MockBean
     protected ImageService imageService;
+
+    @MockBean
+    protected ManuscriptService manuscriptService;
+
+    @MockBean
+    protected ManuscriptQueryRepository manuscriptQueryRepository;
 }

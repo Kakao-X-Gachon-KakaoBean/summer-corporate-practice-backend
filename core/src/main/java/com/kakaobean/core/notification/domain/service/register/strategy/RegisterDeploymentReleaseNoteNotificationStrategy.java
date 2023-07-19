@@ -4,7 +4,7 @@ import com.kakaobean.core.notification.domain.Notification;
 import com.kakaobean.core.notification.domain.NotificationRepository;
 import com.kakaobean.core.notification.domain.NotificationType;
 
-import com.kakaobean.core.notification.domain.event.SendDeploymentReleaseNoteNotificationEvent;
+import com.kakaobean.core.notification.domain.event.DeploymentReleaseNoteNotificationEvent;
 import com.kakaobean.core.notification.domain.event.NotificationSentEvent;
 import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
@@ -16,6 +16,7 @@ import com.kakaobean.core.releasenote.exception.NotExistsReleaseNoteException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,23 +38,20 @@ public class RegisterDeploymentReleaseNoteNotificationStrategy implements Regist
                 .orElseThrow(NotExistsReleaseNoteException::new);
         Project project = projectRepository.findById(releaseNote.getProjectId())
                 .orElseThrow(NotExistsProjectException::new);
-        List<NotificationSentEvent.NotificationTarget> infos = saveNotifications(releaseNote);
-        return new SendDeploymentReleaseNoteNotificationEvent(
-                releaseNote.getProjectId(),
-                releaseNote.getTitle(),
-                infos,
-                project.getTitle(),
-                releaseNoteId
-        );
+
+        String url = "/projects/" + releaseNote.getProjectId() + "/release-notes/" + releaseNote.getId();
+        List<String> emails = saveNotifications(releaseNote, url);
+        String content = releaseNote.getTitle() + "이 배포되었습니다.";
+        return new DeploymentReleaseNoteNotificationEvent(url, project.getTitle(), content, LocalDateTime.now(), emails, project.getId());
     }
 
-    private List<NotificationSentEvent.NotificationTarget> saveNotifications(ReleaseNote releaseNote) {
+    private List<String> saveNotifications(ReleaseNote releaseNote, String url) {
         return projectQueryRepository
                 .findProjectMembers(releaseNote.getProjectId())
                 .stream()
                 .map((dto -> {
-                    notificationRepository.save(new Notification(ACTIVE, dto.getProjectMemberId(), releaseNote.getProjectId(), releaseNote.getTitle(), RELEASE_NOTE_DEPLOYMENT, false));
-                    return new NotificationSentEvent.NotificationTarget(dto.getProjectMemberEmail(), dto.getProjectMemberId());
+                    notificationRepository.save(new Notification(ACTIVE, dto.getProjectMemberId(), url, false));
+                    return dto.getProjectMemberEmail();
                 }))
                 .collect(Collectors.toList());
     }

@@ -103,7 +103,7 @@ public class ProjectAcceptanceTest extends AcceptanceTest {
         ProjectAcceptanceTask.registerProjectTask(givenRequest);
         Project project = projectRepository.findAll().get(0);
 
-        DeployReleaseNoteRequest request = new DeployReleaseNoteRequest("코코노트 초기 릴리즈 노트", ".. 배포 내용", 1.1, project.getId());
+        DeployReleaseNoteRequest request = new DeployReleaseNoteRequest("코코노트 초기 릴리즈 노트", ".. 배포 내용", "1.1", project.getId());
         ReleaseNoteAcceptanceTask.deployReleaseNoteTask(request);
         ReleaseNote releaseNote = releaseNoteRepository.findByProjectId(project.getId()).get(0);
 

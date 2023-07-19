@@ -46,7 +46,7 @@ public class ReleaseNoteControllerTest extends ControllerTest {
                 requestFields(
                         fieldWithPath("title").type(STRING).description("릴리즈 노트 제목"),
                         fieldWithPath("content").type(STRING).description("릴리즈 노트 본문"),
-                        fieldWithPath("version").type(NUMBER).description("릴리즈 노트 버전"),
+                        fieldWithPath("version").type(STRING).description("릴리즈 노트 버전"),
                         fieldWithPath("projectId").type(NUMBER).description("릴리즈 노트를 포함한 프로젝트 id")
                 ),
                 responseFields(

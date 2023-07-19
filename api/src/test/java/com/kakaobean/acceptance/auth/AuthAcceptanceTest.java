@@ -41,7 +41,7 @@ public class AuthAcceptanceTest extends AcceptanceTest {
     void login(){
 
         //given
-        MemberAcceptanceTask.registerMemberTask(RegisterMemberRequestFactory.createRequest(), emailRepository);
+        MemberAcceptanceTask.registerMemberTask(RegisterMemberRequestFactory.createRequestV3(), emailRepository);
         LocalLoginRequest loginRequest = new LocalLoginRequest(TESTER.getEmail(), TESTER.getPassword());
 
         //when

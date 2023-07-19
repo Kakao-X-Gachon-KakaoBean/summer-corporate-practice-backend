@@ -1,14 +1,11 @@
-package com.kakaobean.core.notification.infrastructure;
+package com.kakaobean.core.notification.infrastructure.email;
 
 import com.kakaobean.common.EmailHtmlUtils;
-import com.kakaobean.core.notification.domain.event.SendDeploymentReleaseNoteNotificationEvent;
+import com.kakaobean.core.notification.domain.event.DeploymentReleaseNoteNotificationEvent;
 import com.kakaobean.core.notification.domain.event.NotificationSentEvent;
 import com.kakaobean.core.notification.domain.service.send.email.SendEmailNotificationStrategy;
 import com.kakaobean.independentlysystem.email.EmailSender;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class SendEmailDeploymentReleaseNoteNotificationStrategy implements SendEmailNotificationStrategy {
@@ -21,15 +18,15 @@ public class SendEmailDeploymentReleaseNoteNotificationStrategy implements SendE
 
     @Override
     public void send(NotificationSentEvent event) {
-        SendDeploymentReleaseNoteNotificationEvent notificationEvent = (SendDeploymentReleaseNoteNotificationEvent) event;
+        DeploymentReleaseNoteNotificationEvent notificationEvent = (DeploymentReleaseNoteNotificationEvent) event;
         String title = notificationEvent.getProjectTitle() + " 프로젝트 릴리즈 노트 배포 안내입니다.";
-        String url = "localhost:3000/projects/" + notificationEvent.getProjectId() + "/release-notes/" + notificationEvent.getReleaseNoteId();
+        String url = "localhost:3000" + notificationEvent.getUrl();
         emailSender.sendEmail(
-                getEmails(event),
+                notificationEvent.getEmails(),
                 title,
                 () -> EmailHtmlUtils.makeLinkHtml(
                         "릴리즈 노트 배포",
-                        event.getTitle() + "릴리즈 노트가 배포되었습니다.",
+                        notificationEvent.getContent(),
                         "",
                         "아래 링크",
                         "에서 확인하실 수 있습니다.",
@@ -40,12 +37,8 @@ public class SendEmailDeploymentReleaseNoteNotificationStrategy implements SendE
 
     }
 
-    private List<String> getEmails(NotificationSentEvent event) {
-        return event.getTargets().stream().map(target -> target.getEmail()).collect(Collectors.toList());
-    }
-
     @Override
     public boolean support(Class<? extends NotificationSentEvent> eventClass) {
-        return eventClass == SendDeploymentReleaseNoteNotificationEvent.class;
+        return eventClass == DeploymentReleaseNoteNotificationEvent.class;
     }
 }
