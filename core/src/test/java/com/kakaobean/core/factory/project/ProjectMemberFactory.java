@@ -21,8 +21,11 @@ public class ProjectMemberFactory {
         return new ProjectMember(ACTIVE, 1L ,4L, ProjectRole.INVITED_PERSON);
     }
 
-
     public static ProjectMember createWithMemberIdAndProjectId(Long memberId, Long projectId, ProjectRole role){
         return new ProjectMember(ACTIVE, projectId, memberId, role);
+    }
+
+    public static ProjectMember createViewer(){
+        return new ProjectMember(ACTIVE, 1L ,4L, ProjectRole.VIEWER);
     }
 }
