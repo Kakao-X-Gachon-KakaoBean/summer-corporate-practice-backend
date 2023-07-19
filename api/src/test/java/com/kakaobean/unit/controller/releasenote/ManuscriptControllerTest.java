@@ -1,6 +1,7 @@
 package com.kakaobean.unit.controller.releasenote;
 
 
+import com.kakaobean.core.releasenote.application.dto.response.ManuscriptResponseDto;
 import com.kakaobean.core.releasenote.domain.repository.query.FindManuscriptResponseDto;
 import com.kakaobean.core.releasenote.domain.repository.query.FindManuscriptsResponseDto;
 import com.kakaobean.releasenote.dto.request.RegisterManuscriptRequest;
@@ -19,8 +20,7 @@ import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentRequest;
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentResponse;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
@@ -145,6 +145,38 @@ public class ManuscriptControllerTest extends ControllerTest {
                         fieldWithPath("manuscripts[].id").type(NUMBER).description("릴리즈 노트 원고 id"),
                         fieldWithPath("manuscripts[].title").type(STRING).description("릴리즈 노트 원고 제목"),
                         fieldWithPath("manuscripts[].version").type(STRING).description("릴리즈 노트 원고 버전")
+                )
+        ));
+    }
+
+    @Test
+    @WithMockUser
+    void 릴리즈_노트_원고_수정_권한_획득() throws Exception {
+
+        given(manuscriptService.hasRightToModifyManuscript(Mockito.anyLong(), Mockito.anyLong()))
+                .willReturn(new ManuscriptResponseDto(22L, "1.1V manuscript Title", "content..", "1.1V"));
+
+
+        //when
+        ResultActions perform = mockMvc.perform(patch("/manuscripts/{manuscriptId}/access-status", 1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        //then
+        perform.andDo(print());
+        perform.andExpect(status().is2xxSuccessful());
+        perform.andDo(document("has_right_to_modify_manuscript",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                pathParameters(
+                        parameterWithName("manuscriptId").description("수정 권한을 얻을 릴리즈 노트 원고 id")
+                ),
+                responseFields(
+                        fieldWithPath("manuscriptId").type(NUMBER).description("릴리즈 노트 원고 id"),
+                        fieldWithPath("manuscriptTitle").type(STRING).description("릴리즈 노트 원고 제목"),
+                        fieldWithPath("manuscriptContent").type(STRING).description("릴리즈 노트 원고 내용"),
+                        fieldWithPath("manuscriptVersion").type(STRING).description("릴리즈 노트 원고 버전")
                 )
         ));
     }

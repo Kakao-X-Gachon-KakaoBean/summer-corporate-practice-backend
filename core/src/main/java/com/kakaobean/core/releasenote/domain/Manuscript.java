@@ -34,21 +34,30 @@ public class Manuscript extends BaseEntity {
 
     private Long projectId;
 
+    @Enumerated(EnumType.STRING)
+    private ManuscriptStatus manuscriptStatus;
+
     public Manuscript(BaseStatus status,
                       String title,
                       String content,
                       String version,
                       Long lastEditedMemberId,
-                      Long projectId) {
+                      Long projectId,
+                      ManuscriptStatus manuscriptStatus) {
         super(status);
         this.title = title;
         this.content = content;
         this.version = version;
         this.lastEditedMemberId = lastEditedMemberId;
         this.projectId = projectId;
+        this.manuscriptStatus = manuscriptStatus;
     }
 
     public void registered() {
         Events.raise(new ManuscriptRegisteredEvent(projectId, id, title));
+    }
+
+    public void modifyManuscriptStatus(ManuscriptStatus status) {
+        this.manuscriptStatus = status;
     }
 }

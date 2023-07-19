@@ -18,4 +18,6 @@ public interface ProjectMemberRepository extends JpaRepository<ProjectMember, Lo
     @Modifying
     @Query("update ProjectMember pm set pm.status = 'INACTIVE' where pm.projectId = :projectId and pm.status = 'ACTIVE'")
     void deleteByProjectId(Long projectId);
+
+    Optional<ProjectMember> findByMemberId(Long memberId);
 }

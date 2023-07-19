@@ -2,6 +2,7 @@ package com.kakaobean.releasenote;
 
 import com.kakaobean.common.dto.CommandSuccessResponse;
 import com.kakaobean.core.releasenote.application.ManuscriptService;
+import com.kakaobean.core.releasenote.application.dto.response.ManuscriptResponseDto;
 import com.kakaobean.core.releasenote.domain.repository.query.FindManuscriptResponseDto;
 import com.kakaobean.core.releasenote.domain.repository.query.FindManuscriptsResponseDto;
 import com.kakaobean.core.releasenote.domain.repository.query.ManuscriptQueryRepository;
@@ -39,6 +40,13 @@ public class ManuscriptController {
     @GetMapping("/manuscripts")
     public ResponseEntity findManuscripts(@RequestParam Long projectId, @RequestParam Integer page){
         FindManuscriptsResponseDto response = manuscriptQueryRepository.findByProjectId(projectId, page);
+        return new ResponseEntity(response, HttpStatus.OK);
+    }
+
+    @PatchMapping("/manuscripts/{manuscriptId}/access-status")
+    public ResponseEntity hasRightToModifyManuscript(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                                     @PathVariable Long manuscriptId) {
+        ManuscriptResponseDto response = manuscriptService.hasRightToModifyManuscript(userPrincipal.getId(), manuscriptId);
         return new ResponseEntity(response, HttpStatus.OK);
     }
 }

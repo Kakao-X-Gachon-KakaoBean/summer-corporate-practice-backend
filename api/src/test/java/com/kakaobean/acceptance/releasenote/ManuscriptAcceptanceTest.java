@@ -82,7 +82,7 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    void 릴리즈_노트_원고_여러_개를_페이징을_사용해_조회한다(){
+    void 릴리즈_노트_원고_10개_이하를_페이징을_사용해_조회한다(){
 
         //프로젝트 생성
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
@@ -105,7 +105,7 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    void 릴리즈_노트_원고_여러_개를_페이징을_사용해_조회한다_vp(){
+    void 릴리즈_노트_원고_10개_이상을_페이징을_사용해_조회한다(){
 
         //프로젝트 생성
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
@@ -124,5 +124,28 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
         FindManuscriptsResponseDto dto = response.as(FindManuscriptsResponseDto.class);
         assertThat(response.statusCode()).isEqualTo(200);
         assertThat(dto.isFinalPage()).isFalse();
+        assertThat(dto.getManuscripts().size()).isEqualTo(10);
+    }
+
+
+    @Test
+    void 릴리즈_노트_원고_수정_권한을_획득한다(){
+
+        //프로젝트 생성
+        RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
+        ProjectAcceptanceTask.registerProjectTask(givenRequest);
+        Project project = projectRepository.findAll().get(0);
+
+        //릴리즈 노트 원고 생성
+        RegisterManuscriptRequest request = new RegisterManuscriptRequest("1.9V 코코노트 초기 릴리즈 노트", ".. 배포 내용", "1.1", project.getId());
+        ManuscriptAcceptanceTask.registerManuscriptTask(request);
+
+        Long manuscriptId = manuscriptRepository.findAll().get(0).getId();
+
+        //when
+        ExtractableResponse response = ManuscriptAcceptanceTask.hasRightToModifyManuscriptTask(manuscriptId);
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(200);
     }
 }

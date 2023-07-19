@@ -50,4 +50,16 @@ public class ManuscriptAcceptanceTask {
                 .then().log().all()
                 .extract();
     }
+
+    public static ExtractableResponse hasRightToModifyManuscriptTask(Long manuscriptId){
+        return RestAssured
+                .given()
+                .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
+                .accept(APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
+                .when()
+                .patch("/manuscripts/{manuscriptId}/access-status", manuscriptId)
+                .then().log().all()
+                .extract();
+    }
 }
