@@ -14,10 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -31,8 +28,18 @@ public class IssueController {
 
     @PostMapping("/projects/{projectId}/issue")
     public ResponseEntity<RegisterIssueResponseDto> registerIssue(@Validated @RequestBody RegisterIssueRequest request,
+                                                                  @PathVariable Long projectId,
                                                                   @AuthenticationPrincipal UserPrincipal userPrincipal){
-        RegisterIssueResponseDto res = issueService.registerIssue(request.toServiceDto(userPrincipal.getId()));
+        RegisterIssueResponseDto res = issueService.registerIssue(request.toServiceDto(projectId, userPrincipal.getId()));
         return new ResponseEntity(res, CREATED);
     }
+
+//    TODO:
+//     1. 이슈 생성
+//     2. 이슈 삭제
+//     3. 이슈 수정
+//     4. 이슈 전체 조회
+//     5. 개별 이슈 조회
+
+
 }

@@ -5,6 +5,7 @@ import com.kakaobean.common.ImageController;
 import com.kakaobean.config.AppProperties;
 import com.kakaobean.config.SecurityConfig;
 import com.kakaobean.config.WebMvcConfig;
+import com.kakaobean.core.issue.application.IssueService;
 import com.kakaobean.core.member.application.MemberProvider;
 import com.kakaobean.core.member.domain.repository.MemberRepository;
 import com.kakaobean.core.member.application.MemberService;
@@ -16,6 +17,7 @@ import com.kakaobean.core.releasenote.application.ManuscriptService;
 import com.kakaobean.core.releasenote.application.ReleaseNoteService;
 import com.kakaobean.core.releasenote.domain.repository.query.ManuscriptQueryRepository;
 import com.kakaobean.independentlysystem.image.ImageService;
+import com.kakaobean.issue.IssueController;
 import com.kakaobean.member.MemberController;
 import com.kakaobean.project.ProjectController;
 import com.kakaobean.project.ProjectMemberController;
@@ -48,7 +50,8 @@ import org.springframework.test.web.servlet.MockMvc;
         ProjectMemberController.class,
         ReleaseNoteController.class,
         ManuscriptController.class,
-        ImageController.class
+        ImageController.class,
+        IssueController.class
 })
 @AutoConfigureRestDocs
 @MockBean(JpaMetamodelMappingContext.class)
@@ -105,4 +108,7 @@ public abstract class ControllerTest {
 
     @MockBean
     protected ManuscriptQueryRepository manuscriptQueryRepository;
+
+    @MockBean
+    protected IssueService issueService;
 }

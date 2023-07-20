@@ -12,21 +12,17 @@ import javax.validation.constraints.NotBlank;
 public class RegisterIssueRequest {
 
     @NotBlank
-    private Long projectId;
-
-    @NotBlank
     private String title;
 
     private String content;
 
     @Builder
-    public RegisterIssueRequest(Long projectId, String title, String content){
-        this.projectId = projectId;
+    public RegisterIssueRequest(String title, String content){
         this.title = title;
         this.content = content;
     }
 
-    public RegisterIssueRequestDto toServiceDto(Long writerId){
+    public RegisterIssueRequestDto toServiceDto(Long projectId, Long writerId){
         return new RegisterIssueRequestDto(
                 projectId,
                 title,
