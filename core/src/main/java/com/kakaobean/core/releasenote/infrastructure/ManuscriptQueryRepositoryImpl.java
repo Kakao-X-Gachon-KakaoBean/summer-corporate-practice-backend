@@ -43,6 +43,7 @@ public class ManuscriptQueryRepositoryImpl implements ManuscriptQueryRepository 
                         )
                 )
                 .from(manuscript)
+                .where(manuscript.projectId.eq(projectId))
                 .offset(pageable.getOffset())
                 .limit(PAGE_SIZE + 1) // 페이징을 위해 1을 더 가져온다.
                 .fetch();
