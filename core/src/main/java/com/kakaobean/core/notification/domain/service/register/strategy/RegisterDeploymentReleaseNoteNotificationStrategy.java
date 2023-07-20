@@ -6,6 +6,7 @@ import com.kakaobean.core.notification.domain.NotificationType;
 
 import com.kakaobean.core.notification.domain.event.DeploymentReleaseNoteNotificationEvent;
 import com.kakaobean.core.notification.domain.event.NotificationSentEvent;
+import com.kakaobean.core.notification.utils.NotificationUtils;
 import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
@@ -40,17 +41,18 @@ public class RegisterDeploymentReleaseNoteNotificationStrategy implements Regist
                 .orElseThrow(NotExistsProjectException::new);
 
         String url = "/projects/" + releaseNote.getProjectId() + "/release-notes/" + releaseNote.getId();
-        List<String> emails = saveNotifications(releaseNote, url);
         String content = releaseNote.getTitle() + "이 배포되었습니다.";
+        String finalContent = NotificationUtils.makeNotificationContent(project.getTitle(), content);
+        List<String> emails = saveNotifications(releaseNote, url, finalContent);
         return new DeploymentReleaseNoteNotificationEvent(url, project.getTitle(), content, LocalDateTime.now(), emails, project.getId());
     }
 
-    private List<String> saveNotifications(ReleaseNote releaseNote, String url) {
+    private List<String> saveNotifications(ReleaseNote releaseNote, String url, String finalContent) {
         return projectQueryRepository
                 .findProjectMembers(releaseNote.getProjectId())
                 .stream()
                 .map((dto -> {
-                    notificationRepository.save(new Notification(ACTIVE, dto.getProjectMemberId(), url, false));
+                    notificationRepository.save(new Notification(ACTIVE, dto.getProjectMemberId(), url, false, finalContent));
                     return dto.getProjectMemberEmail();
                 }))
                 .collect(Collectors.toList());
