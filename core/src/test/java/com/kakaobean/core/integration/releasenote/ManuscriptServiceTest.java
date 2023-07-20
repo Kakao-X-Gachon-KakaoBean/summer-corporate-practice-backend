@@ -16,13 +16,19 @@ import com.kakaobean.core.releasenote.domain.repository.ManuscriptRepository;
 import com.kakaobean.core.releasenote.exception.*;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Optional;
 
 import static com.kakaobean.core.project.domain.ProjectRole.*;
 import static com.kakaobean.core.releasenote.domain.ManuscriptStatus.Modifiable;
 import static com.kakaobean.core.releasenote.domain.ManuscriptStatus.Modifying;
 import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class ManuscriptServiceTest extends IntegrationTest {
 
@@ -182,5 +188,31 @@ public class ManuscriptServiceTest extends IntegrationTest {
         });
 
         result.isInstanceOf(CannotModifyManuscriptException.class);
+    }
+
+    @Test
+    void 릴리즈_노트_원고를_삭제한다() {
+        Manuscript manuscript = ManuscriptFactory.createWithId(1L, 2L, Modifiable);
+        ProjectMember projectMember = ProjectMemberFactory.createWithMemberIdAndProjectId(1L, 2L, ADMIN);
+        manuscriptRepository.save(manuscript);
+        projectMemberRepository.save(projectMember);
+
+        manuscriptService.deleteManuscript(projectMember.getMemberId(), manuscript.getId());
+
+        assertThat(manuscriptRepository.findAll().size()).isEqualTo(0);
+    }
+
+    @Test
+    void 릴리즈_노트는_관리자가_아니라면_삭제할_수_없다() {
+        Manuscript manuscript = ManuscriptFactory.createWithId(1L, 2L, Modifiable);
+        ProjectMember projectMember = ProjectMemberFactory.createWithMemberIdAndProjectId(1L, 2L, MEMBER);
+        manuscriptRepository.save(manuscript);
+        projectMemberRepository.save(projectMember);
+
+        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
+            manuscriptService.deleteManuscript(projectMember.getMemberId(), manuscript.getId());
+        });
+
+        result.isInstanceOf(CannotDeleteManuscriptException.class);
     }
 }

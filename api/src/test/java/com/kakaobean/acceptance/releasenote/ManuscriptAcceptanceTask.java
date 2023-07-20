@@ -76,4 +76,16 @@ public class ManuscriptAcceptanceTask {
                 .then().log().all()
                 .extract();
     }
+
+    public static ExtractableResponse deleteManuscriptTask(Long manuscriptId) {
+        return RestAssured
+                .given()
+                .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
+                .accept(APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
+                .when()
+                .delete("/manuscripts/{manuscriptId}", manuscriptId)
+                .then().log().all()
+                .extract();
+    }
 }

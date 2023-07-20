@@ -31,28 +31,8 @@ public class ManuscriptQueryRepositoryImpl implements ManuscriptQueryRepository 
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Optional<FindManuscriptResponseDto> findById (Long manuscriptId) {
-        FindManuscriptResponseDto responseDto = queryFactory
-                .select(
-                        Projections.constructor(
-                                FindManuscriptResponseDto.class,
-                                member.name,
-                                manuscript.id,
-                                manuscript.title,
-                                manuscript.content,
-                                manuscript.version
-                        )
-                )
-                .from(manuscript)
-                .join(member).on(manuscript.lastEditedMemberId.eq(member.id))
-                .where(manuscript.id.eq(manuscriptId))
-                .fetchFirst();
-        return Optional.ofNullable(responseDto);
-    }
-
-    @Override
-    public FindManuscriptsResponseDto findByProjectId(Long projectId, Integer page) {
-        Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.ASC, PAGING_STANDARD));
+    public FindManuscriptsResponseDto findByProjectId (Long projectId, Integer page) {
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, PAGING_STANDARD));
         List<FindManuscriptsResponseDto.ManuscriptDto> result = queryFactory
                 .select(
                         Projections.constructor(
@@ -71,5 +51,25 @@ public class ManuscriptQueryRepositoryImpl implements ManuscriptQueryRepository 
             return new FindManuscriptsResponseDto(false, PagingUtils.applyPaging(result));
         }
         return new FindManuscriptsResponseDto(true, result);
+    }
+
+    @Override
+    public Optional<FindManuscriptResponseDto> findById (Long manuscriptId) {
+        FindManuscriptResponseDto responseDto = queryFactory
+                .select(
+                        Projections.constructor(
+                                FindManuscriptResponseDto.class,
+                                member.name,
+                                manuscript.id,
+                                manuscript.title,
+                                manuscript.content,
+                                manuscript.version
+                        )
+                )
+                .from(manuscript)
+                .join(member).on(manuscript.lastEditedMemberId.eq(member.id))
+                .where(manuscript.id.eq(manuscriptId))
+                .fetchFirst();
+        return Optional.ofNullable(responseDto);
     }
 }
