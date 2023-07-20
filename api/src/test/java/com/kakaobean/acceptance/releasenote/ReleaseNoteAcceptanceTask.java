@@ -20,7 +20,33 @@ public class ReleaseNoteAcceptanceTask {
                 .contentType(APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()
-                .post("/release-note")
+                .post("/release-notes")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse findReleaseNotesTask(Long projectId, Integer page){
+        return RestAssured
+                .given()
+                .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
+                .accept(APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
+                .param("projectId", projectId)
+                .param("page", page)
+                .when()
+                .get("/release-notes")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse findReleaseNoteTask(Long releaseNoteId){
+        return RestAssured
+                .given()
+                .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
+                .accept(APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
+                .when()
+                .get("/release-notes/{releasenoteId}", releaseNoteId)
                 .then().log().all()
                 .extract();
     }
