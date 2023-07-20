@@ -58,4 +58,11 @@ public class ManuscriptController {
         manuscriptService.modifyManuscript(request.toServiceDto(userPrincipal.getId(), manuscriptId));
         return new ResponseEntity(CommandSuccessResponse.from("릴리즈 노트 원고 수정에 성공했습니다."), HttpStatus.OK);
     }
+
+    @DeleteMapping("/manuscripts/{manuscriptId}")
+    public ResponseEntity deleteManuscript(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                           @PathVariable Long manuscriptId) {
+        manuscriptService.deleteManuscript(userPrincipal.getId(), manuscriptId);
+        return new ResponseEntity(CommandSuccessResponse.from("릴리즈 노트 원고 삭제에 성공했습니다."), HttpStatus.OK);
+    }
 }
