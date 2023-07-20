@@ -5,6 +5,7 @@ import com.kakaobean.core.notification.domain.NotificationRepository;
 import com.kakaobean.core.notification.domain.NotificationType;
 import com.kakaobean.core.notification.domain.event.NotificationSentEvent;
 import com.kakaobean.core.notification.domain.event.RegisterManuscriptNotificationEvent;
+import com.kakaobean.core.notification.utils.NotificationUtils;
 import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
@@ -40,17 +41,17 @@ public class RegisterManuscriptNotificationStrategy implements RegisterNotificat
 
         String url = "/projects/" + manuscript.getProjectId() + "/manuscripts/" + manuscript.getId();
         String content = manuscript.getTitle() + " 원고가 생성되었습니다.";
-        saveNotifications(manuscript, url);
-
+        String finalContent = NotificationUtils.makeNotificationContent(project.getTitle(), content);
+        saveNotifications(manuscript, url, finalContent);
         return new RegisterManuscriptNotificationEvent(url, project.getTitle(), content, LocalDateTime.now(), project.getId());
     }
 
-    private List<String> saveNotifications(Manuscript manuscript, String url) {
+    private List<String> saveNotifications(Manuscript manuscript, String url, String finalContent) {
         return projectQueryRepository
                 .findProjectMembers(manuscript.getProjectId())
                 .stream()
                 .map((dto -> {
-                    notificationRepository.save(new Notification(ACTIVE, dto.getProjectMemberId(), url, false));
+                    notificationRepository.save(new Notification(ACTIVE, dto.getProjectMemberId(), url, false, finalContent));
                     return dto.getProjectMemberEmail();
                 }))
                 .collect(Collectors.toList());

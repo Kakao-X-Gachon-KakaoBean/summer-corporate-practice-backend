@@ -9,6 +9,7 @@ import com.kakaobean.core.notification.domain.NotificationType;
 import com.kakaobean.core.notification.domain.event.ModifiedProjectMemberNotificationEvent;
 import com.kakaobean.core.notification.domain.event.NotificationSentEvent;
 import com.kakaobean.core.notification.domain.event.RegisterManuscriptNotificationEvent;
+import com.kakaobean.core.notification.utils.NotificationUtils;
 import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
@@ -43,9 +44,9 @@ public class ModifiedProjectMemberRoleNotificationStrategy implements RegisterNo
                 .orElseThrow(NotExistsMemberException::new);
 
         String url = "/projects/" + projectMember.getProjectId();
-        notificationRepository.save(new Notification(ACTIVE, projectMemberId, url, false));
-
         String content = project.getTitle() + " 프로젝트의 권한이 " + projectMember.getProjectRole().name() + " 으로 변경되었습니다.";
+        String finalContent = NotificationUtils.makeNotificationContent(project.getTitle(), content);
+        notificationRepository.save(new Notification(ACTIVE, projectMemberId, url, false, finalContent));
         return new ModifiedProjectMemberNotificationEvent(url, project.getTitle(), content, LocalDateTime.now(), member.getAuth().getEmail(), member.getId());
     }
 
