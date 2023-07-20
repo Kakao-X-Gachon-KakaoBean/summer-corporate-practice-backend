@@ -27,13 +27,17 @@ public class Notification extends BaseEntity {
 
     private Boolean hasRead;
 
+    private String content;
+
     public Notification(BaseStatus status,
                         Long memberId,
                         String url,
-                        Boolean hasRead) {
+                        Boolean hasRead,
+                        String content) {
         super(status);
         this.memberId = memberId;
         this.url = url;
         this.hasRead = hasRead;
+        this.content = content;
     }
 }

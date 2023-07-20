@@ -43,4 +43,12 @@ public class ManuscriptService {
         manuscriptValidator.isModifiable(manuscript, dto.getEditingMemberId());
         manuscript.modify(dto.getTitle(), dto.getContent(), dto.getVersion(), dto.getEditingMemberId());
     }
+
+    @Transactional
+    public void deleteManuscript(Long adminId, Long manuscriptId) {
+        Manuscript manuscript = manuscriptRepository.findById(manuscriptId)
+                .orElseThrow(NotExistsManuscriptException::new);
+        manuscriptValidator.validRightToDelete(manuscript, adminId);
+        manuscriptRepository.delete(manuscript);
+    }
 }

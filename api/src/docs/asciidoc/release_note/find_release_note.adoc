@@ -1,0 +1,13 @@
+= 릴리즈 노트 단건 조회
+
+== 요청
+
+include::{snippets}/find_release_note/http-request.adoc[]
+
+include::{snippets}/find_release_note/path-parameters.adoc[]
+
+== 응답
+
+include::{snippets}/find_release_note/http-response.adoc[]
+
+include::{snippets}/find_release_note/response-fields.adoc[]

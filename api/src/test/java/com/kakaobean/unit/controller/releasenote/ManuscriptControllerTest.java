@@ -216,4 +216,30 @@ public class ManuscriptControllerTest extends ControllerTest {
                 )
         ));
     }
+
+
+    @Test
+    @WithMockUser
+    void 릴리즈_노트_원고_삭제() throws Exception {
+
+        //when
+        ResultActions perform = mockMvc.perform(delete("/manuscripts/{manuscriptId}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        //then
+        perform.andDo(print());
+        perform.andExpect(status().is2xxSuccessful());
+        perform.andDo(document("delete_release_note_manuscript",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                pathParameters(
+                        parameterWithName("manuscriptId").description("삭제할 릴리즈 노트 원고 id")
+                ),
+                responseFields(
+                        fieldWithPath("message").type(STRING).description("성공 메시지")
+                )
+        ));
+    }
 }

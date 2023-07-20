@@ -173,4 +173,26 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
         //then
         assertThat(response.statusCode()).isEqualTo(200);
     }
+
+
+    @Test
+    void 릴리즈_노트_원고를_삭제한다(){
+
+        //프로젝트 생성
+        RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
+        ProjectAcceptanceTask.registerProjectTask(givenRequest);
+        Project project = projectRepository.findAll().get(0);
+
+        //릴리즈 노트 원고 생성
+        RegisterManuscriptRequest givenRequest2 = new RegisterManuscriptRequest("1.9V 코코노트 초기 릴리즈 노트", ".. 배포 내용", "1.1", project.getId());
+        ManuscriptAcceptanceTask.registerManuscriptTask(givenRequest2);
+
+        Long id = manuscriptRepository.findAll().get(0).getId();
+
+        //when
+        ExtractableResponse response = ManuscriptAcceptanceTask.deleteManuscriptTask(id);
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(200);
+    }
 }

@@ -187,4 +187,32 @@ public class ManuscriptServiceTest extends UnitTest {
 
         result.isInstanceOf(CannotModifyManuscriptException.class);
     }
+
+    @Test
+    void 릴리즈_노트_원고를_삭제한다() {
+        Manuscript manuscript = ManuscriptFactory.create();
+        given(manuscriptRepository.findById(Mockito.anyLong()))
+                .willReturn(Optional.ofNullable(manuscript));
+        given(projectMemberRepository.findByMemberIdAndProjectId(Mockito.anyLong(), Mockito.anyLong()))
+                .willReturn(Optional.ofNullable(ProjectMemberFactory.createAdmin()));
+
+        manuscriptService.deleteManuscript(1L, 2L);
+
+        verify(manuscriptRepository, times(1)).delete(Mockito.any(Manuscript.class));
+    }
+
+    @Test
+    void 릴리즈_노트는_관리자가_아니라면_삭제할_수_없다() {
+        Manuscript manuscript = ManuscriptFactory.create();
+        given(manuscriptRepository.findById(Mockito.anyLong()))
+                .willReturn(Optional.ofNullable(manuscript));
+        given(projectMemberRepository.findByMemberIdAndProjectId(Mockito.anyLong(), Mockito.anyLong()))
+                .willReturn(Optional.ofNullable(ProjectMemberFactory.createMember()));
+
+        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
+            manuscriptService.deleteManuscript(1L, 2L);
+        });
+
+        result.isInstanceOf(CannotDeleteManuscriptException.class);
+    }
 }
