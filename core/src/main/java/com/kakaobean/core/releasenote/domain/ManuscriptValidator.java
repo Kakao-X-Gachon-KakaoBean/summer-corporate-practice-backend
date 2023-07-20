@@ -16,7 +16,7 @@ import static com.kakaobean.core.project.domain.ProjectRole.*;
 
 @Component
 @RequiredArgsConstructor
-public class ManuscriptValidator extends BaseEntity {
+public class ManuscriptValidator {
 
     private final ProjectMemberRepository projectMemberRepository;
     private final ManuscriptRepository manuscriptRepository;
@@ -58,6 +58,15 @@ public class ManuscriptValidator extends BaseEntity {
 
         if(manuscript.getManuscriptStatus() != ManuscriptStatus.Modifying) {
             throw new CannotModifyManuscriptException();
+        }
+    }
+
+    public void validRightToDelete(Manuscript manuscript, Long adminId) {
+        ProjectMember projectMember = projectMemberRepository.findByMemberIdAndProjectId(adminId, manuscript.getProjectId())
+                .orElseThrow(NotExistsProjectMemberException::new);
+
+        if(projectMember.getProjectRole() != ADMIN){
+            throw new CannotDeleteManuscriptException();
         }
     }
 }
