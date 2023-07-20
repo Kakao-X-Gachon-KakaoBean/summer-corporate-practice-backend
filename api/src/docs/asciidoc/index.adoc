@@ -66,6 +66,9 @@
 == 릴리즈 노트 API
 
 * link:/docs/release_note/deploy_release_note.html[릴리즈 노트 배포 API, window=_blank ]
+* link:/docs/release_note/find_release_note.html[릴리즈 노트 단건 조회 API, window=_blank ]
+* link:/docs/release_note/find_release_notes.html[페이징을 사용한 릴리즈 노트 조회 API, window=_blank ]
+
 
 == 릴리즈 노트 원고 API
 
