@@ -44,4 +44,12 @@ public class AmqpService {
     public void send(String exchangeName, String routingKey, String dto){
         rabbitTemplate.convertAndSend(exchangeName, routingKey, dto);
     }
+
+    public void deleteQueue(String queueName) {
+        amqpAdmin.deleteQueue(queueName);
+    }
+
+    public void deleteExchange(String exchangeName) {
+        amqpAdmin.deleteQueue(exchangeName);
+    }
 }

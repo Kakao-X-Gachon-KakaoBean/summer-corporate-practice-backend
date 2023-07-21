@@ -15,6 +15,7 @@ import com.kakaobean.releasenote.dto.request.DeployReleaseNoteRequest;
 import io.restassured.response.ExtractableResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
@@ -34,6 +35,9 @@ public class ProjectAcceptanceTest extends AcceptanceTest {
 
     @Autowired
     ReleaseNoteRepository releaseNoteRepository;
+
+    @Autowired
+    AmqpAdmin amqpAdmin;
 
     @Test
     void 프로젝트를_만든다(){
@@ -65,6 +69,7 @@ public class ProjectAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 초대받은_멤버가_프로젝트에_가입한다(){
+
         //given
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
         ProjectAcceptanceTask.registerProjectTask(givenRequest);

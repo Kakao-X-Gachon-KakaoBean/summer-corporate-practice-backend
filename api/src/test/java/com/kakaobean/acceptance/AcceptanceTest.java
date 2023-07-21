@@ -8,6 +8,7 @@ import com.kakaobean.core.member.domain.repository.MemberRepository;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -24,7 +25,7 @@ public abstract class AcceptanceTest {
     int port;
 
     @Autowired
-    DatabaseCleaner databaseCleaner;
+    protected DatabaseCleaner databaseCleaner;
 
     @Autowired
     protected EmailRepository emailRepository;
@@ -35,10 +36,15 @@ public abstract class AcceptanceTest {
     @Autowired
     protected PasswordEncoder passwordEncoder;
 
+    @Autowired
+    protected MQCleaner mqCleaner;
+
     @BeforeEach
     void beforeEach(){
         RestAssured.port = port;
-        databaseCleaner.execute();;
+        mqCleaner.resetRabbitMq();
+        databaseCleaner.execute();
+
         createMember("ADMIN", ADMIN);
         createMember("MEMBER", MEMBER);
     }
