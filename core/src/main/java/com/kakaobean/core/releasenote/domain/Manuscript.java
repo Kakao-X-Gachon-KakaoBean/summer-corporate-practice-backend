@@ -3,6 +3,7 @@ package com.kakaobean.core.releasenote.domain;
 import com.kakaobean.core.common.domain.BaseEntity;
 import com.kakaobean.core.common.domain.BaseStatus;
 import com.kakaobean.core.common.event.Events;
+import com.kakaobean.core.releasenote.domain.event.ManuscriptModifiedEvent;
 import com.kakaobean.core.releasenote.domain.event.ManuscriptRegisteredEvent;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -66,6 +67,11 @@ public class Manuscript extends BaseEntity {
         this.content = content;
         this.version = version;
         this.lastEditedMemberId = editingMemberId;
+        modified();
+    }
+
+    private void modified() {
         modifyManuscriptStatus(ManuscriptStatus.Modifiable);
+        Events.raise(new ManuscriptModifiedEvent(id));
     }
 }

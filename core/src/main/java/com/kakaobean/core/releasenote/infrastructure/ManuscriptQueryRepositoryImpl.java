@@ -16,7 +16,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.kakaobean.core.member.domain.QMember.member;
 import static com.kakaobean.core.releasenote.domain.QManuscript.*;
