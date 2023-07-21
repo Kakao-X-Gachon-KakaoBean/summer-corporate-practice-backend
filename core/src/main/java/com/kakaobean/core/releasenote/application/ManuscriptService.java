@@ -32,7 +32,7 @@ public class ManuscriptService {
         Manuscript manuscript = manuscriptRepository.findByIdWithPESSIMISTICLock(manuscriptId)
                 .orElseThrow(NotExistsManuscriptException::new);
         manuscriptValidator.validRightToModify(manuscript, memberId);
-        manuscript.modifyManuscriptStatus(ManuscriptStatus.Modifying);
+        manuscript.startModification();
         return new ManuscriptResponseDto(manuscript.getId(), manuscript.getTitle(), manuscript.getContent(), manuscript.getVersion());
     }
 

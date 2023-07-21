@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import static com.kakaobean.core.notification.infrastructure.QueueNameConfig.*;
-import static com.kakaobean.core.notification.infrastructure.QueueNameConfig.PROJECT_PREFIX;
 
 @Slf4j
 @Component

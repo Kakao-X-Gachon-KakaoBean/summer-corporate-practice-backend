@@ -6,9 +6,7 @@ import com.kakaobean.core.notification.domain.NotificationType;
 import com.kakaobean.core.notification.domain.event.ModifiedManuscriptNotificationEvent;
 import com.kakaobean.core.notification.domain.event.NotificationSentEvent;
 import com.kakaobean.core.notification.utils.NotificationUtils;
-import com.kakaobean.core.project.application.dto.response.FindProjectMemberResponseDto;
 import com.kakaobean.core.project.domain.Project;
-import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.project.exception.NotExistsProjectException;
@@ -27,7 +25,7 @@ import static com.kakaobean.core.notification.domain.NotificationType.*;
 
 @Component
 @RequiredArgsConstructor
-public class ModifiedManuscriptNotificationStrategy implements RegisterNotificationStrategy {
+public class RegisterManuscriptModificationStartNotificationStrategy implements RegisterNotificationStrategy {
 
     private final ManuscriptRepository manuscriptRepository;
     private final ProjectQueryRepository projectQueryRepository;
@@ -41,8 +39,8 @@ public class ModifiedManuscriptNotificationStrategy implements RegisterNotificat
         Project project = projectRepository.findById(manuscript.getProjectId())
                 .orElseThrow(NotExistsProjectException::new);
 
-        String url = "/projects/" + manuscript.getProjectId() + "/manuscripts/" + manuscript.getId();
-        String content = manuscript.getTitle() + " 원고 수정이 완료되었습니다.";
+        String url = "/projects/" + manuscript.getProjectId() + "/manuscripts";
+        String content = manuscript.getTitle() + " 원고 수정이 시작되었습니다.";
         String finalContent = NotificationUtils.makeNotificationContent(project.getTitle(), content);
         List<Notification> notifications = makeNotifications(manuscript, url, finalContent);
         notificationRepository.saveAll(notifications);
@@ -59,6 +57,6 @@ public class ModifiedManuscriptNotificationStrategy implements RegisterNotificat
 
     @Override
     public boolean support(NotificationType notificationType) {
-        return notificationType == MODIFIED_MANUSCRIPT;
+        return notificationType == START_MANUSCRIPT_MODIFICATION;
     }
 }
