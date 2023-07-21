@@ -3,8 +3,8 @@ package com.kakaobean.core.notification.domain.service.register.strategy;
 import com.kakaobean.core.notification.domain.Notification;
 import com.kakaobean.core.notification.domain.NotificationRepository;
 import com.kakaobean.core.notification.domain.NotificationType;
+import com.kakaobean.core.notification.domain.event.ModifiedManuscriptNotificationEvent;
 import com.kakaobean.core.notification.domain.event.NotificationSentEvent;
-import com.kakaobean.core.notification.domain.event.StartManuscriptModificationNotificationEvent;
 import com.kakaobean.core.notification.utils.NotificationUtils;
 import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
@@ -25,7 +25,7 @@ import static com.kakaobean.core.notification.domain.NotificationType.*;
 
 @Component
 @RequiredArgsConstructor
-public class RegisterManuscriptModificationStartNotificationStrategy implements RegisterNotificationStrategy {
+public class RegisterModifiedManuscriptNotificationStrategy implements RegisterNotificationStrategy {
 
     private final ManuscriptRepository manuscriptRepository;
     private final ProjectQueryRepository projectQueryRepository;
@@ -39,16 +39,16 @@ public class RegisterManuscriptModificationStartNotificationStrategy implements 
         Project project = projectRepository.findById(manuscript.getProjectId())
                 .orElseThrow(NotExistsProjectException::new);
 
-        String url = "/projects/" + manuscript.getProjectId() + "/manuscripts";
-        String content = manuscript.getTitle() + " 원고 수정이 시작되었습니다.";
+        String url = "/projects/" + manuscript.getProjectId() + "/manuscripts/" + manuscript.getId() ;
+        String content = manuscript.getTitle() + " 원고 수정이 끝났습니다.";
         String finalContent = NotificationUtils.makeNotificationContent(project.getTitle(), content);
         List<Notification> notifications = makeNotifications(manuscript, url, finalContent);
         notificationRepository.saveAll(notifications);
-        return new StartManuscriptModificationNotificationEvent(url, project.getTitle(), finalContent, LocalDateTime.now(), project.getId());
+        return new ModifiedManuscriptNotificationEvent(url, project.getTitle(), finalContent, LocalDateTime.now(), project.getId());
     }
 
     private List<Notification> makeNotifications(Manuscript manuscript, String url, String content) {
-         return projectQueryRepository
+        return projectQueryRepository
                 .findProjectMembers(manuscript.getProjectId())
                 .stream()
                 .map(memberInfo -> new Notification(ACTIVE, memberInfo.getProjectMemberId(), url, false, content))
@@ -57,6 +57,6 @@ public class RegisterManuscriptModificationStartNotificationStrategy implements 
 
     @Override
     public boolean support(NotificationType notificationType) {
-        return notificationType == START_MANUSCRIPT_MODIFICATION;
+        return notificationType == MODIFIED_MANUSCRIPT;
     }
 }

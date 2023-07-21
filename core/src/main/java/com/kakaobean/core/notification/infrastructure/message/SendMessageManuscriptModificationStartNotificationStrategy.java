@@ -1,7 +1,6 @@
 package com.kakaobean.core.notification.infrastructure.message;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kakaobean.core.notification.domain.event.ModifiedManuscriptNotificationEvent;
 import com.kakaobean.core.notification.domain.event.NotificationSentEvent;
 import com.kakaobean.core.notification.domain.event.StartManuscriptModificationNotificationEvent;
 import com.kakaobean.independentlysystem.amqp.AmqpService;
