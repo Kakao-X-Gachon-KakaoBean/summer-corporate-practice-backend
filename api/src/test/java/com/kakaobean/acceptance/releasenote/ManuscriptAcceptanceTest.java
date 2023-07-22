@@ -44,10 +44,14 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
     ManuscriptRepository manuscriptRepository;
 
     @Autowired
+    NotificationRepository notificationRepository;
+
+    @Autowired
     AmqpAdmin amqpAdmin;
 
     /**
      * 관리자가 릴리즈 노트를 정상적으로 생성하는 것이 목표
+     * 메시지가 큐로 전송된다.
      */
     @Test
     void 릴리즈_노트_원고를_생성한다(){
@@ -80,6 +84,7 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
         //then
         assertThat(response.statusCode()).isEqualTo(201);
         assertThat(manuscriptRepository.findAll().size()).isEqualTo(1);
+        assertThat(notificationRepository.findAll().size()).isEqualTo(3);
 
         Long adminId = memberRepository.findMemberByEmail(ADMIN.getEmail()).get().getId();
         QueueInformation queueInfo1 = amqpAdmin.getQueueInfo("user-" + adminId);
@@ -158,13 +163,30 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
     }
 
 
+    /**
+     * 실시간 메시지가 큐로 보내진다.
+     */
     @Test
     void 릴리즈_노트_원고_수정_권한을_획득한다(){
+
+        memberRepository.deleteAll();
+
+        //멤버 생성
+        RegisterMemberRequest request1 = RegisterMemberRequestFactory.createRequest();
+        RegisterMemberRequest request2 = RegisterMemberRequestFactory.createRequestV2();
+
+        MemberAcceptanceTask.registerMemberTask(request1, emailRepository);
+        MemberAcceptanceTask.registerMemberTask(request2, emailRepository);
 
         //프로젝트 생성
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
         ProjectAcceptanceTask.registerProjectTask(givenRequest);
         Project project = projectRepository.findAll().get(0);
+
+        //프로젝트 멤버 가입
+        InviteProjectMemberRequest givenDto = new InviteProjectMemberRequest(List.of(MEMBER.getEmail()));
+        ProjectAcceptanceTask.inviteProjectMemberTask(givenDto, project.getId());
+        ProjectAcceptanceTask.joinProjectMemberTask(new RegisterProjectMemberRequest(project.getSecretKey()));
 
         //릴리즈 노트 원고 생성
         RegisterManuscriptRequest request = new RegisterManuscriptRequest("1.9V 코코노트 초기 릴리즈 노트", ".. 배포 내용", "1.1", project.getId());
@@ -177,15 +199,42 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
 
         //then
         assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(notificationRepository.findAll().size()).isEqualTo(5);
+
+
+        Long adminId = memberRepository.findMemberByEmail(ADMIN.getEmail()).get().getId();
+        QueueInformation queueInfo1 = amqpAdmin.getQueueInfo("user-" + adminId);
+        assertThat(queueInfo1.getMessageCount()).isEqualTo(2); //생성, 수정 시작
+
+        Long memberId = memberRepository.findMemberByEmail(MEMBER.getEmail()).get().getId();
+        QueueInformation queueInfo2 = amqpAdmin.getQueueInfo("user-" + memberId);
+        assertThat(queueInfo2.getMessageCount()).isEqualTo(3); // 멤버 초대, 생성, 수정 시작
     }
 
+    /**
+     * 실시간 메시지가 큐로 보내진다.
+     */
     @Test
     void 릴리즈_노트_원고를_수정한다(){
+
+        memberRepository.deleteAll();
+
+        //멤버 생성
+        RegisterMemberRequest request1 = RegisterMemberRequestFactory.createRequest();
+        RegisterMemberRequest request2 = RegisterMemberRequestFactory.createRequestV2();
+
+        MemberAcceptanceTask.registerMemberTask(request1, emailRepository);
+        MemberAcceptanceTask.registerMemberTask(request2, emailRepository);
 
         //프로젝트 생성
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
         ProjectAcceptanceTask.registerProjectTask(givenRequest);
         Project project = projectRepository.findAll().get(0);
+
+        //프로젝트 멤버 가입
+        InviteProjectMemberRequest givenDto = new InviteProjectMemberRequest(List.of(MEMBER.getEmail()));
+        ProjectAcceptanceTask.inviteProjectMemberTask(givenDto, project.getId());
+        ProjectAcceptanceTask.joinProjectMemberTask(new RegisterProjectMemberRequest(project.getSecretKey()));
 
         //릴리즈 노트 원고 생성
         RegisterManuscriptRequest givenRequest2 = new RegisterManuscriptRequest("1.9V 코코노트 초기 릴리즈 노트", ".. 배포 내용", "1.1", project.getId());
@@ -194,6 +243,7 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
         //권한을 얻는다.
         Long manuscriptId = manuscriptRepository.findAll().get(0).getId();
         ManuscriptAcceptanceTask.hasRightToModifyManuscriptTask(manuscriptId);
+
         ModifyManuscriptRequest request = new ModifyManuscriptRequest("1.9.1V 코코노트 초기 릴리즈 노트", "수정된 배포 내용", "1.9.1V");
 
         //when
@@ -201,6 +251,18 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
 
         //then
         assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(notificationRepository.findAll().size()).isEqualTo(7);
+
+        /**
+         * 수정 시작 알림과 수정 완료 알림이 모두 가야한다.
+         */
+        Long adminId = memberRepository.findMemberByEmail(ADMIN.getEmail()).get().getId();
+        QueueInformation queueInfo1 = amqpAdmin.getQueueInfo("user-" + adminId);
+        assertThat(queueInfo1.getMessageCount()).isEqualTo(3); //생성, 수정 시작, 수정 끝 알림 3개
+
+        Long memberId = memberRepository.findMemberByEmail(MEMBER.getEmail()).get().getId();
+        QueueInformation queueInfo2 = amqpAdmin.getQueueInfo("user-" + memberId);
+        assertThat(queueInfo2.getMessageCount()).isEqualTo(4); // 멤버 초대, 생성, 수정 시작, 수정 끝 알림 3개
     }
 
 
