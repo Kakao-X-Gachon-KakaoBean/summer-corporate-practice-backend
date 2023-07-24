@@ -2,7 +2,7 @@ package com.kakaobean.core.unit.application.releasenote;
 
 
 import com.kakaobean.core.common.event.Events;
-import com.kakaobean.core.factory.project.dto.RegisterReleaseNoteRequestDtoFactory;
+import com.kakaobean.core.factory.releasenote.dto.RegisterReleaseNoteRequestDtoFactory;
 import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.releasenote.application.ReleaseNoteService;

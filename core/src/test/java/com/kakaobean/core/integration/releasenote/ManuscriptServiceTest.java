@@ -108,8 +108,9 @@ public class ManuscriptServiceTest extends IntegrationTest {
     @Test
     void 릴리즈_노트_원고의_수정_권한을_얻는다() {
 
-        Manuscript manuscript = ManuscriptFactory.createWithId(1L, 2L, Modifiable);
-        ProjectMember projectMember = ProjectMemberFactory.createWithMemberIdAndProjectId(1L, 2L, ADMIN);
+        Project project = projectRepository.save(ProjectFactory.createWithoutId());
+        Manuscript manuscript = ManuscriptFactory.createWithId(1L, project.getId(), Modifiable);
+        ProjectMember projectMember = ProjectMemberFactory.createWithMemberIdAndProjectId(1L, project.getId(), ADMIN);
         manuscriptRepository.save(manuscript);
         projectMemberRepository.save(projectMember);
 
@@ -125,7 +126,6 @@ public class ManuscriptServiceTest extends IntegrationTest {
         ProjectMember projectMember = ProjectMemberFactory.createWithMemberIdAndProjectId(1L, 2L, VIEWER);
         manuscriptRepository.save(manuscript);
         projectMemberRepository.save(projectMember);
-
 
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
             manuscriptService.hasRightToModifyManuscript(projectMember.getMemberId(), manuscript.getId());
@@ -152,8 +152,9 @@ public class ManuscriptServiceTest extends IntegrationTest {
     void 릴리즈_노트_원고를_수정한다() {
 
         //given
-        ProjectMember projectMember = ProjectMemberFactory.createWithMemberIdAndProjectId(1L, 2L, ADMIN);
-        Manuscript manuscript = manuscriptRepository.save(ManuscriptFactory.createWithId(1L, 2L, Modifying));
+        Project project = projectRepository.save(ProjectFactory.createWithoutId());
+        ProjectMember projectMember = ProjectMemberFactory.createWithMemberIdAndProjectId(1L, project.getId(), ADMIN);
+        Manuscript manuscript = manuscriptRepository.save(ManuscriptFactory.createWithId(1L, project.getId(), Modifying));
         projectMemberRepository.save(projectMember);
         ModifyManuscriptRequestDto dto = ManuscriptFactory.createServiceDto(projectMember.getMemberId(), manuscript.getId());
 
