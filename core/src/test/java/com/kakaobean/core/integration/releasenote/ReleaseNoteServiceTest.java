@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 
 import static com.kakaobean.core.factory.project.ProjectMemberFactory.*;
-import static com.kakaobean.core.factory.project.dto.RegisterReleaseNoteRequestDtoFactory.*;
+import static com.kakaobean.core.factory.releasenote.dto.RegisterReleaseNoteRequestDtoFactory.*;
 import static com.kakaobean.core.project.domain.ProjectRole.*;
 import static org.assertj.core.api.Assertions.*;
 
