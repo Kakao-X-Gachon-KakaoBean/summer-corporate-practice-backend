@@ -15,9 +15,11 @@ import com.kakaobean.core.releasenote.domain.Manuscript;
 import com.kakaobean.core.releasenote.domain.repository.ManuscriptRepository;
 import com.kakaobean.core.releasenote.exception.*;
 import org.assertj.core.api.AbstractThrowableAssert;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -43,6 +45,13 @@ public class ManuscriptServiceTest extends IntegrationTest {
 
     @Autowired
     ManuscriptRepository manuscriptRepository;
+
+    @BeforeEach
+    void beforeEach() {
+        projectRepository.deleteAll();
+        projectMemberRepository.deleteAll();
+        manuscriptRepository.deleteAll();
+    }
 
     @Test
     void 릴리즈_노트_첫_원고를_등록한다() {
@@ -106,7 +115,7 @@ public class ManuscriptServiceTest extends IntegrationTest {
 
         manuscriptService.hasRightToModifyManuscript(projectMember.getMemberId(), manuscript.getId());
 
-        assertThat(manuscript.getManuscriptStatus()).isSameAs(Modifying);
+        assertThat(manuscriptRepository.findById(manuscript.getId()).get().getManuscriptStatus()).isSameAs(Modifying);
     }
 
     @Test
@@ -139,23 +148,25 @@ public class ManuscriptServiceTest extends IntegrationTest {
         result.isInstanceOf(AnotherMemberAlreadyModifyingException.class);
     }
 
-
     @Test
     void 릴리즈_노트_원고를_수정한다() {
 
-        Manuscript manuscript = ManuscriptFactory.createWithId(1L, 2L, Modifying);
+        //given
         ProjectMember projectMember = ProjectMemberFactory.createWithMemberIdAndProjectId(1L, 2L, ADMIN);
-        manuscriptRepository.save(manuscript);
+        Manuscript manuscript = manuscriptRepository.save(ManuscriptFactory.createWithId(1L, 2L, Modifying));
         projectMemberRepository.save(projectMember);
         ModifyManuscriptRequestDto dto = ManuscriptFactory.createServiceDto(projectMember.getMemberId(), manuscript.getId());
 
+        //when
         manuscriptService.modifyManuscript(dto);
 
-        assertThat(manuscript.getManuscriptStatus()).isSameAs(Modifiable);
-        assertThat(manuscript.getTitle()).isEqualTo(dto.getTitle());
-        assertThat(manuscript.getContent()).isEqualTo(dto.getContent());
-        assertThat(manuscript.getVersion()).isEqualTo(dto.getVersion());
-        assertThat(manuscript.getLastEditedMemberId()).isSameAs(dto.getEditingMemberId());
+        //then
+        Manuscript result = manuscriptRepository.findById(manuscript.getId()).get();
+        assertThat(result.getManuscriptStatus()).isSameAs(Modifiable);
+        assertThat(result.getTitle()).isEqualTo(dto.getTitle());
+        assertThat(result.getContent()).isEqualTo(dto.getContent());
+        assertThat(result.getVersion()).isEqualTo(dto.getVersion());
+        assertThat(result.getLastEditedMemberId()).isSameAs(dto.getEditingMemberId());
     }
 
     @Test

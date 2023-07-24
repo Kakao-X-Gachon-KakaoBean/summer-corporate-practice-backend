@@ -17,7 +17,9 @@ import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.project.exception.NotProjectAdminException;
 import com.kakaobean.core.releasenote.domain.repository.ReleaseNoteRepository;
+import org.aspectj.lang.annotation.Before;
 import org.assertj.core.api.AbstractThrowableAssert;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -42,8 +44,12 @@ public class ProjectServiceIntegrationTest extends IntegrationTest {
     @Autowired
     ProjectMemberRepository projectMemberRepository;
 
-    @Autowired
-    ReleaseNoteRepository releaseNoteRepository;
+    @BeforeEach
+    void beforeEach() {
+        memberRepository.deleteAll();
+        projectRepository.deleteAll();;
+        projectMemberRepository.deleteAll();
+    }
 
     @Test
     void 로그인한_유저가_프로젝트_생성에_성공한다() {
@@ -73,7 +79,7 @@ public class ProjectServiceIntegrationTest extends IntegrationTest {
         projectService.modifyProject(responseDto);
 
         // then
-        assertThat(project.getTitle()).isEqualTo("새로운 제목");
+        assertThat(projectRepository.findById(project.getId()).get().getTitle()).isEqualTo("새로운 제목");
     }
 
     @Test
@@ -106,7 +112,7 @@ public class ProjectServiceIntegrationTest extends IntegrationTest {
         projectService.removeProject(member.getId(), project.getId());
 
         //then
-        assertThat(project.getStatus()).isSameAs(BaseStatus.INACTIVE);
+        assertThat(projectRepository.findAll().size()).isEqualTo(0);
     }
 
     @Test

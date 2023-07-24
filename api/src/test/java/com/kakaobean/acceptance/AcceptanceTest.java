@@ -5,11 +5,15 @@ import com.kakaobean.core.member.domain.AuthProvider;
 import com.kakaobean.core.member.domain.Member;
 import com.kakaobean.core.member.domain.repository.EmailRepository;
 import com.kakaobean.core.member.domain.repository.MemberRepository;
+import com.kakaobean.core.notification.domain.service.send.email.SendEmailNotificationService;
+import com.kakaobean.core.notification.domain.service.send.message.SendMessageNotificationService;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -24,7 +28,7 @@ public abstract class AcceptanceTest {
     int port;
 
     @Autowired
-    DatabaseCleaner databaseCleaner;
+    protected DatabaseCleaner databaseCleaner;
 
     @Autowired
     protected EmailRepository emailRepository;
@@ -35,10 +39,18 @@ public abstract class AcceptanceTest {
     @Autowired
     protected PasswordEncoder passwordEncoder;
 
+    @Autowired
+    protected MQCleaner mqCleaner;
+
+    @MockBean
+    protected SendEmailNotificationService sendEmailNotificationService;
+
     @BeforeEach
     void beforeEach(){
         RestAssured.port = port;
-        databaseCleaner.execute();;
+        mqCleaner.resetRabbitMq();
+        databaseCleaner.execute();
+
         createMember("ADMIN", ADMIN);
         createMember("MEMBER", MEMBER);
     }
