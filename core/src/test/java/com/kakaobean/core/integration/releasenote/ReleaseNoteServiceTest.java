@@ -10,12 +10,13 @@ import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.releasenote.application.ReleaseNoteService;
 import com.kakaobean.core.releasenote.domain.repository.ReleaseNoteRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
 import static com.kakaobean.core.factory.project.ProjectMemberFactory.*;
-import static com.kakaobean.core.factory.project.dto.RegisterReleaseNoteRequestDtoFactory.*;
+import static com.kakaobean.core.factory.releasenote.dto.RegisterReleaseNoteRequestDtoFactory.*;
 import static com.kakaobean.core.project.domain.ProjectRole.*;
 import static org.assertj.core.api.Assertions.*;
 
@@ -35,6 +36,13 @@ public class ReleaseNoteServiceTest extends IntegrationTest {
 
     @Autowired
     private ReleaseNoteRepository releaseNoteRepository;
+
+    @BeforeEach
+    void beforeEach() {
+        projectRepository.deleteAll();
+        projectMemberRepository.deleteAll();
+        releaseNoteRepository.deleteAll();
+    }
 
     @Test
     void 관리자가_릴리즈_노트를_등록한다(){

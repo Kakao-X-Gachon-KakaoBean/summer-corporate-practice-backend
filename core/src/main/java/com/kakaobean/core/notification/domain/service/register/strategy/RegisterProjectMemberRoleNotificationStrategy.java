@@ -45,7 +45,7 @@ public class RegisterProjectMemberRoleNotificationStrategy implements RegisterNo
         String url = "/projects/" + projectMember.getProjectId();
         String content = project.getTitle() + " 프로젝트의 권한이 " + projectMember.getProjectRole().name() + " 으로 변경되었습니다.";
         String finalContent = NotificationUtils.makeNotificationContent(project.getTitle(), content);
-        notificationRepository.save(new Notification(ACTIVE, projectMemberId, url, false, finalContent));
+        notificationRepository.save(new Notification(ACTIVE, projectMember.getMemberId(), url, false, finalContent));
         return new ModifiedProjectMemberNotificationEvent(url, project.getTitle(), content, LocalDateTime.now(), member.getAuth().getEmail(), member.getId());
     }
 
