@@ -20,6 +20,7 @@ import com.kakaobean.core.releasenote.domain.repository.ReleaseNoteRepository;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 
 import static com.kakaobean.core.common.domain.BaseStatus.ACTIVE;
 import static com.kakaobean.core.factory.member.MemberFactory.create;
