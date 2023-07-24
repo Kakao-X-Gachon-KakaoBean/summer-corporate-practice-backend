@@ -43,9 +43,6 @@ public class MemberServiceTest extends IntegrationTest {
     @Autowired
     EmailRepository emailRepository;
 
-    @MockBean
-    EmailSender mailSender;
-
     @Autowired
     RedisTemplate redisTemplate;
 
@@ -62,6 +59,7 @@ public class MemberServiceTest extends IntegrationTest {
             return null;
         });
         this.passwordEncoder = new BCryptPasswordEncoder(); //임시 처리
+        memberRepository.deleteAll();
     }
 
     @DisplayName("멤버를 등록한다.")

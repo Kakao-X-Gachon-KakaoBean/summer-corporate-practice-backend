@@ -22,12 +22,13 @@ import com.kakaobean.releasenote.dto.request.DeployReleaseNoteRequest;
 import com.kakaobean.unit.controller.factory.member.RegisterMemberRequestFactory;
 import io.restassured.response.ExtractableResponse;
 import org.junit.jupiter.api.Test;
+import org.springframework.amqp.core.AmqpAdmin;
+import org.springframework.amqp.core.QueueInformation;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static com.kakaobean.acceptance.TestMember.MEMBER;
-import static com.kakaobean.acceptance.TestMember.RECEIVER;
+import static com.kakaobean.acceptance.TestMember.*;
 import static com.kakaobean.core.common.domain.BaseStatus.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -50,6 +51,9 @@ public class ReleaseNoteAcceptanceTest extends AcceptanceTest {
 
     @Autowired
     ReleaseNoteRepository releaseNoteRepository;
+
+    @Autowired
+    AmqpAdmin amqpAdmin;
 
 
     /**
@@ -88,6 +92,14 @@ public class ReleaseNoteAcceptanceTest extends AcceptanceTest {
         //then
         assertThat(response.statusCode()).isEqualTo(201);
         assertThat(notificationRepository.findAll().size()).isEqualTo(3);
+
+        Long adminId = memberRepository.findMemberByEmail(ADMIN.getEmail()).get().getId();
+        QueueInformation queueInfo1 = amqpAdmin.getQueueInfo("user-" + adminId);
+        assertThat(queueInfo1.getMessageCount()).isEqualTo(1);
+
+        Long memberId = memberRepository.findMemberByEmail(MEMBER.getEmail()).get().getId();
+        QueueInformation queueInfo2 = amqpAdmin.getQueueInfo("user-" + memberId);
+        assertThat(queueInfo2.getMessageCount()).isEqualTo(2); //초대를 받았으므로 메시지가 2개다.
     }
 
     @Test
