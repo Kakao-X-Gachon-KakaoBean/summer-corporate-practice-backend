@@ -115,7 +115,7 @@ public class SecurityConfig {
                         "/**/*.css",
                         "/**/*.js")
                 .permitAll()
-                .antMatchers("/auth/**", "/oauth2/**","/members/**", "/emails/**","/actuator/**")
+                .antMatchers("/auth/**", "/oauth2/**", "/members/**", "/emails/**", "/actuator/**", "/stomp/**")
                 .permitAll()
                 .antMatchers("/members/name")
                 .authenticated()
