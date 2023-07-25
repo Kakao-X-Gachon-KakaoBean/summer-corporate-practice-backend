@@ -40,6 +40,4 @@ public class IssueController {
 //     3. 이슈 수정
 //     4. 이슈 전체 조회
 //     5. 개별 이슈 조회
-
-
 }
