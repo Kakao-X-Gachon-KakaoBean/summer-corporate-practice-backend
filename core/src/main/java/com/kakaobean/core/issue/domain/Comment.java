@@ -4,7 +4,7 @@ package com.kakaobean.core.issue.domain;
 import com.kakaobean.core.common.domain.BaseEntity;
 import com.kakaobean.core.common.domain.BaseStatus;
 import com.kakaobean.core.common.event.Events;
-import com.kakaobean.core.issue.domain.event.RegisterIssueEvent;
+import com.kakaobean.core.issue.domain.event.RegisterCommentEvent;
 import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.SQLDelete;
@@ -59,6 +59,6 @@ public class Comment extends BaseEntity {
         this.writerId = writerId;
     }
     public void registered(Long commentId) {
-        Events.raise(new RegisterIssueEvent(commentId));
+        Events.raise(new RegisterCommentEvent(commentId));
     }
 }

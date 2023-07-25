@@ -1,13 +1,16 @@
 package com.kakaobean.core.unit.application.issue;
 
+import com.kakaobean.core.factory.project.ProjectMemberFactory;
 import com.kakaobean.core.issue.application.IssueService;
 import com.kakaobean.core.issue.application.dto.request.RegisterIssueRequestDto;
 import com.kakaobean.core.issue.application.dto.response.RegisterIssueResponseDto;
 import com.kakaobean.core.issue.domain.Issue;
 import com.kakaobean.core.issue.domain.repository.IssueRepository;
+import com.kakaobean.core.project.application.ProjectMemberFacade;
 import com.kakaobean.core.project.application.ProjectService;
 import com.kakaobean.core.project.application.dto.request.RegisterProjectRequestDto;
 import com.kakaobean.core.project.application.dto.response.RegisterProjectResponseDto;
+import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.ProjectValidator;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
@@ -17,6 +20,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+
+import java.util.Optional;
 
 import static com.kakaobean.core.factory.issue.IssueFactory.create;
 import static org.mockito.BDDMockito.given;
@@ -57,6 +62,7 @@ public class IssueServiceTest extends UnitTest {
     void successRegisterIssue() {
         //given
         given(issueRepository.save(Mockito.any(Issue.class))).willReturn(create(1L));
+        given(projectMemberRepository.findByMemberIdAndProjectId(Mockito.anyLong(),Mockito.anyLong())).willReturn(Optional.of(ProjectMemberFactory.createMember()));
 
         //when
         RegisterIssueResponseDto responseDto = issueService.registerIssue(new RegisterIssueRequestDto(1L, "이슈 제목", "이슈 설명", 2L));
@@ -64,4 +70,6 @@ public class IssueServiceTest extends UnitTest {
         //then
         verify(issueRepository, times(1)).save(Mockito.any(Issue.class));
     }
+
+
 }

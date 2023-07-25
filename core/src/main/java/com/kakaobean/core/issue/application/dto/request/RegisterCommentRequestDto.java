@@ -4,7 +4,9 @@ import com.kakaobean.core.common.domain.BaseStatus;
 import com.kakaobean.core.issue.domain.Comment;
 import com.kakaobean.core.issue.domain.Issue;
 import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 public class RegisterCommentRequestDto {
 
     private Long writerId;
@@ -13,6 +15,7 @@ public class RegisterCommentRequestDto {
 
     private String content;
 
+    @Builder
     public RegisterCommentRequestDto(Long issueId, Long writerId, String content) {
         this.issueId = issueId;
         this.writerId = writerId;
