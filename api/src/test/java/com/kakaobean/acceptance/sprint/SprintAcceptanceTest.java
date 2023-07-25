@@ -67,4 +67,26 @@ public class SprintAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(200);
         assertThat(sprintRepository.findById(sprint.getId()).get().getTitle()).isEqualTo("수정된 스프린트 제목");
     }
+
+    @Test
+    void 스프린트_삭제(){
+
+        //프로젝트 생성
+        RegisterProjectRequest projectRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
+        ProjectAcceptanceTask.registerProjectTask(projectRequest);
+        Project project = projectRepository.findAll().get(0);
+
+        //스프린트 생성
+        RegisterSprintRequest sprintRequest = RegisterSprintRequestFactory.create();
+        SprintAcceptanceTask.registerSprintTask(sprintRequest);
+        Sprint sprint = sprintRepository.findAll().get(0);
+
+        //스프린트 삭제
+        //when
+        ExtractableResponse response = SprintAcceptanceTask.removeSprintTask(sprint.getId());
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(sprintRepository.findAll().size()).isEqualTo(0);
+    }
 }

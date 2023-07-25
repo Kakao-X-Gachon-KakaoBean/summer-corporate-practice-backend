@@ -34,4 +34,10 @@ public class SprintController {
         sprintService.modifySprint(request.toServiceDto(userPrincipal.getId(), sprintId));
         return new ResponseEntity(CommandSuccessResponse.from("스프린트 정보가 수정되었습니다."), OK);
     }
-}
+
+    @DeleteMapping("/sprints/{sprintId}")
+    public ResponseEntity removeSprint(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                       @PathVariable Long sprintId) {
+        sprintService.removeSprint(userPrincipal.getId(), sprintId);
+        return new ResponseEntity(CommandSuccessResponse.from("스프린트가 삭제되었습니다."), OK);
+    }}

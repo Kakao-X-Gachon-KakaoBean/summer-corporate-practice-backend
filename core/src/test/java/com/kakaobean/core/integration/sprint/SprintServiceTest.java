@@ -2,6 +2,7 @@ package com.kakaobean.core.integration.sprint;
 
 import com.kakaobean.core.factory.project.ProjectFactory;
 import com.kakaobean.core.factory.sprint.SprintFactory;
+import com.kakaobean.core.factory.sprint.TaskFactory;
 import com.kakaobean.core.factory.sprint.dto.ModifySprintRequestDtoFactory;
 import com.kakaobean.core.integration.IntegrationTest;
 import com.kakaobean.core.project.domain.Project;
@@ -13,6 +14,7 @@ import com.kakaobean.core.sprint.Exception.SprintAccessException;
 import com.kakaobean.core.sprint.application.SprintService;
 import com.kakaobean.core.sprint.domain.Sprint;
 import com.kakaobean.core.sprint.domain.repository.SprintRepository;
+import com.kakaobean.core.sprint.domain.repository.TaskRepository;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,20 +37,24 @@ public class SprintServiceTest extends IntegrationTest {
     SprintRepository sprintRepository;
 
     @Autowired
+    TaskRepository taskRepository;
+
+    @Autowired
     ProjectRepository projectRepository;
 
     @Autowired
     ProjectMemberRepository projectMemberRepository;
 
     @BeforeEach
-    void beforeEach(){
+    void beforeEach() {
         sprintRepository.deleteAll();
+        taskRepository.deleteAll();
         projectRepository.deleteAll();
         projectMemberRepository.deleteAll();
     }
 
     @Test
-    void 관리자가_스프린트를_등록한다(){
+    void 관리자가_스프린트를_등록한다() {
         // given
         Project project = projectRepository.save(ProjectFactory.create());
         ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
@@ -61,7 +67,7 @@ public class SprintServiceTest extends IntegrationTest {
     }
 
     @Test
-    void 일반멤버는_스프린트를_등록할_수_없다(){
+    void 일반멤버는_스프린트를_등록할_수_없다() {
         // given
         Project project = projectRepository.save(ProjectFactory.create());
         ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), MEMBER));
@@ -76,7 +82,7 @@ public class SprintServiceTest extends IntegrationTest {
     }
 
     @Test
-    void 시작날짜보다_빠른_마감날짜로는_스프린트를_생성하지_못한다(){
+    void 시작날짜보다_빠른_마감날짜로는_스프린트를_생성하지_못한다() {
         // given
         Project project = projectRepository.save(ProjectFactory.create());
         ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
@@ -91,7 +97,7 @@ public class SprintServiceTest extends IntegrationTest {
     }
 
     @Test
-    void 관리자가_스프린트를_수정한다(){
+    void 관리자가_스프린트를_수정한다() {
         // given
         Project project = projectRepository.save(ProjectFactory.createWithoutId());
         ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
@@ -105,7 +111,7 @@ public class SprintServiceTest extends IntegrationTest {
     }
 
     @Test
-    void 일반멤버는_스프린트를_수정할_수_없다(){
+    void 일반멤버는_스프린트를_수정할_수_없다() {
         // given
         Project project = projectRepository.save(ProjectFactory.createWithoutId());
         ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), MEMBER));
@@ -121,7 +127,7 @@ public class SprintServiceTest extends IntegrationTest {
     }
 
     @Test
-    void 시작날짜보다_빠른_마감날짜로_수정할_수_없다(){
+    void 시작날짜보다_빠른_마감날짜로_수정할_수_없다() {
         // given
         Project project = projectRepository.save(ProjectFactory.createWithoutId());
         ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
@@ -136,5 +142,39 @@ public class SprintServiceTest extends IntegrationTest {
         result.isInstanceOf(IllegalSprintDateException.class);
     }
 
+    @Test
+    void 관리자가_스프린트를_삭제한다() {
+        // given
+        Project project = projectRepository.save(ProjectFactory.createWithoutId());
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
+        Sprint sprint = sprintRepository.save(SprintFactory.createWithId(project.getId()));
+        taskRepository.save(TaskFactory.createWithId(sprint.getId(), 1L));
+        taskRepository.save(TaskFactory.createWithId(sprint.getId(), 2L));
+
+        // when
+        sprintService.removeSprint(projectMember.getMemberId(), sprint.getId());
+
+        // then
+        assertThat(sprintRepository.findAll().size()).isEqualTo(0);
+        assertThat(taskRepository.findAll().size()).isEqualTo(0);
+    }
+
+    @Test
+    void 일반멤버는_스프린트를_삭제할_수_없다() {
+        // given
+        Project project = projectRepository.save(ProjectFactory.createWithoutId());
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), MEMBER));
+        Sprint sprint = sprintRepository.save(SprintFactory.createWithId(project.getId()));
+        taskRepository.save(TaskFactory.createWithId(sprint.getId(), 1L));
+        taskRepository.save(TaskFactory.createWithId(sprint.getId(), 2L));
+
+        // when
+        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
+            sprintService.removeSprint(projectMember.getMemberId(), sprint.getId());
+        });
+
+        // then
+        result.isInstanceOf(SprintAccessException.class);
+    }
 
 }

@@ -38,4 +38,16 @@ public class SprintAcceptanceTask {
                 .then().log().all()
                 .extract();
     }
+
+    public static ExtractableResponse removeSprintTask(Long sprintId){
+        return RestAssured
+                .given()
+                .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
+                .accept(APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
+                .when()
+                .delete("/sprints/{sprintId}", sprintId)
+                .then().log().all()
+                .extract();
+    }
 }

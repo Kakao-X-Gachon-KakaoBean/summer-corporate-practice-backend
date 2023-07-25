@@ -5,7 +5,7 @@ import com.kakaobean.core.factory.project.ProjectFactory;
 import com.kakaobean.core.factory.releasenote.ManuscriptFactory;
 import com.kakaobean.core.factory.releasenote.ReleaseNoteFactory;
 import com.kakaobean.core.factory.sprint.SprintFactory;
-import com.kakaobean.core.factory.task.TaskFactory;
+import com.kakaobean.core.factory.sprint.TaskFactory;
 import com.kakaobean.core.integration.IntegrationTest;
 import com.kakaobean.core.member.domain.Member;
 import com.kakaobean.core.member.domain.repository.MemberRepository;

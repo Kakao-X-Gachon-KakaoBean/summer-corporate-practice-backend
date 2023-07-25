@@ -13,8 +13,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentRequest;
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentResponse;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -53,7 +52,7 @@ public class SprintControllerTest extends ControllerTest {
                         fieldWithPath("endDate").type(STRING).description("스프린트 마감 날짜")
                 ),
                 responseFields(
-                        fieldWithPath("message").type(STRING).description("스프린트가 생성되었습니다.")
+                        fieldWithPath("message").type(STRING).description("스프린트가 생성 되었습니다.")
                 )
         ));
     }
@@ -88,9 +87,33 @@ public class SprintControllerTest extends ControllerTest {
                         fieldWithPath("newEndDate").type(STRING).description("수정된 스프린트 마감 날짜")
                 ),
                 responseFields(
-                        fieldWithPath("message").type(STRING).description("스프린트가 수정되었습니다.")
+                        fieldWithPath("message").type(STRING).description("스프린트가 수정 되었습니다.")
                 )
         ));
     }
 
+    @Test
+    @WithMockUser
+    void 스프린트_삭제() throws Exception {
+
+        // when
+        ResultActions perform = mockMvc.perform(delete("/sprints/{sprintId}",1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        //then
+        perform.andDo(print());
+        perform.andExpect(status().is2xxSuccessful());
+        perform.andDo(document("remove_sprint",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                pathParameters(
+                        parameterWithName("sprintId").description("삭제할 스프린트의 id")
+                ),
+                responseFields(
+                        fieldWithPath("message").type(STRING).description("스프린트가 삭제 되었습니다.")
+                )
+        ));
+    }
 }

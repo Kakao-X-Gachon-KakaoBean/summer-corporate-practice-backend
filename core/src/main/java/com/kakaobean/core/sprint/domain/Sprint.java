@@ -3,6 +3,7 @@ package com.kakaobean.core.sprint.domain;
 
 import com.kakaobean.core.common.domain.BaseEntity;
 import com.kakaobean.core.common.domain.BaseStatus;
+import com.kakaobean.core.common.event.Events;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
