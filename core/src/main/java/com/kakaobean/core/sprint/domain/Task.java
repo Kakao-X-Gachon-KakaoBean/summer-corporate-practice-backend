@@ -2,8 +2,10 @@ package com.kakaobean.core.sprint.domain;
 
 import com.kakaobean.core.common.domain.BaseEntity;
 import com.kakaobean.core.common.domain.BaseStatus;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -11,6 +13,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Where(clause = "status = 'ACTIVE'")
 @SQLDelete(sql = "UPDATE task SET status = 'INACTIVE' WHERE id = ?")
 @Entity
@@ -26,6 +29,8 @@ public class Task extends BaseEntity {
 
     private String title;
 
+    private String content;
+
     @Enumerated(EnumType.STRING)
     private WorkStatus workStatus;
 
@@ -37,18 +42,19 @@ public class Task extends BaseEntity {
      * 테스트용
      */
     @Builder
-    public Task(BaseStatus status,
-                Long id,
+    public Task(Long id,
                 Long workerId,
                 Long sprintId,
                 String title,
+                String content,
                 WorkStatus workStatus, LocalDate startDate,
                 LocalDate endDate) {
-        super(status);
+        super(BaseStatus.ACTIVE);
         this.id = id;
         this.workerId = workerId;
         this.sprintId = sprintId;
         this.title = title;
+        this.content = content;
         this.workStatus = workStatus;
         this.startDate = startDate;
         this.endDate = endDate;
