@@ -5,12 +5,9 @@ import com.kakaobean.core.issue.application.IssueService;
 import com.kakaobean.core.issue.application.dto.request.RegisterIssueRequestDto;
 import com.kakaobean.core.issue.application.dto.response.RegisterIssueResponseDto;
 import com.kakaobean.core.issue.domain.Issue;
+import com.kakaobean.core.issue.domain.repository.CommentRepository;
 import com.kakaobean.core.issue.domain.repository.IssueRepository;
-import com.kakaobean.core.project.application.ProjectMemberFacade;
 import com.kakaobean.core.project.application.ProjectService;
-import com.kakaobean.core.project.application.dto.request.RegisterProjectRequestDto;
-import com.kakaobean.core.project.application.dto.response.RegisterProjectResponseDto;
-import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.ProjectValidator;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
@@ -32,13 +29,11 @@ public class IssueServiceTest extends UnitTest {
 
     private IssueService issueService;
 
-    private ProjectService projectService;
+    @Mock
+    private CommentRepository commentRepository;
 
     @Mock
     private IssueRepository issueRepository;
-
-    @Mock
-    private ProjectRepository projectRepository;
 
     @Mock
     private ProjectMemberRepository projectMemberRepository;
@@ -47,13 +42,8 @@ public class IssueServiceTest extends UnitTest {
     void beforeEach(){
         issueService = new IssueService(
                 issueRepository,
+                commentRepository,
                 projectMemberRepository
-        );
-        
-        projectService = new ProjectService(
-                projectRepository,
-                projectMemberRepository,
-                new ProjectValidator()
         );
     }
 
