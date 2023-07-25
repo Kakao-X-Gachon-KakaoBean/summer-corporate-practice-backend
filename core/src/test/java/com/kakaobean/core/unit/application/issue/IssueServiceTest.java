@@ -57,7 +57,7 @@ public class IssueServiceTest extends UnitTest {
     void successRegisterIssue() {
         //given
         given(issueRepository.save(Mockito.any(Issue.class))).willReturn(create(1L));
-        given(projectMemberRepositor)
+
         //when
         RegisterIssueResponseDto responseDto = issueService.registerIssue(new RegisterIssueRequestDto(1L, "이슈 제목", "이슈 설명", 2L));
 

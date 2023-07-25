@@ -23,11 +23,11 @@ public class IssueService {
     @Transactional(readOnly = false)
     public RegisterIssueResponseDto registerIssue(RegisterIssueRequestDto dto) {
         Issue issue = dto.toEntity();
-        issueRepository.save(issue);
-        //알림 필요 없으면 그냥 위 두 줄 합쳐도 됨.
-
         projectMemberRepository.findByMemberIdAndProjectId(dto.getWriterId(), dto.getProjectId()).
                 orElseThrow(NotExistsProjectMemberException::new);
+
+        issueRepository.save(issue);
+        //알림 필요 없으면 그냥 위 두 줄 합쳐도 됨.
 
         return new RegisterIssueResponseDto(issue.getId());
     }
