@@ -16,6 +16,7 @@ import com.kakaobean.core.releasenote.application.ManuscriptService;
 import com.kakaobean.core.releasenote.application.ReleaseNoteService;
 import com.kakaobean.core.releasenote.domain.repository.query.ManuscriptQueryRepository;
 import com.kakaobean.core.releasenote.domain.repository.query.ReleaseNoteQueryRepository;
+import com.kakaobean.core.sprint.application.SprintService;
 import com.kakaobean.independentlysystem.image.ImageService;
 import com.kakaobean.member.MemberController;
 import com.kakaobean.project.ProjectController;
@@ -25,6 +26,7 @@ import com.kakaobean.releasenote.ReleaseNoteController;
 import com.kakaobean.security.token.RefreshTokenRepository;
 import com.kakaobean.security.token.TokenProvider;
 
+import com.kakaobean.sprint.SprintController;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +51,8 @@ import org.springframework.test.web.servlet.MockMvc;
         ProjectMemberController.class,
         ReleaseNoteController.class,
         ManuscriptController.class,
-        ImageController.class
+        ImageController.class,
+        SprintController.class
 })
 @AutoConfigureRestDocs
 @MockBean(JpaMetamodelMappingContext.class)
@@ -109,4 +112,7 @@ public abstract class ControllerTest {
 
     @MockBean
     protected ReleaseNoteQueryRepository releaseNoteQueryRepository;
+
+    @MockBean
+    protected SprintService sprintService;
 }

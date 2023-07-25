@@ -7,9 +7,8 @@ import java.time.LocalDate;
 public class SprintFactory {
     private SprintFactory() {}
 
-    public static Sprint createSprint(Long projectId){
+    public static Sprint createWithId(Long projectId){
         return Sprint.builder()
-                .id(1L)
                 .title("스프린트 제목")
                 .description("스프린트 설명")
                 .startDate(LocalDate.of(2023,8,1))
