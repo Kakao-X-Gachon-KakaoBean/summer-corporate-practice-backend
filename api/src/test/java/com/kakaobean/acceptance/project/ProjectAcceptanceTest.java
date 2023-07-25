@@ -100,6 +100,7 @@ public class ProjectAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(200);
     }
 
+    // 비동기 때문에 가끔 실패할 때가 있음
     @Test
     @Rollback(value = false)
     void 어드민이_프로젝트를_삭제한다(){

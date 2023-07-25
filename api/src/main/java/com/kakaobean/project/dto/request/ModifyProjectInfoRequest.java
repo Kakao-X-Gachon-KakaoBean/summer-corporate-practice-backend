@@ -1,6 +1,6 @@
 package com.kakaobean.project.dto.request;
 
-import com.kakaobean.core.project.application.dto.request.ModifyProjectInfoReqeustDto;
+import com.kakaobean.core.project.application.dto.request.ModifyProjectInfoRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,8 +21,8 @@ public class ModifyProjectInfoRequest {
         this.newContent = newContent;
     }
 
-    public ModifyProjectInfoReqeustDto toServiceDto(Long adminId, Long projectId){
-        return new ModifyProjectInfoReqeustDto(
+    public ModifyProjectInfoRequestDto toServiceDto(Long adminId, Long projectId){
+        return new ModifyProjectInfoRequestDto(
                 adminId,
                 projectId,
                 newTitle,

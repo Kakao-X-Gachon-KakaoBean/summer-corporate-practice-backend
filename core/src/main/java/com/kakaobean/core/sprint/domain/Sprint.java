@@ -64,4 +64,11 @@ public class Sprint extends BaseEntity {
         this.startDate = startDate;
         this.endDate = endDate;
     }
+
+    public void modify(String newTitle, String newDescription, LocalDate newStartDate, LocalDate newEndDate){
+        this.title = newTitle;
+        this.description = newDescription;
+        this.startDate = newStartDate;
+        this.endDate = newEndDate;
+    }
 }

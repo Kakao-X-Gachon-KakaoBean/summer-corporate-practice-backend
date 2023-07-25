@@ -2,9 +2,8 @@ package com.kakaobean.core.unit.application.project;
 
 import com.kakaobean.core.common.domain.BaseStatus;
 import com.kakaobean.core.common.event.Events;
-import com.kakaobean.core.factory.releasenote.ReleaseNoteFactory;
 import com.kakaobean.core.project.application.ProjectService;
-import com.kakaobean.core.project.application.dto.request.ModifyProjectInfoReqeustDto;
+import com.kakaobean.core.project.application.dto.request.ModifyProjectInfoRequestDto;
 import com.kakaobean.core.project.application.dto.request.RegisterProjectRequestDto;
 import com.kakaobean.core.project.application.dto.response.RegisterProjectResponseDto;
 import com.kakaobean.core.project.domain.Project;
@@ -13,8 +12,6 @@ import com.kakaobean.core.project.domain.event.RemovedProjectEvent;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.project.exception.NotProjectAdminException;
-import com.kakaobean.core.releasenote.domain.ReleaseNote;
-import com.kakaobean.core.releasenote.domain.event.ReleaseNoteDeployedEvent;
 import com.kakaobean.core.unit.UnitTest;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.junit.jupiter.api.AfterEach;
@@ -80,7 +77,7 @@ public class ProjectServiceTest extends UnitTest {
         given(projectMemberRepository.findByMemberIdAndProjectId(Mockito.anyLong(), Mockito.anyLong())).willReturn(Optional.of(createAdmin()));
         given(projectRepository.findById(Mockito.anyLong())).willReturn(Optional.of(testProject));
         // when
-        projectService.modifyProject(new ModifyProjectInfoReqeustDto(1L, 2L, "새로운 프로젝트 제목", "새로운 프로젝트 내용"));
+        projectService.modifyProject(new ModifyProjectInfoRequestDto(1L, 2L, "새로운 프로젝트 제목", "새로운 프로젝트 내용"));
         // then
         assertThat(testProject.getTitle()).isEqualTo("새로운 프로젝트 제목");
     }
@@ -91,7 +88,7 @@ public class ProjectServiceTest extends UnitTest {
         given(projectMemberRepository.findByMemberIdAndProjectId(Mockito.anyLong(), Mockito.anyLong())).willReturn(Optional.of(createMember()));
         // when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
-            projectService.modifyProject(new ModifyProjectInfoReqeustDto(1L, 2L, "새로운 프로젝트 제목", "새로운 프로젝트 내용"));
+            projectService.modifyProject(new ModifyProjectInfoRequestDto(1L, 2L, "새로운 프로젝트 제목", "새로운 프로젝트 내용"));
         });
         // then
         result.isInstanceOf(NotProjectAdminException.class);

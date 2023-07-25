@@ -1,5 +1,7 @@
 package com.kakaobean.core.sprint.application;
 
+import com.kakaobean.core.sprint.Exception.NotExistsSprintException;
+import com.kakaobean.core.sprint.application.dto.ModifySprintRequestDto;
 import com.kakaobean.core.sprint.application.dto.RegisterSprintRequestDto;
 import com.kakaobean.core.sprint.domain.Sprint;
 import com.kakaobean.core.sprint.domain.SprintValidator;
@@ -21,4 +23,12 @@ public class SprintService {
         sprintValidator.validate(sprint, dto.getMemberId());
         sprintRepository.save(sprint);
     }
+
+    @Transactional
+    public void modifySprint(ModifySprintRequestDto dto) {
+        Sprint sprint = sprintRepository.findById(dto.getSprintId()).orElseThrow(NotExistsSprintException::new);
+        sprint.modify(dto.getNewTitle(),dto.getNewDescription(),dto.getNewStartDate(),dto.getNewEndDate());
+        sprintValidator.validate(sprint, dto.getAdminId());
+    }
+
 }

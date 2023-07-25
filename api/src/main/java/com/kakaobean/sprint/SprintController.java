@@ -3,16 +3,16 @@ package com.kakaobean.sprint;
 import com.kakaobean.common.dto.CommandSuccessResponse;
 import com.kakaobean.core.sprint.application.SprintService;
 import com.kakaobean.security.UserPrincipal;
+import com.kakaobean.sprint.dto.request.ModifySprintRequest;
 import com.kakaobean.sprint.dto.request.RegisterSprintRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,5 +25,13 @@ public class SprintController {
                                          @Validated @RequestBody RegisterSprintRequest request) {
         sprintService.registerSprint(request.toServiceDto(userPrincipal.getId()));
         return new ResponseEntity(CommandSuccessResponse.from("스프린트가 생성되었습니다."), CREATED);
+    }
+
+    @PatchMapping("/sprints/{sprintId}")
+    public ResponseEntity modifySprint(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                       @PathVariable Long sprintId,
+                                       @Validated @RequestBody ModifySprintRequest request) {
+        sprintService.modifySprint(request.toServiceDto(userPrincipal.getId(), sprintId));
+        return new ResponseEntity(CommandSuccessResponse.from("스프린트 정보가 수정되었습니다."), OK);
     }
 }
