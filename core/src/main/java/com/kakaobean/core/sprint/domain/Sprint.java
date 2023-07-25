@@ -50,14 +50,13 @@ public class Sprint extends BaseEntity {
      * 테스트용
      */
     @Builder
-    public Sprint(BaseStatus status,
-                  Long id,
+    public Sprint(Long id,
                   Long projectId,
                   String title,
                   String description,
                   LocalDate startDate,
                   LocalDate endDate) {
-        super(status);
+        super(BaseStatus.ACTIVE);
         this.id = id;
         this.projectId = projectId;
         this.title = title;

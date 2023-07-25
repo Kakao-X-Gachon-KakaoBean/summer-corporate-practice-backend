@@ -29,6 +29,8 @@ public class Task extends BaseEntity {
 
     private String title;
 
+    private String content;
+
     @Enumerated(EnumType.STRING)
     private WorkStatus workStatus;
 
@@ -40,18 +42,19 @@ public class Task extends BaseEntity {
      * 테스트용
      */
     @Builder
-    public Task(BaseStatus status,
-                Long id,
+    public Task(Long id,
                 Long workerId,
                 Long sprintId,
                 String title,
+                String content,
                 WorkStatus workStatus, LocalDate startDate,
                 LocalDate endDate) {
-        super(status);
+        super(BaseStatus.ACTIVE);
         this.id = id;
         this.workerId = workerId;
         this.sprintId = sprintId;
         this.title = title;
+        this.content = content;
         this.workStatus = workStatus;
         this.startDate = startDate;
         this.endDate = endDate;

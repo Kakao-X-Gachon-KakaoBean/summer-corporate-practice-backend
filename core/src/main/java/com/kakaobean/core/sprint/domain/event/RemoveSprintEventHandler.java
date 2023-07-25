@@ -21,7 +21,7 @@ public class RemoveSprintEventHandler {
     private final TaskRepository taskRepository;
 
     @Async
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @TransactionalEventListener(RemovedProjectEvent.class)
     public void handler(RemovedProjectEvent event){
         List<Sprint> sprints = sprintRepository.findSprintByProjectId(event.getProjectId());

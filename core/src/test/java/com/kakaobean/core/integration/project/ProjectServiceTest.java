@@ -1,8 +1,11 @@
 package com.kakaobean.core.integration.project;
 
-import com.kakaobean.core.common.domain.BaseStatus;
 import com.kakaobean.core.factory.member.MemberFactory;
 import com.kakaobean.core.factory.project.ProjectFactory;
+import com.kakaobean.core.factory.releasenote.ManuscriptFactory;
+import com.kakaobean.core.factory.releasenote.ReleaseNoteFactory;
+import com.kakaobean.core.factory.sprint.SprintFactory;
+import com.kakaobean.core.factory.task.TaskFactory;
 import com.kakaobean.core.integration.IntegrationTest;
 import com.kakaobean.core.member.domain.Member;
 import com.kakaobean.core.member.domain.repository.MemberRepository;
@@ -16,13 +19,15 @@ import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.project.exception.NotProjectAdminException;
+import com.kakaobean.core.releasenote.domain.repository.ManuscriptRepository;
 import com.kakaobean.core.releasenote.domain.repository.ReleaseNoteRepository;
-import org.aspectj.lang.annotation.Before;
+import com.kakaobean.core.sprint.domain.Sprint;
+import com.kakaobean.core.sprint.domain.repository.SprintRepository;
+import com.kakaobean.core.sprint.domain.repository.TaskRepository;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 
 import static com.kakaobean.core.common.domain.BaseStatus.ACTIVE;
 import static com.kakaobean.core.factory.member.MemberFactory.create;
@@ -31,7 +36,7 @@ import static com.kakaobean.core.project.domain.ProjectRole.MEMBER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class ProjectServiceIntegrationTest extends IntegrationTest {
+public class ProjectServiceTest extends IntegrationTest {
 
     @Autowired
     ProjectService projectService;
@@ -44,6 +49,18 @@ public class ProjectServiceIntegrationTest extends IntegrationTest {
 
     @Autowired
     ProjectMemberRepository projectMemberRepository;
+
+    @Autowired
+    ReleaseNoteRepository releaseNoteRepository;
+
+    @Autowired
+    ManuscriptRepository manuscriptRepository;
+
+    @Autowired
+    SprintRepository sprintRepository;
+
+    @Autowired
+    TaskRepository taskRepository;
 
     @BeforeEach
     void beforeEach() {
@@ -103,17 +120,30 @@ public class ProjectServiceIntegrationTest extends IntegrationTest {
     @Test
     void 어드민이_프로젝트_정보를_삭제에_성공한다() throws InterruptedException {
         //given
-        Member member = memberRepository.save(MemberFactory.create());
+        Member admin = memberRepository.save(MemberFactory.createWithoutId());
+        Member member = memberRepository.save(MemberFactory.createWithoutId());
         Project project = projectRepository.save(ProjectFactory.create());
-        ProjectMember projectMember = projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), member.getId(), ADMIN));
-//        ReleaseNote releaseNote = ReleaseNoteFactory.create(member.getId(), project.getId());
-//        History history = HistoryFactory.create(releaseNote.getId());
+
+        projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), admin.getId(), ADMIN));
+        projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), member.getId(), MEMBER));
+
+        manuscriptRepository.save(ManuscriptFactory.createWithId(member.getId(), project.getId()));
+        releaseNoteRepository.save(ReleaseNoteFactory.createWithId(member.getId(), project.getId()));
+
+        Sprint sprint = sprintRepository.save(SprintFactory.createWithId(project.getId()));
+        taskRepository.save(TaskFactory.createWithId(sprint.getId(), admin.getId()));
+        taskRepository.save(TaskFactory.createWithId(sprint.getId(), member.getId()));
 
         //when
-        projectService.removeProject(member.getId(), project.getId());
+        projectService.removeProject(admin.getId(), project.getId());
 
         //then
         assertThat(projectRepository.findAll().size()).isEqualTo(0);
+        assertThat(projectMemberRepository.findAll().size()).isEqualTo(0);
+        assertThat(manuscriptRepository.findAll().size()).isEqualTo(0);
+        assertThat(releaseNoteRepository.findAll().size()).isEqualTo(0);
+        assertThat(sprintRepository.findAll().size()).isEqualTo(0);
+        assertThat(taskRepository.findAll().size()).isEqualTo(0);
     }
 
     @Test

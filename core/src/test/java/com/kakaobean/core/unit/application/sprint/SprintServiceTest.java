@@ -1,4 +1,4 @@
-package com.kakaobean.core.unit.sprint;
+package com.kakaobean.core.unit.application.sprint;
 
 import com.kakaobean.core.factory.project.ProjectMemberFactory;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;

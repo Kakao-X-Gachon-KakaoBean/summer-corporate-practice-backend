@@ -6,9 +6,8 @@ public class ReleaseNoteFactory {
 
     private ReleaseNoteFactory() {}
 
-    private static ReleaseNote create(Long memberId, Long projectId){
+    public static ReleaseNote createWithId(Long memberId, Long projectId){
         return ReleaseNote.builder()
-                .id(1L)
                 .title("릴리즈노트 제목")
                 .content("릴리즈노트 내용")
                 .version("1.3")
