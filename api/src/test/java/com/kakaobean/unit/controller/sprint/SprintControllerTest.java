@@ -28,7 +28,7 @@ public class SprintControllerTest extends ControllerTest {
     @WithMockUser
     void 스프린트_생성() throws Exception {
         // given
-        RegisterSprintRequest request = RegisterSprintRequestFactory.create();
+        RegisterSprintRequest request = RegisterSprintRequestFactory.createWithId();
         String requestBody = objectMapper.writeValueAsString(request);
 
         // when

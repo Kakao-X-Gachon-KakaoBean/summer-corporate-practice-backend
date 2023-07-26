@@ -34,7 +34,7 @@ public class SprintAcceptanceTest extends AcceptanceTest {
         Project project = projectRepository.findAll().get(0);
 
         //스프린트 생성
-        RegisterSprintRequest sprintRequest = RegisterSprintRequestFactory.create();
+        RegisterSprintRequest sprintRequest = RegisterSprintRequestFactory.createWithId(project.getId());
 
         //when
         ExtractableResponse response = SprintAcceptanceTask.registerSprintTask(sprintRequest);
@@ -53,7 +53,7 @@ public class SprintAcceptanceTest extends AcceptanceTest {
         Project project = projectRepository.findAll().get(0);
 
         //스프린트 생성
-        RegisterSprintRequest sprintRequest = RegisterSprintRequestFactory.create();
+        RegisterSprintRequest sprintRequest = RegisterSprintRequestFactory.createWithId(project.getId());
         SprintAcceptanceTask.registerSprintTask(sprintRequest);
         Sprint sprint = sprintRepository.findAll().get(0);
 
@@ -77,7 +77,7 @@ public class SprintAcceptanceTest extends AcceptanceTest {
         Project project = projectRepository.findAll().get(0);
 
         //스프린트 생성
-        RegisterSprintRequest sprintRequest = RegisterSprintRequestFactory.create();
+        RegisterSprintRequest sprintRequest = RegisterSprintRequestFactory.createWithId(project.getId());
         SprintAcceptanceTask.registerSprintTask(sprintRequest);
         Sprint sprint = sprintRepository.findAll().get(0);
 

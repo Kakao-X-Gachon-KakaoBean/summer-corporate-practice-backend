@@ -13,14 +13,12 @@ public class RegisterTaskRequestDto {
     private String title;
     private String content;
     private Long sprintId;
-    private Long projectId;
     private Long adminId;
 
-    public RegisterTaskRequestDto(String title, String content, Long sprintId, Long projectId, Long adminId) {
+    public RegisterTaskRequestDto(String title, String content, Long sprintId, Long adminId) {
         this.title = title;
         this.content = content;
         this.sprintId = sprintId;
-        this.projectId = projectId;
         this.adminId = adminId;
     }
 

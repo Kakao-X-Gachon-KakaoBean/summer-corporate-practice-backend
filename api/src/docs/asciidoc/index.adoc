@@ -84,3 +84,4 @@
 * link:/docs/sprint/register_sprint.html[스프린트 생성 API, window=_blank ]
 * link:/docs/sprint/modify_sprint.html[스프린트 수정 API, window=_blank ]
 * link:/docs/sprint/remove_sprint.html[스프린트 삭제 API, window=_blank ]
+* link:/docs/sprint/register_task.html[테스크 삭제 API, window=_blank ]

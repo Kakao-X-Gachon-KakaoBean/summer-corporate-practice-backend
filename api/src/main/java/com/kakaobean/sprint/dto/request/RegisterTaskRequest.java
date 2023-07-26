@@ -20,14 +20,10 @@ public class RegisterTaskRequest {
     @NotNull
     private Long sprintId;
 
-    @NotNull
-    private Long projectId;
-
-    public RegisterTaskRequest(String title, String content, Long sprintId, Long projectId) {
+    public RegisterTaskRequest(String title, String content, Long sprintId) {
         this.title = title;
         this.content = content;
         this.sprintId = sprintId;
-        this.projectId = projectId;
     }
 
     public RegisterTaskRequestDto toService(Long adminId) {
@@ -35,7 +31,6 @@ public class RegisterTaskRequest {
                 title,
                 content,
                 sprintId,
-                projectId,
                 adminId
         );
     }
