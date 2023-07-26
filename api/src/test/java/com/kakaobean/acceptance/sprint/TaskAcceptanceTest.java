@@ -33,7 +33,7 @@ public class TaskAcceptanceTest extends AcceptanceTest {
     TaskRepository taskRepository;
 
     @Test
-    void 스프린트_생성(){
+    void 테크스_생성(){
 
         //프로젝트 생성
         RegisterProjectRequest projectRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
@@ -57,7 +57,7 @@ public class TaskAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    void 스프린트_수정(){
+    void 테스크_수정(){
 
         //프로젝트 생성
         RegisterProjectRequest projectRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
@@ -83,5 +83,32 @@ public class TaskAcceptanceTest extends AcceptanceTest {
         //then
         assertThat(response.statusCode()).isEqualTo(200);
         assertThat(taskRepository.findById(task.getId()).get().getTitle()).isEqualTo("수정된 테스크 제목");
+    }
+
+    @Test
+    void 테스크_삭제(){
+
+        //프로젝트 생성
+        RegisterProjectRequest projectRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
+        ProjectAcceptanceTask.registerProjectTask(projectRequest);
+        Project project = projectRepository.findAll().get(0);
+
+        //스프린트 생성
+        RegisterSprintRequest sprintRequest = RegisterSprintRequestFactory.createWithId(project.getId());
+        SprintAcceptanceTask.registerSprintTask(sprintRequest);
+        Sprint sprint = sprintRepository.findAll().get(0);
+
+        //테스크 생성
+        RegisterTaskRequest taskRequest = RegisterTaskRequestFactory.createWithId(sprint.getId());
+        TaskAcceptanceTask.registerTaskTask(taskRequest);
+        Task task = taskRepository.findAll().get(0);
+
+        //테스크 삭제
+        //when
+        ExtractableResponse response = TaskAcceptanceTask.removeTaskTask(task.getId());
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(taskRepository.findAll().size()).isEqualTo(0);
     }
 }

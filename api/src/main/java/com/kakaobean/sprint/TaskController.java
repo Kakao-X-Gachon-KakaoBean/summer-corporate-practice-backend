@@ -35,4 +35,10 @@ public class TaskController {
         return new ResponseEntity(CommandSuccessResponse.from("테스크가 수정 되었습니다."), OK);
     }
 
+    @DeleteMapping("/tasks/{taskId}")
+    public ResponseEntity modifyTask(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                     @PathVariable Long taskId){
+        taskService.removeTask(userPrincipal.getId(), taskId);
+        return new ResponseEntity(CommandSuccessResponse.from("테스크가 삭제 되었습니다."), OK);
+    }
 }

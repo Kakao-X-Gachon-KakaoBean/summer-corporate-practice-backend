@@ -108,5 +108,35 @@ public class TaskServiceTest extends UnitTest {
         // then
         result.isInstanceOf(TaskAccessException.class);
     }
+
+    @Test
+    void 테스크를_삭제한다() {
+        // given
+        given(taskRepository.findById(Mockito.anyLong())).willReturn(Optional.of(TaskFactory.createWithId(1L,2L)));
+        given(sprintRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(createWithId(1L)));
+        given(projectMemberRepository.findByMemberIdAndProjectId(Mockito.anyLong(), Mockito.anyLong())).willReturn(Optional.of(createAdmin()));
+
+        // when
+        taskService.removeTask(1L,2L);
+
+        // then
+        verify(taskRepository,times(1)).delete(Mockito.any(Task.class));
+    }
+
+    @Test
+    void 일반멤버는_테스크를_삭제하지_못한다() {
+        // given
+        given(taskRepository.findById(Mockito.anyLong())).willReturn(Optional.of(TaskFactory.createWithId(1L,2L)));
+        given(sprintRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(createWithId(1L)));
+        given(projectMemberRepository.findByMemberIdAndProjectId(Mockito.anyLong(), Mockito.anyLong())).willReturn(Optional.of(createMember()));
+
+        // when
+        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
+            taskService.removeTask(1L,2L);
+        });
+
+        // then
+        result.isInstanceOf(TaskAccessException.class);
+    }
     
 }

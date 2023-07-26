@@ -38,4 +38,16 @@ public class TaskAcceptanceTask {
                 .then().log().all()
                 .extract();
     }
+
+    public static ExtractableResponse removeTaskTask(Long taskId){
+        return RestAssured
+                .given()
+                .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
+                .accept(APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
+                .when()
+                .delete("/tasks/{taskId}",taskId)
+                .then().log().all()
+                .extract();
+    }
 }

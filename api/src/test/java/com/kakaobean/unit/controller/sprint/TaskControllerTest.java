@@ -13,8 +13,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentRequest;
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentResponse;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
 import static org.springframework.restdocs.payload.JsonFieldType.STRING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -77,7 +76,7 @@ public class TaskControllerTest extends ControllerTest {
                 getDocumentRequest(),
                 getDocumentResponse(),
                 pathParameters(
-                        parameterWithName("taskId").description("수정된 테스크의 id")
+                        parameterWithName("taskId").description("수정할 테스크의 id")
                 ),
                 requestFields(
                         fieldWithPath("newTitle").type(STRING).description("수정된 테스크 제목"),
@@ -86,6 +85,31 @@ public class TaskControllerTest extends ControllerTest {
                 ),
                 responseFields(
                         fieldWithPath("message").type(STRING).description("테스크가 수정 되었습니다.")
+                )
+        ));
+    }
+
+    @Test
+    @WithMockUser
+    void 테스크_삭제() throws Exception {
+
+        // when
+        ResultActions perform = mockMvc.perform(delete("/tasks/{taskId}",1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        //then
+        perform.andDo(print());
+        perform.andExpect(status().is2xxSuccessful());
+        perform.andDo(document("remove_tasks",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                pathParameters(
+                        parameterWithName("taskId").description("삭제할 테스크의 id")
+                ),
+                responseFields(
+                        fieldWithPath("message").type(STRING).description("테스크가 삭제 되었습니다.")
                 )
         ));
     }

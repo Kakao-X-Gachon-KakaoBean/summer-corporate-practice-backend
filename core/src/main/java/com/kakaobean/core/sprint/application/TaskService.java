@@ -36,4 +36,12 @@ public class TaskService {
         Task task = taskRepository.findById(dto.getTaskId()).orElseThrow(NotExistsTaskException::new);
         task.modify(dto.getNewTitle(), dto.getNewContent());
     }
+
+    @Transactional
+    public void removeTask(Long adminId, Long taskId) {
+        Task task = taskRepository.findById(taskId).orElseThrow(NotExistsTaskException::new);
+        Sprint sprint = sprintRepository.findById(task.getSprintId()).orElseThrow(NotExistsSprintException::new);
+        taskValidator.validate(adminId, sprint.getProjectId());
+        taskRepository.delete(task);
+    }
 }

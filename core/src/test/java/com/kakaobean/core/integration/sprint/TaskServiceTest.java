@@ -114,4 +114,36 @@ public class TaskServiceTest extends IntegrationTest {
         result.isInstanceOf(TaskAccessException.class);
     }
 
+    @Test
+    void 테스크를_삭제한다() {
+        // given
+        Project project = projectRepository.save(ProjectFactory.create());
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
+        Sprint sprint = sprintRepository.save(createWithId(project.getId()));
+        Task task = taskRepository.save(TaskFactory.createWithId(sprint.getId(), 1L));
+
+        // when
+        taskService.removeTask(projectMember.getMemberId(),task.getId());
+
+        // then
+        assertThat(taskRepository.findAll().size()).isEqualTo(0);
+    }
+
+    @Test
+    void 일반멤버는_테스크를_삭제하지_못한다() {
+        // given
+        Project project = projectRepository.save(ProjectFactory.create());
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), MEMBER));
+        Sprint sprint = sprintRepository.save(createWithId(project.getId()));
+        Task task = taskRepository.save(TaskFactory.createWithId(sprint.getId(), 1L));
+
+        // when
+        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
+            taskService.removeTask(projectMember.getMemberId(),task.getId());
+        });
+
+        // then
+        result.isInstanceOf(TaskAccessException.class);
+    }
+
 }
