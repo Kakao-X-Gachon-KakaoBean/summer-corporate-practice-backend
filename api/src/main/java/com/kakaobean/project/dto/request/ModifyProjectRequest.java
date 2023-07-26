@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @NoArgsConstructor
-public class ModifyProjectInfoRequest {
+public class ModifyProjectRequest {
 
     @NotBlank
     private String newTitle;
@@ -16,7 +16,7 @@ public class ModifyProjectInfoRequest {
     @NotBlank
     private String newContent;
 
-    public ModifyProjectInfoRequest(String newTitle, String newContent) {
+    public ModifyProjectRequest(String newTitle, String newContent) {
         this.newTitle = newTitle;
         this.newContent = newContent;
     }
