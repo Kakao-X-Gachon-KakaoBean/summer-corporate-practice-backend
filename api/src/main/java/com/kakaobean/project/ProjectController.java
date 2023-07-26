@@ -5,7 +5,7 @@ import com.kakaobean.core.project.application.ProjectService;
 import com.kakaobean.core.project.application.dto.response.FindProjectResponseDto;
 import com.kakaobean.core.project.application.dto.response.RegisterProjectResponseDto;
 import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
-import com.kakaobean.project.dto.request.ModifyProjectInfoRequest;
+import com.kakaobean.project.dto.request.ModifyProjectRequest;
 import com.kakaobean.project.dto.request.RegisterProjectRequest;
 import com.kakaobean.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +43,7 @@ public class ProjectController {
     @PatchMapping("/projects/{projectId}")
     public ResponseEntity modifyProject(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                         @PathVariable Long projectId,
-                                        @Validated @RequestBody ModifyProjectInfoRequest request){
+                                        @Validated @RequestBody ModifyProjectRequest request){
         projectService.modifyProject(request.toServiceDto(userPrincipal.getId(), projectId));
         return new ResponseEntity(CommandSuccessResponse.from("프로젝트 정보가 변경 되었습니다."), OK);
     }

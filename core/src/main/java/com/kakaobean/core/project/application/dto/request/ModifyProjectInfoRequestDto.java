@@ -5,14 +5,14 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ModifyProjectInfoReqeustDto {
+public class ModifyProjectInfoRequestDto {
 
     private Long adminId;
     private Long projectId;
     private String newTitle;
     private String newContent;
 
-    public ModifyProjectInfoReqeustDto(Long adminId,
+    public ModifyProjectInfoRequestDto(Long adminId,
                                        Long projectId,
                                        String newTitle,
                                        String newContent) {

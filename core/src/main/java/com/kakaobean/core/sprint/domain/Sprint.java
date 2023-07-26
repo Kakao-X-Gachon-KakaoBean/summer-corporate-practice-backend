@@ -3,6 +3,7 @@ package com.kakaobean.core.sprint.domain;
 
 import com.kakaobean.core.common.domain.BaseEntity;
 import com.kakaobean.core.common.domain.BaseStatus;
+import com.kakaobean.core.common.event.Events;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -63,5 +64,12 @@ public class Sprint extends BaseEntity {
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    public void modify(String newTitle, String newDescription, LocalDate newStartDate, LocalDate newEndDate){
+        this.title = newTitle;
+        this.description = newDescription;
+        this.startDate = newStartDate;
+        this.endDate = newEndDate;
     }
 }

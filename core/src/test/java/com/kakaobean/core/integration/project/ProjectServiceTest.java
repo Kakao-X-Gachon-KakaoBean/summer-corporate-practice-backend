@@ -5,13 +5,13 @@ import com.kakaobean.core.factory.project.ProjectFactory;
 import com.kakaobean.core.factory.releasenote.ManuscriptFactory;
 import com.kakaobean.core.factory.releasenote.ReleaseNoteFactory;
 import com.kakaobean.core.factory.sprint.SprintFactory;
-import com.kakaobean.core.factory.task.TaskFactory;
+import com.kakaobean.core.factory.sprint.TaskFactory;
 import com.kakaobean.core.integration.IntegrationTest;
 import com.kakaobean.core.member.domain.Member;
 import com.kakaobean.core.member.domain.repository.MemberRepository;
 import com.kakaobean.core.member.exception.member.NotExistsMemberException;
 import com.kakaobean.core.project.application.ProjectService;
-import com.kakaobean.core.project.application.dto.request.ModifyProjectInfoReqeustDto;
+import com.kakaobean.core.project.application.dto.request.ModifyProjectInfoRequestDto;
 import com.kakaobean.core.project.application.dto.request.RegisterProjectRequestDto;
 import com.kakaobean.core.project.application.dto.response.RegisterProjectResponseDto;
 import com.kakaobean.core.project.domain.Project;
@@ -91,7 +91,7 @@ public class ProjectServiceTest extends IntegrationTest {
         Member member = memberRepository.save(MemberFactory.create());
         Project project = projectRepository.save(ProjectFactory.create());
         projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), member.getId(), ADMIN));
-        ModifyProjectInfoReqeustDto responseDto = new ModifyProjectInfoReqeustDto(member.getId(), project.getId(), "새로운 제목", "새로운 설명");
+        ModifyProjectInfoRequestDto responseDto = new ModifyProjectInfoRequestDto(member.getId(), project.getId(), "새로운 제목", "새로운 설명");
 
         // when
         projectService.modifyProject(responseDto);
@@ -106,7 +106,7 @@ public class ProjectServiceTest extends IntegrationTest {
         Member member = memberRepository.save(MemberFactory.create());
         Project project = projectRepository.save(ProjectFactory.create());
         projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), member.getId(), MEMBER));
-        ModifyProjectInfoReqeustDto responseDto = new ModifyProjectInfoReqeustDto(member.getId(), project.getId(), "새로운 제목", "새로운 설명");
+        ModifyProjectInfoRequestDto responseDto = new ModifyProjectInfoRequestDto(member.getId(), project.getId(), "새로운 제목", "새로운 설명");
 
         // when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
@@ -117,8 +117,9 @@ public class ProjectServiceTest extends IntegrationTest {
         result.isInstanceOf(NotProjectAdminException.class);
     }
 
+    // 비동기 때문에 테스트에 실패하는 경우가 있음
     @Test
-    void 어드민이_프로젝트_정보를_삭제에_성공한다() throws InterruptedException {
+    void 어드민이_프로젝트_삭제에_성공한다() throws InterruptedException {
         //given
         Member admin = memberRepository.save(MemberFactory.createWithoutId());
         Member member = memberRepository.save(MemberFactory.createWithoutId());

@@ -34,4 +34,13 @@ public class SprintValidator {
             throw new IllegalSprintDateException();
         }
     }
+
+    public void validateRemoveAccess(Sprint sprint, Long memberId) {
+        ProjectMember projectMember = projectMemberRepository.findByMemberIdAndProjectId(memberId, sprint.getProjectId())
+                .orElseThrow(NotExistsProjectMemberException::new);
+
+        if(projectMember.getProjectRole() != ADMIN){
+            throw new SprintAccessException();
+        }
+    }
 }
