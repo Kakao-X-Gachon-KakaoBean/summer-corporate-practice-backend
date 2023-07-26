@@ -66,4 +66,9 @@ public class Task extends BaseEntity {
         this.content = content;
         this.workStatus = workStatus;
     }
+
+    public void modify(String newTitle, String newContent) {
+        this.title = newTitle;
+        this.content = newContent;
+    }
 }

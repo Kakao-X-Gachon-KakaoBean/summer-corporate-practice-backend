@@ -1,6 +1,8 @@
 package com.kakaobean.core.integration.sprint;
 
 import com.kakaobean.core.factory.project.ProjectFactory;
+import com.kakaobean.core.factory.sprint.TaskFactory;
+import com.kakaobean.core.factory.sprint.dto.ModifyTaskRequestDtoFactory;
 import com.kakaobean.core.factory.sprint.dto.RegisterTaskRequestDtoFactory;
 import com.kakaobean.core.integration.IntegrationTest;
 import com.kakaobean.core.project.domain.Project;
@@ -10,6 +12,7 @@ import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.sprint.Exception.TaskAccessException;
 import com.kakaobean.core.sprint.application.TaskService;
 import com.kakaobean.core.sprint.domain.Sprint;
+import com.kakaobean.core.sprint.domain.Task;
 import com.kakaobean.core.sprint.domain.repository.SprintRepository;
 import com.kakaobean.core.sprint.domain.repository.TaskRepository;
 import org.assertj.core.api.AbstractThrowableAssert;
@@ -73,6 +76,38 @@ public class TaskServiceTest extends IntegrationTest {
         // when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
             taskService.registerTask(RegisterTaskRequestDtoFactory.createWithId(sprint.getId(), projectMember.getMemberId()));
+        });
+
+        // then
+        result.isInstanceOf(TaskAccessException.class);
+    }
+
+    @Test
+    void 테스크를_수정한다() {
+        // given
+        Project project = projectRepository.save(ProjectFactory.create());
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
+        Sprint sprint = sprintRepository.save(createWithId(project.getId()));
+        Task task = taskRepository.save(TaskFactory.createWithId(sprint.getId(), 1L));
+
+        // when
+        taskService.modifyTask(ModifyTaskRequestDtoFactory.createWithId(task.getId(), sprint.getId(), projectMember.getMemberId()));
+
+        // then
+        assertThat(taskRepository.findAll().get(0).getTitle()).isEqualTo("새로운 테스크 제목");
+    }
+
+    @Test
+    void 일반멤버는_테스크를_수정하지_못한다() {
+        // given
+        Project project = projectRepository.save(ProjectFactory.create());
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), MEMBER));
+        Sprint sprint = sprintRepository.save(createWithId(project.getId()));
+        Task task = taskRepository.save(TaskFactory.createWithId(sprint.getId(), 1L));
+
+        // when
+        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
+            taskService.modifyTask(ModifyTaskRequestDtoFactory.createWithId(task.getId(), sprint.getId(), projectMember.getMemberId()));
         });
 
         // then

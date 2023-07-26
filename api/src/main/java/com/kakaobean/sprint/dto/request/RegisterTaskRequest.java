@@ -26,7 +26,7 @@ public class RegisterTaskRequest {
         this.sprintId = sprintId;
     }
 
-    public RegisterTaskRequestDto toService(Long adminId) {
+    public RegisterTaskRequestDto toServiceDto(Long adminId) {
         return new RegisterTaskRequestDto(
                 title,
                 content,

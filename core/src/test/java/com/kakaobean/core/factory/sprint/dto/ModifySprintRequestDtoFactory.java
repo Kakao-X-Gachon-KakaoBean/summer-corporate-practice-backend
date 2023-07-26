@@ -8,7 +8,7 @@ public class ModifySprintRequestDtoFactory {
 
     private ModifySprintRequestDtoFactory() {}
 
-    public static ModifySprintRequestDto createDto(Long adminId, Long sprintId){
+    public static ModifySprintRequestDto createWithId(Long adminId, Long sprintId){
         return new ModifySprintRequestDto(
                 "수정된 스프린트 제목",
                 "수정된 스프린트 내용",
@@ -19,10 +19,10 @@ public class ModifySprintRequestDtoFactory {
         );
     }
 
-    public static ModifySprintRequestDto createFailDto(Long adminId, Long sprintId){
+    public static ModifySprintRequestDto createFailWithId(Long adminId, Long sprintId){
         return new ModifySprintRequestDto(
-                "스프린트 제목",
-                "스프린트 내용",
+                "수정된 스프린트 제목",
+                "수정된 스프린트 내용",
                 LocalDate.of(2023,8,23),
                 LocalDate.of(2023,8,03),
                 adminId,
