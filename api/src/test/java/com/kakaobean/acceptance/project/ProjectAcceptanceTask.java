@@ -6,7 +6,7 @@ import static com.kakaobean.acceptance.auth.AuthAcceptanceTask.getMemberAuthoriz
 import static org.apache.http.HttpHeaders.*;
 
 import com.kakaobean.project.dto.request.InviteProjectMemberRequest;
-import com.kakaobean.project.dto.request.ModifyProjectInfoRequest;
+import com.kakaobean.project.dto.request.ModifyProjectRequest;
 import com.kakaobean.project.dto.request.RegisterProjectMemberRequest;
 import com.kakaobean.project.dto.request.RegisterProjectRequest;
 
@@ -59,7 +59,7 @@ public class ProjectAcceptanceTask {
                 .extract();
     }
 
-    public static ExtractableResponse modifyProjectInfoTask(ModifyProjectInfoRequest request,
+    public static ExtractableResponse modifyProjectInfoTask(ModifyProjectRequest request,
                                                             Long projectId){
         return RestAssured
                 .given()
