@@ -40,8 +40,7 @@ public class ReleaseNoteServiceTest extends UnitTest {
     void beforeEach(){
         releaseNoteService = new ReleaseNoteService(
                 releaseNoteRepository,
-                projectMemberRepository,
-                new ReleaseNoteValidator()
+                new ReleaseNoteValidator(projectMemberRepository)
         );
         mockEvents = mockStatic(Events.class);
     }

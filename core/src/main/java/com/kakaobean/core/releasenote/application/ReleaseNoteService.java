@@ -17,14 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReleaseNoteService {
 
     private final ReleaseNoteRepository releaseNoteRepository;
-    private final ProjectMemberRepository projectMemberRepository;
     private final ReleaseNoteValidator releaseNoteValidator;
 
     public void deployReleaseNote(DeployReleaseNoteRequestDto dto) {
-        ProjectMember writer = projectMemberRepository.findByMemberIdAndProjectId(dto.getWriterId(), dto.getProjectId())
-                .orElseThrow(NotExistsProjectMemberException::new);
-        releaseNoteValidator.validWriterAccess(writer);
         ReleaseNote releaseNote = dto.toEntity();
+        releaseNoteValidator.validWriterAccess(releaseNote);
         releaseNoteRepository.save(releaseNote);
         releaseNote.deployed();
     }

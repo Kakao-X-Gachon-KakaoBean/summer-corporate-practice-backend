@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.kakaobean.core.common.domain.BaseStatus.*;
+
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
@@ -28,23 +30,21 @@ public class ProjectService {
     public RegisterProjectResponseDto registerProject(RegisterProjectRequestDto dto) {
         Project project = dto.toEntity();
         projectRepository.save(project);
-        projectMemberRepository.save(new ProjectMember(BaseStatus.ACTIVE, project.getId(), dto.getAdminId(), ProjectRole.ADMIN));
+        projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), dto.getAdminId(), ProjectRole.ADMIN));
         project.registered(dto.getAdminId());
         return new RegisterProjectResponseDto(project.getId());
     }
 
     @Transactional(readOnly = false)
     public void modifyProject(ModifyProjectInfoReqeustDto dto){
-        ProjectMember projectAdmin = projectMemberRepository.findByMemberIdAndProjectId(dto.getAdminId(), dto.getProjectId()).orElseThrow(NotExistsProjectMemberException::new);
-        projectValidator.validAdmin(projectAdmin);
+        projectValidator.validAdmin(dto.getAdminId(), dto.getProjectId());
         Project project = projectRepository.findById(dto.getProjectId()).orElseThrow(NotExistsProjectException::new);
         project.modify(dto.getNewTitle(),dto.getNewContent());
     }
 
     @Transactional(readOnly = false)
     public void removeProject(Long adminId, Long projectId) {
-        ProjectMember projectAdmin = projectMemberRepository.findByMemberIdAndProjectId(adminId, projectId).orElseThrow(NotExistsProjectMemberException::new);
-        projectValidator.validAdmin(projectAdmin);
+        projectValidator.validAdmin(adminId, projectId);
         Project project = projectRepository.findById(projectId).orElseThrow(NotExistsProjectException::new);
         project.removed();
     }
