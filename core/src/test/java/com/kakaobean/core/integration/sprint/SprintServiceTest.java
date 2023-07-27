@@ -104,7 +104,7 @@ public class SprintServiceTest extends IntegrationTest {
         Sprint sprint = sprintRepository.save(SprintFactory.createWithId(project.getId()));
 
         // when
-        sprintService.modifySprint(ModifySprintRequestDtoFactory.createDto(projectMember.getMemberId(), sprint.getId()));
+        sprintService.modifySprint(ModifySprintRequestDtoFactory.createWithId(projectMember.getMemberId(), sprint.getId()));
 
         // then
         assertThat(sprintRepository.findById(sprint.getId()).get().getTitle()).isEqualTo("수정된 스프린트 제목");
@@ -119,7 +119,7 @@ public class SprintServiceTest extends IntegrationTest {
 
         // when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
-            sprintService.modifySprint(ModifySprintRequestDtoFactory.createDto(projectMember.getMemberId(), sprint.getId()));
+            sprintService.modifySprint(ModifySprintRequestDtoFactory.createWithId(projectMember.getMemberId(), sprint.getId()));
         });
 
         // then
@@ -135,7 +135,7 @@ public class SprintServiceTest extends IntegrationTest {
 
         // when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
-            sprintService.modifySprint(ModifySprintRequestDtoFactory.createFailDto(projectMember.getMemberId(), sprint.getId()));
+            sprintService.modifySprint(ModifySprintRequestDtoFactory.createFailWithId(projectMember.getMemberId(), sprint.getId()));
         });
 
         // then

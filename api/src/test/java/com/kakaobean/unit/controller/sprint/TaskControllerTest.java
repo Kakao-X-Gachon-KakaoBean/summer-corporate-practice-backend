@@ -1,10 +1,10 @@
 package com.kakaobean.unit.controller.sprint;
 
-import com.kakaobean.sprint.dto.request.ModifySprintRequest;
-import com.kakaobean.sprint.dto.request.RegisterSprintRequest;
+import com.kakaobean.sprint.dto.request.ModifyTaskRequest;
+import com.kakaobean.sprint.dto.request.RegisterTaskRequest;
 import com.kakaobean.unit.controller.ControllerTest;
-import com.kakaobean.unit.controller.factory.sprint.ModifySprintRequestFactory;
-import com.kakaobean.unit.controller.factory.sprint.RegisterSprintRequestFactory;
+import com.kakaobean.unit.controller.factory.sprint.ModifyTaskRequestFactory;
+import com.kakaobean.unit.controller.factory.sprint.RegisterTaskRequestFactory;
 import com.kakaobean.unit.controller.security.WithMockUser;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -22,17 +22,17 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class SprintControllerTest extends ControllerTest {
+public class TaskControllerTest extends ControllerTest {
 
     @Test
     @WithMockUser
-    void 스프린트_생성() throws Exception {
+    void 테스크_생성() throws Exception {
         // given
-        RegisterSprintRequest request = RegisterSprintRequestFactory.createWithId();
+        RegisterTaskRequest request = RegisterTaskRequestFactory.create();
         String requestBody = objectMapper.writeValueAsString(request);
 
         // when
-        ResultActions perform = mockMvc.perform(post("/sprints")
+        ResultActions perform = mockMvc.perform(post("/tasks")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody)
@@ -41,31 +41,29 @@ public class SprintControllerTest extends ControllerTest {
         //then
         perform.andDo(print());
         perform.andExpect(status().is2xxSuccessful());
-        perform.andDo(document("register_sprint",
+        perform.andDo(document("register_tasks",
                 getDocumentRequest(),
                 getDocumentResponse(),
                 requestFields(
-                        fieldWithPath("title").type(STRING).description("스프린트 제목"),
-                        fieldWithPath("description").type(STRING).description("스프린트 본문"),
-                        fieldWithPath("projectId").type(NUMBER).description("스프린트 프로젝트 id"),
-                        fieldWithPath("startDate").type(STRING).description("스프린트 시작 날짜"),
-                        fieldWithPath("endDate").type(STRING).description("스프린트 마감 날짜")
+                        fieldWithPath("title").type(STRING).description("테스크 제목"),
+                        fieldWithPath("content").type(STRING).description("테스크 본문"),
+                        fieldWithPath("sprintId").type(NUMBER).description("테스크의 스프린트 id")
                 ),
                 responseFields(
-                        fieldWithPath("message").type(STRING).description("스프린트가 생성 되었습니다.")
+                        fieldWithPath("message").type(STRING).description("테스크가 생성 되었습니다.")
                 )
         ));
     }
 
     @Test
     @WithMockUser
-    void 스프린트_수정() throws Exception {
+    void 테스크_수정() throws Exception {
         // given
-        ModifySprintRequest request = ModifySprintRequestFactory.createRequest();
+        ModifyTaskRequest request = ModifyTaskRequestFactory.createRequest();
         String requestBody = objectMapper.writeValueAsString(request);
 
         // when
-        ResultActions perform = mockMvc.perform(patch("/sprints/{sprintId}",1)
+        ResultActions perform = mockMvc.perform(patch("/tasks/{taskId}",1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody)
@@ -74,30 +72,29 @@ public class SprintControllerTest extends ControllerTest {
         //then
         perform.andDo(print());
         perform.andExpect(status().is2xxSuccessful());
-        perform.andDo(document("modify_sprint",
+        perform.andDo(document("modify_tasks",
                 getDocumentRequest(),
                 getDocumentResponse(),
                 pathParameters(
-                        parameterWithName("sprintId").description("수정할 스프린트의 id")
+                        parameterWithName("taskId").description("수정할 테스크의 id")
                 ),
                 requestFields(
-                        fieldWithPath("newTitle").type(STRING).description("수정된 스프린트 제목"),
-                        fieldWithPath("newDescription").type(STRING).description("수정된 스프린트 본문"),
-                        fieldWithPath("newStartDate").type(STRING).description("수정된 스프린트 시작 날짜"),
-                        fieldWithPath("newEndDate").type(STRING).description("수정된 스프린트 마감 날짜")
+                        fieldWithPath("newTitle").type(STRING).description("수정된 테스크 제목"),
+                        fieldWithPath("newContent").type(STRING).description("수정된 테스크 본문"),
+                        fieldWithPath("sprintId").type(NUMBER).description("수정된 테스크의 스프린트 id")
                 ),
                 responseFields(
-                        fieldWithPath("message").type(STRING).description("스프린트가 수정 되었습니다.")
+                        fieldWithPath("message").type(STRING).description("테스크가 수정 되었습니다.")
                 )
         ));
     }
 
     @Test
     @WithMockUser
-    void 스프린트_삭제() throws Exception {
+    void 테스크_삭제() throws Exception {
 
         // when
-        ResultActions perform = mockMvc.perform(delete("/sprints/{sprintId}",1)
+        ResultActions perform = mockMvc.perform(delete("/tasks/{taskId}",1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
         );
@@ -105,14 +102,14 @@ public class SprintControllerTest extends ControllerTest {
         //then
         perform.andDo(print());
         perform.andExpect(status().is2xxSuccessful());
-        perform.andDo(document("remove_sprint",
+        perform.andDo(document("remove_tasks",
                 getDocumentRequest(),
                 getDocumentResponse(),
                 pathParameters(
-                        parameterWithName("sprintId").description("삭제할 스프린트의 id")
+                        parameterWithName("taskId").description("삭제할 테스크의 id")
                 ),
                 responseFields(
-                        fieldWithPath("message").type(STRING).description("스프린트가 삭제 되었습니다.")
+                        fieldWithPath("message").type(STRING).description("테스크가 삭제 되었습니다.")
                 )
         ));
     }
