@@ -62,12 +62,9 @@ public class ProjectMemberService {
     }
 
     public ProjectMemberInvitedEvent registerInvitedProjectPersons(InviteProjectMemberRequestDto dto) {
-        //프로젝트 관리자를 찾고
-        ProjectMember projectAdmin = projectMemberRepository.findByMemberIdAndProjectId(dto.getProjectAdminId(), dto.getProjectId())
-                .orElseThrow(NotExistsProjectMemberException::new);
 
         //관리자인지 검증
-        projectValidator.validAdmin(projectAdmin);
+        projectValidator.validAdmin(dto.getProjectAdminId(), dto.getProjectId());
 
         //프로젝트를 찾고
         Project project = projectRepository.findById(dto.getProjectId()).orElseThrow(NotExistsProjectException::new);
@@ -92,10 +89,7 @@ public class ProjectMemberService {
     }
 
     public void modifyProjectMemberRole(ModifyProjectMembersRolesRequestDto dto){
-        ProjectMember admin = projectMemberRepository.findByMemberIdAndProjectId(dto.getAdminId(), dto.getProjectId())
-                .orElseThrow(NotExistsProjectMemberException::new);
-
-        projectValidator.validAdmin(admin);
+        projectValidator.validAdmin(dto.getAdminId(), dto.getProjectId());
         modifyProjectMembersRoles(dto.getProjectId(), dto.getModifyProjectMemberRoles());
     }
 

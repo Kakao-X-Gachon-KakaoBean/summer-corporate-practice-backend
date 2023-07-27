@@ -69,10 +69,6 @@ public class ReleaseNote extends BaseEntity {
         this.memberId = memberId;
     }
 
-    public void registered() {
-        Events.raise(new ReleaseNoteDeployedEvent(id));
-    }
-
     public void deployed() {
         Events.raise(new ReleaseNoteDeployedEvent(id));
     }
