@@ -45,8 +45,7 @@ public class TaskServiceTest extends UnitTest {
     void beforeEach(){
         taskService = new TaskService(
                 taskRepository,
-                sprintRepository,
-                new TaskValidator(projectMemberRepository)
+                new TaskValidator(projectMemberRepository, sprintRepository)
         );
     }
 

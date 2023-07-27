@@ -18,21 +18,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class TaskService {
 
     private final TaskRepository taskRepository;
-    private final SprintRepository sprintRepository;
     private final TaskValidator taskValidator;
 
     @Transactional
     public void registerTask(RegisterTaskRequestDto dto) {
-        Sprint sprint = sprintRepository.findById(dto.getSprintId()).orElseThrow(NotExistsSprintException::new);
-        taskValidator.validate(dto.getAdminId(), sprint.getProjectId());
+        taskValidator.validate(dto.getAdminId(), dto.getSprintId());
         Task task = dto.toEntity();
         taskRepository.save(task);
     }
 
     @Transactional
     public void modifyTask(ModifyTaskRequestDto dto) {
-        Sprint sprint = sprintRepository.findById(dto.getSprintId()).orElseThrow(NotExistsSprintException::new);
-        taskValidator.validate(dto.getAdminId(), sprint.getProjectId());
+        taskValidator.validate(dto.getAdminId(), dto.getSprintId());
         Task task = taskRepository.findById(dto.getTaskId()).orElseThrow(NotExistsTaskException::new);
         task.modify(dto.getNewTitle(), dto.getNewContent());
     }
@@ -40,8 +37,7 @@ public class TaskService {
     @Transactional
     public void removeTask(Long adminId, Long taskId) {
         Task task = taskRepository.findById(taskId).orElseThrow(NotExistsTaskException::new);
-        Sprint sprint = sprintRepository.findById(task.getSprintId()).orElseThrow(NotExistsSprintException::new);
-        taskValidator.validate(adminId, sprint.getProjectId());
+        taskValidator.validate(adminId, task.getSprintId());
         taskRepository.delete(task);
     }
 }
