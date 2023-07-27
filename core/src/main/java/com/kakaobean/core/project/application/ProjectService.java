@@ -1,7 +1,7 @@
 package com.kakaobean.core.project.application;
 
 import com.kakaobean.core.common.domain.BaseStatus;
-import com.kakaobean.core.project.application.dto.request.ModifyProjectInfoReqeustDto;
+import com.kakaobean.core.project.application.dto.request.ModifyProjectInfoRequestDto;
 import com.kakaobean.core.project.application.dto.response.RegisterProjectResponseDto;
 import com.kakaobean.core.project.application.dto.request.RegisterProjectRequestDto;
 import com.kakaobean.core.project.domain.Project;
@@ -36,7 +36,7 @@ public class ProjectService {
     }
 
     @Transactional(readOnly = false)
-    public void modifyProject(ModifyProjectInfoReqeustDto dto){
+    public void modifyProject(ModifyProjectInfoRequestDto dto){
         projectValidator.validAdmin(dto.getAdminId(), dto.getProjectId());
         Project project = projectRepository.findById(dto.getProjectId()).orElseThrow(NotExistsProjectException::new);
         project.modify(dto.getNewTitle(),dto.getNewContent());

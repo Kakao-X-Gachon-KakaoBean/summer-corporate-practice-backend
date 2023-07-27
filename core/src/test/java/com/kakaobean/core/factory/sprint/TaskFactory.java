@@ -1,4 +1,4 @@
-package com.kakaobean.core.factory.task;
+package com.kakaobean.core.factory.sprint;
 
 import com.kakaobean.core.sprint.domain.Task;
 import com.kakaobean.core.sprint.domain.WorkStatus;

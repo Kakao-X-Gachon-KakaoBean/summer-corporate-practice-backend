@@ -2,7 +2,7 @@ package com.kakaobean.unit.controller.project;
 
 import com.kakaobean.core.project.application.dto.request.RegisterProjectRequestDto;
 import com.kakaobean.core.project.application.dto.response.RegisterProjectResponseDto;
-import com.kakaobean.project.dto.request.ModifyProjectInfoRequest;
+import com.kakaobean.project.dto.request.ModifyProjectRequest;
 import com.kakaobean.project.dto.request.RegisterProjectRequest;
 import com.kakaobean.unit.controller.ControllerTest;
 import com.kakaobean.unit.controller.factory.project.FindProjectResponseDtoFactory;
@@ -92,7 +92,7 @@ public class ProjectControllerTest extends ControllerTest {
     @WithMockUser
     void 프로젝트_정보수정_api_테스트() throws Exception{
         // given
-        ModifyProjectInfoRequest request = new ModifyProjectInfoRequest("새로운 프로젝트 제목", "새로운 프로젝트 설명");
+        ModifyProjectRequest request = new ModifyProjectRequest("새로운 프로젝트 제목", "새로운 프로젝트 설명");
         String requestBody = objectMapper.writeValueAsString(request);
 
         // when

@@ -8,7 +8,7 @@ import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.releasenote.domain.ReleaseNote;
 import com.kakaobean.core.releasenote.domain.repository.ReleaseNoteRepository;
 import com.kakaobean.project.dto.request.InviteProjectMemberRequest;
-import com.kakaobean.project.dto.request.ModifyProjectInfoRequest;
+import com.kakaobean.project.dto.request.ModifyProjectRequest;
 import com.kakaobean.project.dto.request.RegisterProjectMemberRequest;
 import com.kakaobean.project.dto.request.RegisterProjectRequest;
 import com.kakaobean.releasenote.dto.request.DeployReleaseNoteRequest;
@@ -91,7 +91,7 @@ public class ProjectAcceptanceTest extends AcceptanceTest {
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
         ProjectAcceptanceTask.registerProjectTask(givenRequest);
         Project project = projectRepository.findAll().get(0);
-        ModifyProjectInfoRequest request = new ModifyProjectInfoRequest("새로운 프로젝트 제목", "새로운 프로젝트 내용");
+        ModifyProjectRequest request = new ModifyProjectRequest("새로운 프로젝트 제목", "새로운 프로젝트 내용");
 
         //when
         ExtractableResponse response = ProjectAcceptanceTask.modifyProjectInfoTask(request, project.getId());
@@ -100,6 +100,7 @@ public class ProjectAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(200);
     }
 
+    // 비동기 때문에 가끔 실패할 때가 있음
     @Test
     @Rollback(value = false)
     void 어드민이_프로젝트를_삭제한다(){
