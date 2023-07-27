@@ -1,0 +1,13 @@
+= 스프린트 삭제
+
+== 요청
+
+include::{snippets}/remove_tasks/http-request.adoc[]
+
+include::{snippets}/remove_tasks/path-parameters.adoc[]
+
+== 응답
+
+include::{snippets}/remove_tasks/http-response.adoc[]
+
+include::{snippets}/remove_tasks/response-fields.adoc[]

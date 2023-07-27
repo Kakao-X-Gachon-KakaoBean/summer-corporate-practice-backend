@@ -48,7 +48,7 @@ public class ProjectServiceTest extends UnitTest {
         projectService = new ProjectService(
                 projectRepository,
                 projectMemberRepository,
-                new ProjectValidator()
+                new ProjectValidator(projectMemberRepository)
         );
         mockEvents = mockStatic(Events.class);
     }

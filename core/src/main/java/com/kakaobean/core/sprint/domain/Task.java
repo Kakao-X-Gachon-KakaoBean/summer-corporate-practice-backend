@@ -34,9 +34,19 @@ public class Task extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private WorkStatus workStatus;
 
-    private LocalDate startDate;
-
-    private LocalDate endDate;
+    public Task(BaseStatus status,
+                Long workerId,
+                Long sprintId,
+                String title,
+                String content,
+                WorkStatus workStatus) {
+        super(status);
+        this.workerId = workerId;
+        this.sprintId = sprintId;
+        this.title = title;
+        this.content = content;
+        this.workStatus = workStatus;
+    }
 
     /**
      * 테스트용
@@ -47,8 +57,7 @@ public class Task extends BaseEntity {
                 Long sprintId,
                 String title,
                 String content,
-                WorkStatus workStatus, LocalDate startDate,
-                LocalDate endDate) {
+                WorkStatus workStatus) {
         super(BaseStatus.ACTIVE);
         this.id = id;
         this.workerId = workerId;
@@ -56,7 +65,10 @@ public class Task extends BaseEntity {
         this.title = title;
         this.content = content;
         this.workStatus = workStatus;
-        this.startDate = startDate;
-        this.endDate = endDate;
+    }
+
+    public void modify(String newTitle, String newContent) {
+        this.title = newTitle;
+        this.content = newContent;
     }
 }
