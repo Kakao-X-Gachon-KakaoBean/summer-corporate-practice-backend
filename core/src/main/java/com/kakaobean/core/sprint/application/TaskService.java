@@ -40,4 +40,11 @@ public class TaskService {
         taskValidator.validate(adminId, task.getSprintId());
         taskRepository.delete(task);
     }
+
+    @Transactional
+    public void assignTask(Long adminId, Long taskId, Long memberId) {
+        Task task = taskRepository.findById(taskId).orElseThrow(NotExistsTaskException::new);
+        taskValidator.validate(adminId, task.getSprintId());
+        task.assigned(memberId);
+    }
 }

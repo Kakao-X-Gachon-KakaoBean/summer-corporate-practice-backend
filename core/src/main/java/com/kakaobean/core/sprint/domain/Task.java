@@ -2,6 +2,9 @@ package com.kakaobean.core.sprint.domain;
 
 import com.kakaobean.core.common.domain.BaseEntity;
 import com.kakaobean.core.common.domain.BaseStatus;
+import com.kakaobean.core.common.event.Events;
+import com.kakaobean.core.releasenote.domain.event.ManuscriptRegisteredEvent;
+import com.kakaobean.core.sprint.domain.event.TaskAssignedEvent;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -70,5 +73,11 @@ public class Task extends BaseEntity {
     public void modify(String newTitle, String newContent) {
         this.title = newTitle;
         this.content = newContent;
+    }
+
+    public void assigned(Long memberId) {
+        this.workStatus = WorkStatus.WORKING;
+        this.workerId = memberId;
+        Events.raise(new TaskAssignedEvent(id, sprintId, workerId));
     }
 }
