@@ -1,6 +1,5 @@
 package com.kakaobean.core.notification.domain.event.handler.sprint;
 
-import com.kakaobean.core.notification.domain.NotificationType;
 import com.kakaobean.core.notification.domain.event.NotificationSentEvent;
 import com.kakaobean.core.notification.domain.service.register.RegisterNotificationService;
 import com.kakaobean.core.notification.domain.service.send.email.SendEmailNotificationService;
@@ -10,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionalEventListener;
 
-import static com.kakaobean.core.notification.domain.NotificationType.*;
+import static com.kakaobean.core.notification.domain.NotificationType.TASK;
 
 @Component
 @RequiredArgsConstructor
@@ -20,13 +19,13 @@ public class TaskAssignedEventHandler {
     private final SendEmailNotificationService sendEmailNotificationService;
     private final SendMessageNotificationService sendMessageNotificationService;
 
-    @TransactionalEventListener(TaskAssignedEventHandler.class)
+    @TransactionalEventListener(TaskAssignedEvent.class)
     public void handler(TaskAssignedEvent event){
-        NotificationSentEvent notificationSentEvent = registerNotificationService.register(event.getTaskId(), TASK);
-        // 이메일 보내기
-        sendEmailNotificationService.sendEmail(notificationSentEvent);
-        // 알람 보내기
-        sendMessageNotificationService.sendMessage(notificationSentEvent);
+        if(event != null){
+            NotificationSentEvent notificationSentEvent = registerNotificationService.register(event.getTaskId(), TASK);
+            sendEmailNotificationService.sendEmail(notificationSentEvent);
+            sendMessageNotificationService.sendMessage(notificationSentEvent);
+        }
     }
 
 }

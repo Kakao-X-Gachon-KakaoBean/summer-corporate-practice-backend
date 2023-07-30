@@ -1,13 +1,10 @@
 package com.kakaobean.core.sprint.application;
 
-import com.kakaobean.core.sprint.Exception.NotExistsSprintException;
 import com.kakaobean.core.sprint.Exception.NotExistsTaskException;
 import com.kakaobean.core.sprint.application.dto.ModifyTaskRequestDto;
 import com.kakaobean.core.sprint.application.dto.RegisterTaskRequestDto;
-import com.kakaobean.core.sprint.domain.Sprint;
 import com.kakaobean.core.sprint.domain.Task;
 import com.kakaobean.core.sprint.domain.TaskValidator;
-import com.kakaobean.core.sprint.domain.repository.SprintRepository;
 import com.kakaobean.core.sprint.domain.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -44,7 +41,7 @@ public class TaskService {
     @Transactional
     public void assignTask(Long adminId, Long taskId, Long memberId) {
         Task task = taskRepository.findById(taskId).orElseThrow(NotExistsTaskException::new);
-        taskValidator.validate(adminId, task.getSprintId());
+        taskValidator.validAssignment(adminId, task.getSprintId(), memberId);
         task.assigned(memberId);
     }
 }

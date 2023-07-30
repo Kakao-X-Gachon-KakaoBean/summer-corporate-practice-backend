@@ -42,9 +42,10 @@ public class TaskController {
         return new ResponseEntity(CommandSuccessResponse.from("테스크가 삭제되었습니다."), OK);
     }
 
-    @PatchMapping("/tasks/{taskId}/Assignment/{memberId}")
+    @PatchMapping("/tasks/{taskId}/assignment/{memberId}")
     public ResponseEntity assignTask(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                     @PathVariable Long taskId, Long memberId){
+                                     @PathVariable Long taskId,
+                                     @PathVariable Long memberId){
         taskService.assignTask(userPrincipal.getId(), taskId, memberId);
         return new ResponseEntity(CommandSuccessResponse.from("작업이 할당되었습니다."), OK);
     }
