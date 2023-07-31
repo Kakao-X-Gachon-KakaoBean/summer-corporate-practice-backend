@@ -2,7 +2,6 @@ package com.kakaobean.core.notification.infrastructure.message;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kakaobean.core.notification.domain.event.AssignmentTaskNotificationEvent;
-import com.kakaobean.core.notification.domain.event.ModifiedProjectMemberNotificationEvent;
 import com.kakaobean.core.notification.domain.event.NotificationSentEvent;
 import com.kakaobean.independentlysystem.amqp.AmqpService;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +26,6 @@ public class SendMessageAssignmentTaskNotificationStrategy extends AbstractSendM
 
     @Override
     public boolean support(Class<? extends NotificationSentEvent> eventClass) {
-        return eventClass == ModifiedProjectMemberNotificationEvent.class;
+        return eventClass == AssignmentTaskNotificationEvent.class;
     }
 }

@@ -29,7 +29,7 @@ public class TaskValidator {
         }
     }
 
-    public void validAssignment(Long adminId, Long sprintId, Long workerId){
+    public void validAssignmentTask(Long adminId, Long sprintId, Long workerId){
         Sprint sprint = sprintRepository.findById(sprintId).orElseThrow(NotExistsSprintException::new);
 
         ProjectMember projectAdmin = projectMemberRepository.findByMemberIdAndProjectId(adminId, sprint.getProjectId())

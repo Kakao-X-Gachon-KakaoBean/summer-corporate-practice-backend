@@ -21,8 +21,8 @@ import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
 
-import static com.kakaobean.acceptance.TestMember.*;
-import static org.assertj.core.api.Assertions.*;
+import static com.kakaobean.acceptance.TestMember.MEMBER;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 public class ProjectAcceptanceTest extends AcceptanceTest {

@@ -113,4 +113,30 @@ public class TaskControllerTest extends ControllerTest {
                 )
         ));
     }
+
+    @Test
+    @WithMockUser
+    void 테스크_할당() throws Exception {
+
+        // when
+        ResultActions perform = mockMvc.perform(patch("/tasks/{taskId}/assignment/{memberId}",1L, 2L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        //then
+        perform.andDo(print());
+        perform.andExpect(status().is2xxSuccessful());
+        perform.andDo(document("assign_tasks",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                pathParameters(
+                        parameterWithName("taskId").description("할당할 테스크의 id"),
+                        parameterWithName("memberId").description("할당할 멤버 id")
+                ),
+                responseFields(
+                        fieldWithPath("message").type(STRING).description("테스크가 할당 되었습니다.")
+                )
+        ));
+    }
 }
