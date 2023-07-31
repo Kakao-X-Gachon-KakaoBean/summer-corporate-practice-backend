@@ -2,6 +2,8 @@ package com.kakaobean.core.sprint.domain;
 
 import com.kakaobean.core.common.domain.BaseEntity;
 import com.kakaobean.core.common.domain.BaseStatus;
+import com.kakaobean.core.common.event.Events;
+import com.kakaobean.core.sprint.domain.event.TaskAssignedEvent;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +12,6 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -70,5 +71,11 @@ public class Task extends BaseEntity {
     public void modify(String newTitle, String newContent) {
         this.title = newTitle;
         this.content = newContent;
+    }
+
+    public void assigned(Long memberId) {
+        this.workStatus = WorkStatus.WORKING;
+        this.workerId = memberId;
+        Events.raise(new TaskAssignedEvent(id, sprintId, workerId));
     }
 }

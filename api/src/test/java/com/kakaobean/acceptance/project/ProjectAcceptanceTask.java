@@ -5,10 +5,7 @@ import static com.kakaobean.acceptance.auth.AuthAcceptanceTask.getAdminAuthoriza
 import static com.kakaobean.acceptance.auth.AuthAcceptanceTask.getMemberAuthorizationHeaderToken;
 import static org.apache.http.HttpHeaders.*;
 
-import com.kakaobean.project.dto.request.InviteProjectMemberRequest;
-import com.kakaobean.project.dto.request.ModifyProjectRequest;
-import com.kakaobean.project.dto.request.RegisterProjectMemberRequest;
-import com.kakaobean.project.dto.request.RegisterProjectRequest;
+import com.kakaobean.project.dto.request.*;
 
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -55,6 +52,19 @@ public class ProjectAcceptanceTask {
                 .body(request)
                 .when()
                 .post("/projects/members")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse modifyProjectMemberRoleTask(ModifyProjectMembersRolesRequest request, Long projectId){
+        return RestAssured
+                .given()
+                .header(AUTHORIZATION, getMemberAuthorizationHeaderToken())
+                .accept(APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .post("/projects/{projectId}/members", projectId)
                 .then().log().all()
                 .extract();
     }
