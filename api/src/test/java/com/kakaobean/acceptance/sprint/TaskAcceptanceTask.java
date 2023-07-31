@@ -51,7 +51,7 @@ public class TaskAcceptanceTask {
                 .extract();
     }
 
-    public static ExtractableResponse assignTask(Long taskId, Long memberId){
+    public static ExtractableResponse assignTaskTask(Long taskId, Long memberId){
         return RestAssured
                 .given()
                 .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
@@ -59,6 +59,18 @@ public class TaskAcceptanceTask {
                 .contentType(APPLICATION_JSON_VALUE)
                 .when()
                 .patch("/tasks/{taskId}/assignment/{memberId}", taskId, memberId)
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse changeWorkStatusTask(Long taskId, String workStatus){
+        return RestAssured
+                .given()
+                .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
+                .accept(APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
+                .when()
+                .patch("/tasks/{taskId}/{workStatus}", taskId, workStatus)
                 .then().log().all()
                 .extract();
     }

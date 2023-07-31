@@ -78,4 +78,8 @@ public class Task extends BaseEntity {
         this.workerId = memberId;
         Events.raise(new TaskAssignedEvent(id, sprintId, workerId));
     }
+
+    public void changeStatus(String workStatus) {
+        this.workStatus = WorkStatus.valueOf(workStatus.toUpperCase());
+    }
 }

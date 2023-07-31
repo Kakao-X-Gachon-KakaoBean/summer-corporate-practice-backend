@@ -1,13 +1,19 @@
 package com.kakaobean.core.unit.application.sprint;
 
 import com.kakaobean.core.common.event.Events;
+import com.kakaobean.core.factory.project.ProjectMemberFactory;
+import com.kakaobean.core.factory.sprint.SprintFactory;
 import com.kakaobean.core.factory.sprint.TaskFactory;
 import com.kakaobean.core.factory.sprint.dto.ModifyTaskRequestDtoFactory;
+import com.kakaobean.core.project.domain.Project;
+import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.event.RemovedProjectEvent;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.sprint.Exception.AssignmentNotAllowedException;
+import com.kakaobean.core.sprint.Exception.ChangeOperationNotAllowedException;
 import com.kakaobean.core.sprint.Exception.TaskAccessException;
 import com.kakaobean.core.sprint.application.TaskService;
+import com.kakaobean.core.sprint.domain.Sprint;
 import com.kakaobean.core.sprint.domain.Task;
 import com.kakaobean.core.sprint.domain.TaskValidator;
 import com.kakaobean.core.sprint.domain.WorkStatus;
@@ -25,9 +31,11 @@ import org.mockito.Mockito;
 
 import java.util.Optional;
 
+import static com.kakaobean.core.factory.project.ProjectFactory.createWithoutId;
 import static com.kakaobean.core.factory.project.ProjectMemberFactory.*;
 import static com.kakaobean.core.factory.sprint.SprintFactory.createWithId;
 import static com.kakaobean.core.factory.sprint.dto.RegisterTaskRequestDtoFactory.createWithId;
+import static com.kakaobean.core.project.domain.ProjectRole.MEMBER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.*;
@@ -202,6 +210,44 @@ public class TaskServiceTest extends UnitTest {
 
         // then
         result.isInstanceOf(AssignmentNotAllowedException.class);
+    }
+
+    @Test
+    void 테스크_담당가_작업상태를_변경한다() {
+        // given
+        Long workerId = 2L;
+        Task task = TaskFactory.createWithId(1L, workerId);
+
+        given(taskRepository.findById(Mockito.anyLong())).willReturn(Optional.of(task));
+        given(sprintRepository.findById(Mockito.anyLong())).willReturn(Optional.of(SprintFactory.createWithId(1L)));
+        given(projectMemberRepository.findByMemberIdAndProjectId(Mockito.anyLong(),Mockito.anyLong())).willReturn(Optional.of(createMember()));
+
+        // when
+        taskService.changeStatus(workerId, 2L, "complete");
+
+        // then
+        assertThat(task.getWorkStatus()).isEqualTo(WorkStatus.COMPLETE);
+    }
+
+    @Test
+    void 테스크_담당자가_아니라면_작업상태를_변경할_수_없다() {
+        // given
+        Long workerId = 2L;
+        Long differentWorkerId = 3L;
+        Task task = TaskFactory.createWithId(1L, workerId);
+
+        given(taskRepository.findById(Mockito.anyLong())).willReturn(Optional.of(task));
+        given(sprintRepository.findById(Mockito.anyLong())).willReturn(Optional.of(SprintFactory.createWithId(1L)));
+        given(projectMemberRepository.findByMemberIdAndProjectId(Mockito.anyLong(),Mockito.anyLong())).willReturn(Optional.of(createMember()));
+
+
+        // when
+        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
+            taskService.changeStatus(differentWorkerId, 2L, "complete");
+        });
+
+        // then
+        result.isInstanceOf(ChangeOperationNotAllowedException.class);
     }
 
 }

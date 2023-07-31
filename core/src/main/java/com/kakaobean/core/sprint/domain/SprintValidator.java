@@ -3,7 +3,7 @@ package com.kakaobean.core.sprint.domain;
 import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.exception.NotExistsProjectMemberException;
-import com.kakaobean.core.sprint.Exception.IllegalSprintDateException;
+import com.kakaobean.core.sprint.Exception.InvalidSprintDateException;
 import com.kakaobean.core.sprint.Exception.SprintAccessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -31,7 +31,7 @@ public class SprintValidator {
 
     private void checkDateValidation(LocalDate startDate, LocalDate endDate){
         if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
-            throw new IllegalSprintDateException();
+            throw new InvalidSprintDateException();
         }
     }
 

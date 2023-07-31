@@ -41,7 +41,14 @@ public class TaskService {
     @Transactional
     public void assignTask(Long adminId, Long taskId, Long memberId) {
         Task task = taskRepository.findById(taskId).orElseThrow(NotExistsTaskException::new);
-        taskValidator.validAssignmentTask(adminId, task.getSprintId(), memberId);
+        taskValidator.validAssignmentTask(task, adminId,  memberId);
         task.assigned(memberId);
+    }
+
+    @Transactional
+    public void changeStatus(Long workerId, Long taskId, String workStatus) {
+        Task task = taskRepository.findById(taskId).orElseThrow(NotExistsTaskException::new);
+        taskValidator.validRightToChange(task, workerId);
+        task.changeStatus(workStatus);
     }
 }

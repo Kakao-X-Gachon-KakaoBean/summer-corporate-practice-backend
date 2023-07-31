@@ -139,4 +139,30 @@ public class TaskControllerTest extends ControllerTest {
                 )
         ));
     }
+
+    @Test
+    @WithMockUser
+    void 테스크_작업상태_변경() throws Exception {
+
+        // when
+        ResultActions perform = mockMvc.perform(patch("/tasks/{taskId}/{workStatus}",1L, "complete")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        //then
+        perform.andDo(print());
+        perform.andExpect(status().is2xxSuccessful());
+        perform.andDo(document("change_work_status",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                pathParameters(
+                        parameterWithName("taskId").description("작업 상태를 변경할 테스크의 id"),
+                        parameterWithName("workStatus").description("변경시킬 작업 상태명")
+                ),
+                responseFields(
+                        fieldWithPath("message").type(STRING).description("작업 상태가 변경되었습니다.")
+                )
+        ));
+    }
 }
