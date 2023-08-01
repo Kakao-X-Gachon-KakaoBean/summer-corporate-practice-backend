@@ -1,5 +1,6 @@
 package com.kakaobean.unit.controller.sprint;
 
+import com.kakaobean.sprint.dto.request.ChangeWorkStatusRequest;
 import com.kakaobean.sprint.dto.request.ModifyTaskRequest;
 import com.kakaobean.sprint.dto.request.RegisterTaskRequest;
 import com.kakaobean.unit.controller.ControllerTest;
@@ -136,6 +137,38 @@ public class TaskControllerTest extends ControllerTest {
                 ),
                 responseFields(
                         fieldWithPath("message").type(STRING).description("테스크가 할당 되었습니다.")
+                )
+        ));
+    }
+
+    @Test
+    @WithMockUser
+    void 테스크_작업상태_변경() throws Exception {
+        // given
+        ChangeWorkStatusRequest request = new ChangeWorkStatusRequest("complete");
+        String requestBody = objectMapper.writeValueAsString(request);
+
+        // when
+        ResultActions perform = mockMvc.perform(patch("/tasks/{taskId}/work-status",1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(requestBody)
+        );
+
+        //then
+        perform.andDo(print());
+        perform.andExpect(status().is2xxSuccessful());
+        perform.andDo(document("change_work_status",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                pathParameters(
+                        parameterWithName("taskId").description("작업 상태를 변경할 테스크의 id")
+                ),
+                requestFields(
+                        fieldWithPath("workStatus").type(STRING).description("변경할 작업 상태명")
+                ),
+                responseFields(
+                        fieldWithPath("message").type(STRING).description("작업 상태가 변경되었습니다.")
                 )
         ));
     }

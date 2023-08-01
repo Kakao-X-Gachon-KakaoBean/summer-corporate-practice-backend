@@ -88,3 +88,4 @@
 * link:/docs/sprint/modify_task.html[테스크 수정 API, window=_blank ]
 * link:/docs/sprint/remove_task.html[테스크 삭제 API, window=_blank ]
 * link:/docs/sprint/assign_task.html[테스크 할당 API, window=_blank ]
+* link:/docs/sprint/change_work_status.html[테스크 작업 상태 변 API, window=_blank ]
