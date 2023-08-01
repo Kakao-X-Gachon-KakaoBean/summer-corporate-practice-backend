@@ -1,6 +1,7 @@
 package com.kakaobean.core.sprint.application;
 
 import com.kakaobean.core.sprint.Exception.NotExistsTaskException;
+import com.kakaobean.core.sprint.application.dto.ChangeWorkStatusRequestDto;
 import com.kakaobean.core.sprint.application.dto.ModifyTaskRequestDto;
 import com.kakaobean.core.sprint.application.dto.RegisterTaskRequestDto;
 import com.kakaobean.core.sprint.domain.Task;
@@ -46,9 +47,9 @@ public class TaskService {
     }
 
     @Transactional
-    public void changeStatus(Long workerId, Long taskId, String workStatus) {
-        Task task = taskRepository.findById(taskId).orElseThrow(NotExistsTaskException::new);
-        taskValidator.validRightToChange(task, workerId);
-        task.changeStatus(workStatus);
+    public void changeStatus(ChangeWorkStatusRequestDto dto) {
+        Task task = taskRepository.findById(dto.getTaskId()).orElseThrow(NotExistsTaskException::new);
+        taskValidator.validRightToChange(task, dto.getWorkerId());
+        task.changeStatus(dto.getWorkStatus());
     }
 }

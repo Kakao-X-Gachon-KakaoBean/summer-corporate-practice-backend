@@ -2,6 +2,7 @@ package com.kakaobean.core.integration.sprint;
 
 import com.kakaobean.core.factory.project.ProjectFactory;
 import com.kakaobean.core.factory.sprint.TaskFactory;
+import com.kakaobean.core.factory.sprint.dto.ChangeWorkStatusRequestDtoFactory;
 import com.kakaobean.core.factory.sprint.dto.ModifyTaskRequestDtoFactory;
 import com.kakaobean.core.factory.sprint.dto.RegisterTaskRequestDtoFactory;
 import com.kakaobean.core.integration.IntegrationTest;
@@ -26,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static com.kakaobean.core.factory.project.ProjectFactory.createWithoutId;
 import static com.kakaobean.core.factory.project.ProjectMemberFactory.createWithMemberIdAndProjectId;
 import static com.kakaobean.core.factory.sprint.SprintFactory.createWithId;
+import static com.kakaobean.core.factory.sprint.dto.ChangeWorkStatusRequestDtoFactory.createWithId;
 import static com.kakaobean.core.project.domain.ProjectRole.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -210,7 +212,7 @@ public class TaskServiceTest extends IntegrationTest {
         Task task = taskRepository.save(TaskFactory.createWithId(sprint.getId(), projectMember.getMemberId()));
 
         // when
-        taskService.changeStatus(task.getWorkerId(), task.getId(), "complete");
+        taskService.changeStatus(createWithId(task.getWorkerId(), task.getId()));
 
         // then
         assertThat(taskRepository.findById(task.getId()).get().getWorkStatus()).isEqualTo(WorkStatus.COMPLETE);
@@ -227,7 +229,7 @@ public class TaskServiceTest extends IntegrationTest {
 
         // when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
-            taskService.changeStatus(projectMember2.getMemberId(), task.getId(), "complete");
+            taskService.changeStatus(createWithId(projectMember2.getMemberId(), task.getId()));
         });
 
         // then

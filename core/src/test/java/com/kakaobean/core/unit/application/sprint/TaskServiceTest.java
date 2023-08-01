@@ -4,6 +4,7 @@ import com.kakaobean.core.common.event.Events;
 import com.kakaobean.core.factory.project.ProjectMemberFactory;
 import com.kakaobean.core.factory.sprint.SprintFactory;
 import com.kakaobean.core.factory.sprint.TaskFactory;
+import com.kakaobean.core.factory.sprint.dto.ChangeWorkStatusRequestDtoFactory;
 import com.kakaobean.core.factory.sprint.dto.ModifyTaskRequestDtoFactory;
 import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.ProjectMember;
@@ -223,7 +224,7 @@ public class TaskServiceTest extends UnitTest {
         given(projectMemberRepository.findByMemberIdAndProjectId(Mockito.anyLong(),Mockito.anyLong())).willReturn(Optional.of(createMember()));
 
         // when
-        taskService.changeStatus(workerId, 2L, "complete");
+        taskService.changeStatus(ChangeWorkStatusRequestDtoFactory.createWithId(workerId, 2L));
 
         // then
         assertThat(task.getWorkStatus()).isEqualTo(WorkStatus.COMPLETE);
@@ -240,10 +241,9 @@ public class TaskServiceTest extends UnitTest {
         given(sprintRepository.findById(Mockito.anyLong())).willReturn(Optional.of(SprintFactory.createWithId(1L)));
         given(projectMemberRepository.findByMemberIdAndProjectId(Mockito.anyLong(),Mockito.anyLong())).willReturn(Optional.of(createMember()));
 
-
         // when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
-            taskService.changeStatus(differentWorkerId, 2L, "complete");
+            taskService.changeStatus(ChangeWorkStatusRequestDtoFactory.createWithId(differentWorkerId, 2L));
         });
 
         // then

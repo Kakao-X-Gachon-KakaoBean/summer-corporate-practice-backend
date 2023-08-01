@@ -16,6 +16,7 @@ import com.kakaobean.member.dto.RegisterMemberRequest;
 import com.kakaobean.project.dto.request.InviteProjectMemberRequest;
 import com.kakaobean.project.dto.request.RegisterProjectMemberRequest;
 import com.kakaobean.project.dto.request.RegisterProjectRequest;
+import com.kakaobean.sprint.dto.request.ChangeWorkStatusRequest;
 import com.kakaobean.sprint.dto.request.ModifyTaskRequest;
 import com.kakaobean.sprint.dto.request.RegisterSprintRequest;
 import com.kakaobean.sprint.dto.request.RegisterTaskRequest;
@@ -225,7 +226,8 @@ public class TaskAcceptanceTest extends AcceptanceTest {
 
         //when
         //테스크 작업 상태 변경
-        ExtractableResponse response = TaskAcceptanceTask.changeWorkStatusTask(task.getId(), "complete");
+        ChangeWorkStatusRequest request = new ChangeWorkStatusRequest("complete");
+        ExtractableResponse response = TaskAcceptanceTask.changeWorkStatusTask(task.getId(), request);
 
         //then
         assertThat(response.statusCode()).isEqualTo(200);

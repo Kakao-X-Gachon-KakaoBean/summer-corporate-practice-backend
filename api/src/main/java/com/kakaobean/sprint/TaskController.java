@@ -3,6 +3,7 @@ package com.kakaobean.sprint;
 import com.kakaobean.common.dto.CommandSuccessResponse;
 import com.kakaobean.core.sprint.application.TaskService;
 import com.kakaobean.security.UserPrincipal;
+import com.kakaobean.sprint.dto.request.ChangeWorkStatusRequest;
 import com.kakaobean.sprint.dto.request.ModifyTaskRequest;
 import com.kakaobean.sprint.dto.request.RegisterTaskRequest;
 import lombok.RequiredArgsConstructor;
@@ -50,11 +51,11 @@ public class TaskController {
         return new ResponseEntity(CommandSuccessResponse.from("작업이 할당되었습니다."), OK);
     }
 
-    @PatchMapping("/tasks/{taskId}/{workStatus}")
+    @PatchMapping("/tasks/{taskId}/work-status")
     public ResponseEntity changeStatus(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                        @PathVariable Long taskId,
-                                       @PathVariable String workStatus){
-        taskService.changeStatus(userPrincipal.getId(), taskId, workStatus);
+                                       @RequestBody ChangeWorkStatusRequest request){
+        taskService.changeStatus(request.toServiceDto(userPrincipal.getId(), taskId));
         return new ResponseEntity(CommandSuccessResponse.from("작업 상태가 변경되었습니다."), OK);
     }
 }

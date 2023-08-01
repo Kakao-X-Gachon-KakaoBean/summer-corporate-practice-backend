@@ -1,5 +1,6 @@
 package com.kakaobean.acceptance.sprint;
 
+import com.kakaobean.sprint.dto.request.ChangeWorkStatusRequest;
 import com.kakaobean.sprint.dto.request.ModifyTaskRequest;
 import com.kakaobean.sprint.dto.request.RegisterTaskRequest;
 import io.restassured.RestAssured;
@@ -63,14 +64,15 @@ public class TaskAcceptanceTask {
                 .extract();
     }
 
-    public static ExtractableResponse changeWorkStatusTask(Long taskId, String workStatus){
+    public static ExtractableResponse changeWorkStatusTask(Long taskId, ChangeWorkStatusRequest request){
         return RestAssured
                 .given()
                 .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
                 .accept(APPLICATION_JSON_VALUE)
                 .contentType(APPLICATION_JSON_VALUE)
+                .body(request)
                 .when()
-                .patch("/tasks/{taskId}/{workStatus}", taskId, workStatus)
+                .patch("/tasks/{taskId}/work-status", taskId)
                 .then().log().all()
                 .extract();
     }
