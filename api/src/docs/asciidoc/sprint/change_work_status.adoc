@@ -1,0 +1,13 @@
+= 테스크 작업 상태 변경
+
+== 요청
+
+include::{snippets}/change_work_status/http-request.adoc[]
+
+include::{snippets}/change_work_status/path-parameters.adoc[]
+
+== 응답
+
+include::{snippets}/change_work_status/http-response.adoc[]
+
+include::{snippets}/change_work_status/response-fields.adoc[]

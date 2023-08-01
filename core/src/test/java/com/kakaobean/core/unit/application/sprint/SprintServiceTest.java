@@ -3,7 +3,7 @@ package com.kakaobean.core.unit.application.sprint;
 import com.kakaobean.core.factory.sprint.SprintFactory;
 import com.kakaobean.core.factory.sprint.dto.ModifySprintRequestDtoFactory;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
-import com.kakaobean.core.sprint.Exception.IllegalSprintDateException;
+import com.kakaobean.core.sprint.Exception.InvalidSprintDateException;
 import com.kakaobean.core.sprint.Exception.SprintAccessException;
 import com.kakaobean.core.sprint.application.SprintService;
 import com.kakaobean.core.sprint.domain.Sprint;
@@ -90,7 +90,7 @@ public class SprintServiceTest extends UnitTest {
         });
 
         // then
-        result.isInstanceOf(IllegalSprintDateException.class);
+        result.isInstanceOf(InvalidSprintDateException.class);
     }
 
     @Test
@@ -139,7 +139,7 @@ public class SprintServiceTest extends UnitTest {
         });
 
         // then
-        result.isInstanceOf(IllegalSprintDateException.class);
+        result.isInstanceOf(InvalidSprintDateException.class);
     }
 
     @Test

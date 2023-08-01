@@ -1,13 +1,11 @@
 package com.kakaobean.core.sprint.application;
 
-import com.kakaobean.core.sprint.Exception.NotExistsSprintException;
 import com.kakaobean.core.sprint.Exception.NotExistsTaskException;
+import com.kakaobean.core.sprint.application.dto.ChangeWorkStatusRequestDto;
 import com.kakaobean.core.sprint.application.dto.ModifyTaskRequestDto;
 import com.kakaobean.core.sprint.application.dto.RegisterTaskRequestDto;
-import com.kakaobean.core.sprint.domain.Sprint;
 import com.kakaobean.core.sprint.domain.Task;
 import com.kakaobean.core.sprint.domain.TaskValidator;
-import com.kakaobean.core.sprint.domain.repository.SprintRepository;
 import com.kakaobean.core.sprint.domain.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,5 +37,19 @@ public class TaskService {
         Task task = taskRepository.findById(taskId).orElseThrow(NotExistsTaskException::new);
         taskValidator.validate(adminId, task.getSprintId());
         taskRepository.delete(task);
+    }
+
+    @Transactional
+    public void assignTask(Long adminId, Long taskId, Long memberId) {
+        Task task = taskRepository.findById(taskId).orElseThrow(NotExistsTaskException::new);
+        taskValidator.validAssignmentTask(task, adminId,  memberId);
+        task.assigned(memberId);
+    }
+
+    @Transactional
+    public void changeStatus(ChangeWorkStatusRequestDto dto) {
+        Task task = taskRepository.findById(dto.getTaskId()).orElseThrow(NotExistsTaskException::new);
+        taskValidator.validRightToChange(task, dto.getWorkerId());
+        task.changeStatus(dto.getWorkStatus());
     }
 }

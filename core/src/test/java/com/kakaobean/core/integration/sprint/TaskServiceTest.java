@@ -2,6 +2,7 @@ package com.kakaobean.core.integration.sprint;
 
 import com.kakaobean.core.factory.project.ProjectFactory;
 import com.kakaobean.core.factory.sprint.TaskFactory;
+import com.kakaobean.core.factory.sprint.dto.ChangeWorkStatusRequestDtoFactory;
 import com.kakaobean.core.factory.sprint.dto.ModifyTaskRequestDtoFactory;
 import com.kakaobean.core.factory.sprint.dto.RegisterTaskRequestDtoFactory;
 import com.kakaobean.core.integration.IntegrationTest;
@@ -9,10 +10,13 @@ import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
+import com.kakaobean.core.sprint.Exception.AssignmentNotAllowedException;
+import com.kakaobean.core.sprint.Exception.ChangeOperationNotAllowedException;
 import com.kakaobean.core.sprint.Exception.TaskAccessException;
 import com.kakaobean.core.sprint.application.TaskService;
 import com.kakaobean.core.sprint.domain.Sprint;
 import com.kakaobean.core.sprint.domain.Task;
+import com.kakaobean.core.sprint.domain.WorkStatus;
 import com.kakaobean.core.sprint.domain.repository.SprintRepository;
 import com.kakaobean.core.sprint.domain.repository.TaskRepository;
 import org.assertj.core.api.AbstractThrowableAssert;
@@ -20,10 +24,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static com.kakaobean.core.factory.project.ProjectFactory.createWithoutId;
 import static com.kakaobean.core.factory.project.ProjectMemberFactory.createWithMemberIdAndProjectId;
 import static com.kakaobean.core.factory.sprint.SprintFactory.createWithId;
-import static com.kakaobean.core.project.domain.ProjectRole.ADMIN;
-import static com.kakaobean.core.project.domain.ProjectRole.MEMBER;
+import static com.kakaobean.core.factory.sprint.dto.ChangeWorkStatusRequestDtoFactory.createWithId;
+import static com.kakaobean.core.project.domain.ProjectRole.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -123,7 +128,7 @@ public class TaskServiceTest extends IntegrationTest {
         Task task = taskRepository.save(TaskFactory.createWithId(sprint.getId(), 1L));
 
         // when
-        taskService.removeTask(projectMember.getMemberId(),task.getId());
+        taskService.removeTask(projectMember.getMemberId(), task.getId());
 
         // then
         assertThat(taskRepository.findAll().size()).isEqualTo(0);
@@ -139,11 +144,95 @@ public class TaskServiceTest extends IntegrationTest {
 
         // when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
-            taskService.removeTask(projectMember.getMemberId(),task.getId());
+            taskService.removeTask(projectMember.getMemberId(), task.getId());
         });
 
         // then
         result.isInstanceOf(TaskAccessException.class);
     }
 
+    @Test
+    void 어드민이_멤버에게_테스크를_할당한다() {
+        // given
+        Project project = projectRepository.save(createWithoutId());
+        ProjectMember projectAdmin = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(2L, project.getId(), MEMBER));
+        Sprint sprint = sprintRepository.save(createWithId(project.getId()));
+        Task task = taskRepository.save(TaskFactory.createWithId(sprint.getId(), null));
+
+        // when
+        taskService.assignTask(projectAdmin.getMemberId(), task.getId(), projectMember.getMemberId());
+
+        // then
+        assertThat(taskRepository.findById(task.getId()).get().getWorkerId()).isEqualTo(projectMember.getMemberId());
+    }
+
+    @Test
+    void 일반멤버는_테스크를_할당할_수_없다() {
+        // given
+        Project project = projectRepository.save(createWithoutId());
+        ProjectMember projectAdmin = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), MEMBER));
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(2L, project.getId(), MEMBER));
+        Sprint sprint = sprintRepository.save(createWithId(project.getId()));
+        Task task = taskRepository.save(TaskFactory.createWithId(sprint.getId(), null));
+
+        // when
+        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
+            taskService.assignTask(projectAdmin.getMemberId(), task.getId(), projectMember.getMemberId());
+        });
+
+        // then
+        result.isInstanceOf(TaskAccessException.class);
+    }
+
+    @Test
+    void Viewr는_테스크를_할당받을_수_없다() {
+        // given
+        Project project = projectRepository.save(createWithoutId());
+        ProjectMember projectAdmin = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
+        ProjectMember projectViewer = projectMemberRepository.save(createWithMemberIdAndProjectId(2L, project.getId(), VIEWER));
+        Sprint sprint = sprintRepository.save(createWithId(project.getId()));
+        Task task = taskRepository.save(TaskFactory.createWithId(sprint.getId(), null));
+
+        // when
+        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
+            taskService.assignTask(projectAdmin.getMemberId(), task.getId(), projectViewer.getMemberId());
+        });
+
+        // then
+        result.isInstanceOf(AssignmentNotAllowedException.class);
+    }
+
+    @Test
+    void 테스크_담당가_작업상태를_변경한다() {
+        // given
+        Project project = projectRepository.save(createWithoutId());
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), MEMBER));
+        Sprint sprint = sprintRepository.save(createWithId(project.getId()));
+        Task task = taskRepository.save(TaskFactory.createWithId(sprint.getId(), projectMember.getMemberId()));
+
+        // when
+        taskService.changeStatus(createWithId(task.getWorkerId(), task.getId()));
+
+        // then
+        assertThat(taskRepository.findById(task.getId()).get().getWorkStatus()).isEqualTo(WorkStatus.COMPLETE);
+    }
+
+    @Test
+    void 테스크_담당자가_아니라면_작업상태를_변경할_수_없다() {
+        // given
+        Project project = projectRepository.save(createWithoutId());
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), MEMBER));
+        ProjectMember projectMember2 = projectMemberRepository.save(createWithMemberIdAndProjectId(2L, project.getId(), MEMBER));
+        Sprint sprint = sprintRepository.save(createWithId(project.getId()));
+        Task task = taskRepository.save(TaskFactory.createWithId(sprint.getId(), projectMember.getMemberId()));
+
+        // when
+        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
+            taskService.changeStatus(createWithId(projectMember2.getMemberId(), task.getId()));
+        });
+
+        // then
+        result.isInstanceOf(ChangeOperationNotAllowedException.class);
+    }
 }

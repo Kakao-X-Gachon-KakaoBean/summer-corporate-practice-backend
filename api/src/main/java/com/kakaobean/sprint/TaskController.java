@@ -3,6 +3,7 @@ package com.kakaobean.sprint;
 import com.kakaobean.common.dto.CommandSuccessResponse;
 import com.kakaobean.core.sprint.application.TaskService;
 import com.kakaobean.security.UserPrincipal;
+import com.kakaobean.sprint.dto.request.ChangeWorkStatusRequest;
 import com.kakaobean.sprint.dto.request.ModifyTaskRequest;
 import com.kakaobean.sprint.dto.request.RegisterTaskRequest;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class TaskController {
     public ResponseEntity registerTask(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                        @Validated @RequestBody RegisterTaskRequest request){
         taskService.registerTask(request.toServiceDto(userPrincipal.getId()));
-        return new ResponseEntity(CommandSuccessResponse.from("테스크가 생성 되었습니다."), CREATED);
+        return new ResponseEntity(CommandSuccessResponse.from("테스크가 생성되었습니다."), CREATED);
     }
 
     @PatchMapping("/tasks/{taskId}")
@@ -32,13 +33,29 @@ public class TaskController {
                                      @PathVariable Long taskId,
                                      @Validated @RequestBody ModifyTaskRequest request){
         taskService.modifyTask(request.toServiceDto(userPrincipal.getId(), taskId));
-        return new ResponseEntity(CommandSuccessResponse.from("테스크가 수정 되었습니다."), OK);
+        return new ResponseEntity(CommandSuccessResponse.from("테스크 정보가 수정되었습니다."), OK);
     }
 
     @DeleteMapping("/tasks/{taskId}")
-    public ResponseEntity modifyTask(@AuthenticationPrincipal UserPrincipal userPrincipal,
+    public ResponseEntity removeTask(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                      @PathVariable Long taskId){
         taskService.removeTask(userPrincipal.getId(), taskId);
-        return new ResponseEntity(CommandSuccessResponse.from("테스크가 삭제 되었습니다."), OK);
+        return new ResponseEntity(CommandSuccessResponse.from("테스크가 삭제되었습니다."), OK);
+    }
+
+    @PatchMapping("/tasks/{taskId}/assignment/{memberId}")
+    public ResponseEntity assignTask(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                     @PathVariable Long taskId,
+                                     @PathVariable Long memberId){
+        taskService.assignTask(userPrincipal.getId(), taskId, memberId);
+        return new ResponseEntity(CommandSuccessResponse.from("작업이 할당되었습니다."), OK);
+    }
+
+    @PatchMapping("/tasks/{taskId}/work-status")
+    public ResponseEntity changeStatus(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                       @PathVariable Long taskId,
+                                       @RequestBody ChangeWorkStatusRequest request){
+        taskService.changeStatus(request.toServiceDto(userPrincipal.getId(), taskId));
+        return new ResponseEntity(CommandSuccessResponse.from("작업 상태가 변경되었습니다."), OK);
     }
 }
