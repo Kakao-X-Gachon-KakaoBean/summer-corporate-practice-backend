@@ -4,12 +4,12 @@ package com.kakaobean.unit.controller.releasenote;
 import com.kakaobean.core.releasenote.application.dto.response.ManuscriptResponseDto;
 import com.kakaobean.core.releasenote.domain.repository.query.FindManuscriptResponseDto;
 import com.kakaobean.core.releasenote.domain.repository.query.FindManuscriptsResponseDto;
+import com.kakaobean.core.releasenote.domain.repository.query.FindPagingManuscriptsResponseDto;
 import com.kakaobean.releasenote.dto.request.ModifyManuscriptRequest;
 import com.kakaobean.releasenote.dto.request.RegisterManuscriptRequest;
 import com.kakaobean.unit.controller.ControllerTest;
 import com.kakaobean.unit.controller.security.WithMockUser;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
@@ -109,21 +109,21 @@ public class ManuscriptControllerTest extends ControllerTest {
 
     @Test
     @WithMockUser
-    void 릴리즈_노트_원고_전체_조회() throws Exception {
+    void 페이징을_사용한_릴리즈_노트_원고_조회() throws Exception {
 
-        given(manuscriptQueryRepository.findByProjectId(Mockito.anyLong(), Mockito.anyInt()))
+        given(manuscriptQueryRepository.findByProjectIdWithPaging(Mockito.anyLong(), Mockito.anyInt()))
                 .willReturn(
-                        new FindManuscriptsResponseDto(
+                        new FindPagingManuscriptsResponseDto(
                                 true,
                                 List.of(
-                                        new FindManuscriptsResponseDto.ManuscriptDto(1L, "1.1V 릴리즈 노트", "1.1V"),
-                                        new FindManuscriptsResponseDto.ManuscriptDto(2L, "1.12V 릴리즈 노트", "1.2V")
+                                        new FindPagingManuscriptsResponseDto.ManuscriptDto(1L, "1.1V 릴리즈 노트", "1.1V"),
+                                        new FindPagingManuscriptsResponseDto.ManuscriptDto(2L, "1.12V 릴리즈 노트", "1.2V")
                                         )
                         )
                 );
 
         //when
-        ResultActions perform = mockMvc.perform(get("/manuscripts")
+        ResultActions perform = mockMvc.perform(get("/manuscripts/page")
                 .param("projectId", "3")
                 .param("page", "0")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -133,7 +133,7 @@ public class ManuscriptControllerTest extends ControllerTest {
         //then
         perform.andDo(print());
         perform.andExpect(status().is2xxSuccessful());
-        perform.andDo(document("find_release_note_manuscripts",
+        perform.andDo(document("find_release_note_manuscripts_with_paging",
                 getDocumentRequest(),
                 getDocumentResponse(),
                 requestParameters(
@@ -239,6 +239,46 @@ public class ManuscriptControllerTest extends ControllerTest {
                 ),
                 responseFields(
                         fieldWithPath("message").type(STRING).description("성공 메시지")
+                )
+        ));
+    }
+
+
+    @Test
+    @WithMockUser
+    void 릴리즈_노트_원고_전체_조회() throws Exception {
+
+        given(manuscriptQueryRepository.findAllByProjectId(Mockito.anyLong()))
+                .willReturn(
+                        new FindManuscriptsResponseDto(
+                                List.of(
+                                        new FindManuscriptsResponseDto.ManuscriptDto(1L, "1.1V 릴리즈 노트", "1.1V"),
+                                        new FindManuscriptsResponseDto.ManuscriptDto(2L, "1.12V 릴리즈 노트", "1.2V")
+                                )
+                        )
+                );
+
+        //when
+        ResultActions perform = mockMvc.perform(get("/manuscripts")
+                .param("projectId", "3")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        //then
+        perform.andDo(print());
+        perform.andExpect(status().is2xxSuccessful());
+        perform.andDo(document("find_release_note_manuscripts",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestParameters(
+                        parameterWithName("projectId").description("릴리즈 노트 원고를 조회할 프로젝트 id")
+                ),
+                responseFields(
+                        fieldWithPath("manuscripts").type(ARRAY).description("릴리즈 노트 원고 리스트"),
+                        fieldWithPath("manuscripts[].id").type(NUMBER).description("릴리즈 노트 원고 id"),
+                        fieldWithPath("manuscripts[].title").type(STRING).description("릴리즈 노트 원고 제목"),
+                        fieldWithPath("manuscripts[].version").type(STRING).description("릴리즈 노트 원고 버전")
                 )
         ));
     }

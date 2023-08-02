@@ -38,7 +38,7 @@ public class ManuscriptAcceptanceTask {
                 .extract();
     }
 
-    public static ExtractableResponse findManuscriptsTask(Long projectId, Integer page){
+    public static ExtractableResponse findManuscriptsTaskWithPaging(Long projectId, Integer page){
         return RestAssured
                 .given()
                 .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
@@ -47,7 +47,7 @@ public class ManuscriptAcceptanceTask {
                 .param("projectId", projectId)
                 .param("page", page)
                 .when()
-                .get("/manuscripts")
+                .get("/manuscripts/page")
                 .then().log().all()
                 .extract();
     }
@@ -85,6 +85,19 @@ public class ManuscriptAcceptanceTask {
                 .contentType(APPLICATION_JSON_VALUE)
                 .when()
                 .delete("/manuscripts/{manuscriptId}", manuscriptId)
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse findManuscriptsTask(Long projectId){
+        return RestAssured
+                .given()
+                .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
+                .accept(APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
+                .param("projectId", projectId)
+                .when()
+                .get("/manuscripts")
                 .then().log().all()
                 .extract();
     }

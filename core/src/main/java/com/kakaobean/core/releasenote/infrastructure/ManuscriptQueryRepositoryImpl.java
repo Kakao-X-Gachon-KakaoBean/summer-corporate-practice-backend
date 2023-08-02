@@ -4,6 +4,7 @@ package com.kakaobean.core.releasenote.infrastructure;
 import com.kakaobean.common.PagingUtils;
 import com.kakaobean.core.releasenote.domain.repository.query.FindManuscriptResponseDto;
 import com.kakaobean.core.releasenote.domain.repository.query.FindManuscriptsResponseDto;
+import com.kakaobean.core.releasenote.domain.repository.query.FindPagingManuscriptsResponseDto;
 import com.kakaobean.core.releasenote.domain.repository.query.ManuscriptQueryRepository;
 
 import com.querydsl.core.types.Projections;
@@ -30,12 +31,12 @@ public class ManuscriptQueryRepositoryImpl implements ManuscriptQueryRepository 
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public FindManuscriptsResponseDto findByProjectId (Long projectId, Integer page) {
+    public FindPagingManuscriptsResponseDto findByProjectIdWithPaging (Long projectId, Integer page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, PAGING_STANDARD));
-        List<FindManuscriptsResponseDto.ManuscriptDto> result = queryFactory
+        List<FindPagingManuscriptsResponseDto.ManuscriptDto> result = queryFactory
                 .select(
                         Projections.constructor(
-                                FindManuscriptsResponseDto.ManuscriptDto.class,
+                                FindPagingManuscriptsResponseDto.ManuscriptDto.class,
                                 manuscript.id,
                                 manuscript.title,
                                 manuscript.version
@@ -48,9 +49,9 @@ public class ManuscriptQueryRepositoryImpl implements ManuscriptQueryRepository 
                 .fetch();
 
         if(result.size() > PAGE_SIZE){
-            return new FindManuscriptsResponseDto(false, PagingUtils.applyPaging(result));
+            return new FindPagingManuscriptsResponseDto(false, PagingUtils.applyPaging(result));
         }
-        return new FindManuscriptsResponseDto(true, result);
+        return new FindPagingManuscriptsResponseDto(true, result);
     }
 
     @Override
@@ -71,5 +72,23 @@ public class ManuscriptQueryRepositoryImpl implements ManuscriptQueryRepository 
                 .where(manuscript.id.eq(manuscriptId))
                 .fetchFirst();
         return Optional.ofNullable(responseDto);
+    }
+
+
+    @Override
+    public FindManuscriptsResponseDto findAllByProjectId(Long projectId) {
+        List<FindManuscriptsResponseDto.ManuscriptDto> result = queryFactory
+                .select(
+                        Projections.constructor(
+                                FindManuscriptsResponseDto.ManuscriptDto.class,
+                                manuscript.id,
+                                manuscript.title,
+                                manuscript.version
+                        )
+                )
+                .from(manuscript)
+                .where(manuscript.projectId.eq(projectId))
+                .fetch();
+        return new FindManuscriptsResponseDto(result);
     }
 }
