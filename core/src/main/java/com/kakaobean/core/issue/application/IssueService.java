@@ -29,10 +29,9 @@ public class IssueService {
         Issue issue = dto.toEntity();
         projectMemberRepository.findByMemberIdAndProjectId(dto.getWriterId(), dto.getProjectId()).
                 orElseThrow(NotExistsProjectMemberException::new);
-        String writtenTime = issue.getUpdatedAt();
         issueRepository.save(issue);
         //알림 필요 없으면 그냥 위 두 줄 합쳐도 됨.
 
-        return new RegisterIssueResponseDto(issue.getId(), writtenTime);
+        return new RegisterIssueResponseDto(issue.getId());
     }
 }

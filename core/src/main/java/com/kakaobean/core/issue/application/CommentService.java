@@ -18,9 +18,8 @@ public class CommentService {
     @Transactional(readOnly = false)
     public RegisterCommentResponseDto registerComment(RegisterCommentRequestDto dto){
         Comment comment = dto.toEntity();
-        String writtenTime = comment.getUpdatedAt();
         commentRepository.save(comment);
 
-        return new RegisterCommentResponseDto(comment.getCommentId(), writtenTime);
+        return new RegisterCommentResponseDto(comment.getCommentId());
     }
 }

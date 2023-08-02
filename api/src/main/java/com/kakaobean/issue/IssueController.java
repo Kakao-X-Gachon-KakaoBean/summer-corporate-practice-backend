@@ -28,6 +28,7 @@ public class IssueController {
     private final IssueService issueService;
 
     @PostMapping("/projects/{projectId}/issues")
+    //             ("/issues")
     public ResponseEntity<RegisterIssueResponseDto> registerIssue(@Validated @RequestBody RegisterIssueRequest request,
                                                                   @PathVariable Long projectId,
                                                                   @AuthenticationPrincipal UserPrincipal userPrincipal){

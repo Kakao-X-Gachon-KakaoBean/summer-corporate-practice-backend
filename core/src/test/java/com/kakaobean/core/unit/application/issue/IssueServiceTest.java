@@ -42,7 +42,6 @@ public class IssueServiceTest extends UnitTest {
     void beforeEach(){
         issueService = new IssueService(
                 issueRepository,
-                commentRepository,
                 projectMemberRepository
         );
     }
