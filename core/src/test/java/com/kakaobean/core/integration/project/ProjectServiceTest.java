@@ -117,35 +117,35 @@ public class ProjectServiceTest extends IntegrationTest {
         result.isInstanceOf(NotProjectAdminException.class);
     }
 
-//    // 비동기 때문에 테스트에 실패하는 경우가 있음
-//    @Test
-//    void 어드민이_프로젝트_삭제에_성공한다() throws InterruptedException {
-//        //given
-//        Member admin = memberRepository.save(MemberFactory.createWithoutId());
-//        Member member = memberRepository.save(MemberFactory.createWithoutId());
-//        Project project = projectRepository.save(ProjectFactory.create());
-//
-//        projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), admin.getId(), ADMIN));
-//        projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), member.getId(), MEMBER));
-//
-//        manuscriptRepository.save(ManuscriptFactory.createWithId(member.getId(), project.getId()));
-//        releaseNoteRepository.save(ReleaseNoteFactory.createWithId(member.getId(), project.getId()));
-//
-//        Sprint sprint = sprintRepository.save(SprintFactory.createWithId(project.getId()));
-//        taskRepository.save(TaskFactory.createWithId(sprint.getId(), admin.getId()));
-//        taskRepository.save(TaskFactory.createWithId(sprint.getId(), member.getId()));
-//
-//        //when
-//        projectService.removeProject(admin.getId(), project.getId());
-//
-//        //then
-//        assertThat(projectRepository.findAll().size()).isEqualTo(0);
-//        assertThat(projectMemberRepository.findAll().size()).isEqualTo(0);
-//        assertThat(manuscriptRepository.findAll().size()).isEqualTo(0);
-//        assertThat(releaseNoteRepository.findAll().size()).isEqualTo(0);
-//        assertThat(sprintRepository.findAll().size()).isEqualTo(0);
-//        assertThat(taskRepository.findAll().size()).isEqualTo(0);
-//    }
+    // 비동기 테스트 적용X
+    @Test
+    void 어드민이_프로젝트_삭제에_성공한다() throws InterruptedException {
+        //given
+        Member admin = memberRepository.save(MemberFactory.createWithoutId());
+        Member member = memberRepository.save(MemberFactory.createWithoutId());
+        Project project = projectRepository.save(ProjectFactory.create());
+
+        projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), admin.getId(), ADMIN));
+        projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), member.getId(), MEMBER));
+
+        manuscriptRepository.save(ManuscriptFactory.createWithId(member.getId(), project.getId()));
+        releaseNoteRepository.save(ReleaseNoteFactory.createWithId(member.getId(), project.getId()));
+
+        Sprint sprint = sprintRepository.save(SprintFactory.createWithId(project.getId()));
+        taskRepository.save(TaskFactory.createWithId(sprint.getId(), admin.getId()));
+        taskRepository.save(TaskFactory.createWithId(sprint.getId(), member.getId()));
+
+        //when
+        projectService.removeProject(admin.getId(), project.getId());
+
+        //then
+        assertThat(projectRepository.findAll().size()).isEqualTo(0);
+        assertThat(projectMemberRepository.findAll().size()).isEqualTo(0);
+        assertThat(manuscriptRepository.findAll().size()).isEqualTo(0);
+        assertThat(releaseNoteRepository.findAll().size()).isEqualTo(0);
+        assertThat(sprintRepository.findAll().size()).isEqualTo(0);
+        assertThat(taskRepository.findAll().size()).isEqualTo(0);
+    }
 
     @Test
     void 일반유저는_프로젝트_정보를_삭제에_실패한다() throws InterruptedException {

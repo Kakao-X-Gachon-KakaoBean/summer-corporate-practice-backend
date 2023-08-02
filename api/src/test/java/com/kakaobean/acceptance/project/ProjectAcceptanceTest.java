@@ -100,28 +100,28 @@ public class ProjectAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(200);
     }
 
-//    // 비동기 때문에 가끔 실패할 때가 있음
-//    @Test
-//    @Rollback(value = false)
-//    void 어드민이_프로젝트를_삭제한다(){
-//        //given
-//        RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
-//        ProjectAcceptanceTask.registerProjectTask(givenRequest);
-//        Project project = projectRepository.findAll().get(0);
-//
-//        DeployReleaseNoteRequest request = new DeployReleaseNoteRequest("코코노트 초기 릴리즈 노트", ".. 배포 내용", "1.1", project.getId());
-//        ReleaseNoteAcceptanceTask.deployReleaseNoteTask(request);
-//        ReleaseNote releaseNote = releaseNoteRepository.findByProjectId(project.getId()).get(0);
-//
-//        //when
-//        ExtractableResponse response = ProjectAcceptanceTask.removeProjectTask(project.getId());
-//
-//        //then
-//        assertThat(response.statusCode()).isEqualTo(200);
-//        assertThat(projectRepository.findAll().size()).isEqualTo(0);
-//        assertThat(projectMemberRepository.findAll().size()).isEqualTo(0);
-//        assertThat(releaseNoteRepository.findAll().size()).isEqualTo(0);
-//    }
+    // 비동기 테스트 적용X
+    @Test
+    @Rollback(value = false)
+    void 어드민이_프로젝트를_삭제한다(){
+        //given
+        RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
+        ProjectAcceptanceTask.registerProjectTask(givenRequest);
+        Project project = projectRepository.findAll().get(0);
+
+        DeployReleaseNoteRequest request = new DeployReleaseNoteRequest("코코노트 초기 릴리즈 노트", ".. 배포 내용", "1.1", project.getId());
+        ReleaseNoteAcceptanceTask.deployReleaseNoteTask(request);
+        ReleaseNote releaseNote = releaseNoteRepository.findByProjectId(project.getId()).get(0);
+
+        //when
+        ExtractableResponse response = ProjectAcceptanceTask.removeProjectTask(project.getId());
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(projectRepository.findAll().size()).isEqualTo(0);
+        assertThat(projectMemberRepository.findAll().size()).isEqualTo(0);
+        assertThat(releaseNoteRepository.findAll().size()).isEqualTo(0);
+    }
 }
 
 /**
