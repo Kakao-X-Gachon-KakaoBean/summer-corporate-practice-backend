@@ -14,7 +14,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
-import static com.kakaobean.core.releasenote.domain.QManuscript.manuscript;
 import static com.kakaobean.core.releasenote.domain.QReleaseNote.*;
 
 @Repository
@@ -27,12 +26,12 @@ public class ReleaseNoteQueryRepositoryImpl implements ReleaseNoteQueryRepositor
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public FindReleaseNotesResponseDto findByProjectId(Long projectId, Integer page) {
+    public FindPagingReleaseNotesResponseDto findByProjectId(Long projectId, Integer page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, PAGING_STANDARD));
-        List<FindReleaseNotesResponseDto.ReleaseNoteDto> result = queryFactory
+        List<FindPagingReleaseNotesResponseDto.ReleaseNoteDto> result = queryFactory
                 .select(
                         Projections.constructor(
-                                FindReleaseNotesResponseDto.ReleaseNoteDto.class,
+                                FindPagingReleaseNotesResponseDto.ReleaseNoteDto.class,
                                 releaseNote.id,
                                 releaseNote.title,
                                 releaseNote.version
@@ -45,9 +44,9 @@ public class ReleaseNoteQueryRepositoryImpl implements ReleaseNoteQueryRepositor
                 .fetch();
 
         if(result.size() > PAGE_SIZE){
-            return new FindReleaseNotesResponseDto(false, PagingUtils.applyPaging(result));
+            return new FindPagingReleaseNotesResponseDto(false, PagingUtils.applyPaging(result));
         }
-        return new FindReleaseNotesResponseDto(true, result);
+        return new FindPagingReleaseNotesResponseDto(true, result);
     }
 
     @Override
@@ -67,5 +66,22 @@ public class ReleaseNoteQueryRepositoryImpl implements ReleaseNoteQueryRepositor
                 .where(releaseNote.id.eq(releaseNoteId))
                 .fetchFirst();
         return Optional.ofNullable(responseDto);
+    }
+
+    @Override
+    public FindReleaseNotesResponseDto findAllByProjectId(Long projectId) {
+        List<FindReleaseNotesResponseDto.ReleaseNoteDto> result = queryFactory
+                .select(
+                        Projections.constructor(
+                                FindReleaseNotesResponseDto.ReleaseNoteDto.class,
+                                releaseNote.id,
+                                releaseNote.title,
+                                releaseNote.version
+                        )
+                )
+                .from(releaseNote)
+                .where(releaseNote.projectId.eq(projectId))
+                .fetch();
+        return new FindReleaseNotesResponseDto(result);
     }
 }

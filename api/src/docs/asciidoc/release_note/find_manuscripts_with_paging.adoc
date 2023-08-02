@@ -1,0 +1,13 @@
+= 페이징을 사용한 릴리즈 노트 원고 조회
+
+== 요청
+
+include::{snippets}/find_release_note_manuscripts_with_paging/http-request.adoc[]
+
+include::{snippets}/find_release_note_manuscripts_with_paging/request-parameters.adoc[]
+
+== 응답
+
+include::{snippets}/find_release_note_manuscripts_with_paging/http-response.adoc[]
+
+include::{snippets}/find_release_note_manuscripts_with_paging/response-fields.adoc[]
