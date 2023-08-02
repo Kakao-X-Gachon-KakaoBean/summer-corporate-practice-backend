@@ -12,6 +12,7 @@ import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.releasenote.domain.ReleaseNote;
 import com.kakaobean.core.releasenote.domain.repository.ReleaseNoteRepository;
 import com.kakaobean.core.releasenote.domain.repository.query.FindPagingReleaseNotesResponseDto;
+import com.kakaobean.core.releasenote.domain.repository.query.FindReleaseNotesResponseDto;
 import com.kakaobean.member.dto.RegisterMemberRequest;
 import com.kakaobean.project.dto.request.InviteProjectMemberRequest;
 import com.kakaobean.project.dto.request.RegisterProjectMemberRequest;
@@ -113,7 +114,7 @@ public class ReleaseNoteAcceptanceTest extends AcceptanceTest {
         ReleaseNoteAcceptanceTask.deployReleaseNoteTask(request);
 
         //when
-        ExtractableResponse response = ReleaseNoteAcceptanceTask.findReleaseNotesTask(project.getId(), 0);
+        ExtractableResponse response = ReleaseNoteAcceptanceTask.findReleaseNotesTaskWithPaging(project.getId(), 0);
 
         //then
         FindPagingReleaseNotesResponseDto result = response.as(FindPagingReleaseNotesResponseDto.class);
@@ -136,7 +137,7 @@ public class ReleaseNoteAcceptanceTest extends AcceptanceTest {
         }
 
         //when
-        ExtractableResponse response = ReleaseNoteAcceptanceTask.findReleaseNotesTask(project.getId(), 0);
+        ExtractableResponse response = ReleaseNoteAcceptanceTask.findReleaseNotesTaskWithPaging(project.getId(), 0);
 
         //then
         FindPagingReleaseNotesResponseDto result = response.as(FindPagingReleaseNotesResponseDto.class);
@@ -164,5 +165,28 @@ public class ReleaseNoteAcceptanceTest extends AcceptanceTest {
 
         //then
         assertThat(response.statusCode()).isEqualTo(200);
+    }
+
+
+    @Test
+    void 릴리즈_노트를_전체_조회한다(){
+
+        //프로젝트 생성
+        RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
+        ProjectAcceptanceTask.registerProjectTask(givenRequest);
+        Project project = projectRepository.findAll().get(0);
+
+        //릴리즈 노트 배포 요창
+        for (int i = 1; i < 15; i++) {
+            releaseNoteRepository.save(new ReleaseNote(ACTIVE, "1." + i  + "V title", "content", "1." + i + "V", project.getId(), 1L));
+        }
+
+        //when
+        ExtractableResponse response = ReleaseNoteAcceptanceTask.findReleaseNotesTask(project.getId());
+
+        //then
+        FindReleaseNotesResponseDto result = response.as(FindReleaseNotesResponseDto.class);
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(result.getReleaseNotes().size()).isEqualTo(14);
     }
 }

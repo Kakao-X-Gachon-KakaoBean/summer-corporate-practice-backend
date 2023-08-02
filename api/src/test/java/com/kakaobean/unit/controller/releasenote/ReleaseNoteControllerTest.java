@@ -3,6 +3,7 @@ package com.kakaobean.unit.controller.releasenote;
 
 import com.kakaobean.core.releasenote.domain.repository.query.FindReleaseNoteResponseDto;
 import com.kakaobean.core.releasenote.domain.repository.query.FindPagingReleaseNotesResponseDto;
+import com.kakaobean.core.releasenote.domain.repository.query.FindReleaseNotesResponseDto;
 import com.kakaobean.releasenote.dto.request.DeployReleaseNoteRequest;
 import com.kakaobean.unit.controller.ControllerTest;
 import com.kakaobean.unit.controller.factory.releasenote.RegisterReleaseNoteRequestFactory;
@@ -93,7 +94,7 @@ public class ReleaseNoteControllerTest extends ControllerTest {
         //then
         perform.andDo(print());
         perform.andExpect(status().is2xxSuccessful());
-        perform.andDo(document("find_release_notes",
+        perform.andDo(document("find_release_notes_with_paging",
                 getDocumentRequest(),
                 getDocumentResponse(),
                 requestParameters(
@@ -149,4 +150,49 @@ public class ReleaseNoteControllerTest extends ControllerTest {
                 )
         ));
     }
+
+
+    @Test
+    @WithMockUser
+    void 릴리즈_노트_전체_조회() throws Exception {
+
+        given(releaseNoteQueryRepository.findAllByProjectId(Mockito.anyLong()))
+                .willReturn(new FindReleaseNotesResponseDto(
+                                List.of(new FindReleaseNotesResponseDto.ReleaseNoteDto(
+                                                1L,
+                                                "1.1V releaseNote title",
+                                                "1.1V"),
+                                        new FindReleaseNotesResponseDto.ReleaseNoteDto(
+                                                2L,
+                                                "1.2V releaseNote title",
+                                                "1.2V")
+                                )
+                        )
+                );
+
+
+        //when
+        ResultActions perform = mockMvc.perform(get("/release-notes")
+                .param("projectId", "0")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        //then
+        perform.andDo(print());
+        perform.andExpect(status().is2xxSuccessful());
+        perform.andDo(document("find_release_notes",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestParameters(
+                        parameterWithName("projectId").description("릴리즈 노트 원고를 조회할 프로젝트 id")
+                ),
+                responseFields(
+                        fieldWithPath("releaseNotes").type(ARRAY).description("릴리즈 노트 리스트"),
+                        fieldWithPath("releaseNotes[].id").type(NUMBER).description("릴리즈 노트 id"),
+                        fieldWithPath("releaseNotes[].title").type(STRING).description("릴리즈 노트 제목"),
+                        fieldWithPath("releaseNotes[].version").type(STRING).description("릴리즈 노트 버전")                )
+        ));
+    }
+
 }

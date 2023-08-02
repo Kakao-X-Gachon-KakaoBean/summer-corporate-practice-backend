@@ -1,13 +1,15 @@
 package com.kakaobean.core.releasenote.domain.repository.query;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
+@NoArgsConstructor
 public class FindReleaseNotesResponseDto {
 
-    private final List<FindReleaseNotesResponseDto.ReleaseNoteDto> releaseNotes;
+    private List<FindReleaseNotesResponseDto.ReleaseNoteDto> releaseNotes;
 
     public FindReleaseNotesResponseDto(List<FindReleaseNotesResponseDto.ReleaseNoteDto> releaseNotes) {
         this.releaseNotes = releaseNotes;

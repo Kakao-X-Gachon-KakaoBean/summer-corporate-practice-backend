@@ -8,6 +8,7 @@ import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.releasenote.domain.Manuscript;
 import com.kakaobean.core.releasenote.domain.repository.ManuscriptRepository;
+import com.kakaobean.core.releasenote.domain.repository.query.FindManuscriptsResponseDto;
 import com.kakaobean.core.releasenote.domain.repository.query.FindPagingManuscriptsResponseDto;
 import com.kakaobean.member.dto.RegisterMemberRequest;
 import com.kakaobean.project.dto.request.InviteProjectMemberRequest;
@@ -124,7 +125,7 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
         ManuscriptAcceptanceTask.registerManuscriptTask(request);
         ManuscriptAcceptanceTask.registerManuscriptTask(request2);
         //when
-        ExtractableResponse response = ManuscriptAcceptanceTask.findManuscriptsTask(project.getId(), 0);
+        ExtractableResponse response = ManuscriptAcceptanceTask.findManuscriptsTaskWithPaging(project.getId(), 0);
 
         //then
         FindPagingManuscriptsResponseDto dto = response.as(FindPagingManuscriptsResponseDto.class);
@@ -146,7 +147,7 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
             ManuscriptAcceptanceTask.registerManuscriptTask(request);
         }
         //when
-        ExtractableResponse response = ManuscriptAcceptanceTask.findManuscriptsTask(project.getId(), 0);
+        ExtractableResponse response = ManuscriptAcceptanceTask.findManuscriptsTaskWithPaging(project.getId(), 0);
 
         //then
         FindPagingManuscriptsResponseDto dto = response.as(FindPagingManuscriptsResponseDto.class);
@@ -278,5 +279,28 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
 
         //then
         assertThat(response.statusCode()).isEqualTo(200);
+    }
+
+
+    @Test
+    void 릴리즈_노트_원고를_전체_조회한다(){
+
+        //프로젝트 생성
+        RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
+        ProjectAcceptanceTask.registerProjectTask(givenRequest);
+        Project project = projectRepository.findAll().get(0);
+
+        //릴리즈 노트 원고 생성
+        for (int i = 1; i < 15; i++) {
+            RegisterManuscriptRequest request = new RegisterManuscriptRequest("1." + i + "v 노트" , ".. 배포 내용", "1." + i, project.getId());
+            ManuscriptAcceptanceTask.registerManuscriptTask(request);
+        }
+        //when
+        ExtractableResponse response = ManuscriptAcceptanceTask.findManuscriptsTask(project.getId());
+
+        //then
+        FindManuscriptsResponseDto result = response.as(FindManuscriptsResponseDto.class);
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(result.getManuscripts().size()).isEqualTo(14);
     }
 }
