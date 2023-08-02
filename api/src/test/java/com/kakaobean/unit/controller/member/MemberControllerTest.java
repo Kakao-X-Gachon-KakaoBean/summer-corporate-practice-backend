@@ -105,9 +105,12 @@ public class MemberControllerTest extends ControllerTest {
     @DisplayName("멤버 정보 API 명세서 테스트.")
     void findMemberInfo() throws Exception {
 
+        String url = "https://bucket.s3.ap-northeast-5.amazonaws.com/8d78cf624c99-%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%851%85%AE%206.23.05.png";
+        String url2 = "https://bucket.s3.ap-northeast-5.amazonaws.com/8d78cf624c99-%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%851%85%AE%206.23.06.png";
+
         //given
         given(memberProvider.findMemberInfoByMemberId(1L))
-                .willReturn(new FindMemberInfoResponseDto("조연겸", "whdusrua@naver.com"));
+                .willReturn(new FindMemberInfoResponseDto("조연겸", "whdusrua@naver.com", url, url2));
 
         //when
         ResultActions perform = mockMvc.perform(get("/members/info")
@@ -122,7 +125,9 @@ public class MemberControllerTest extends ControllerTest {
                 getDocumentResponse(),
                 responseFields(
                         fieldWithPath("name").type(STRING).description("찾은 멤버 이름"),
-                        fieldWithPath("email").type(STRING).description("찾은 멤버 이메일")
+                        fieldWithPath("email").type(STRING).description("찾은 멤버 이메일"),
+                        fieldWithPath("profileImg").description("찾을 멤버 프로필 이미지"),
+                        fieldWithPath("thumbnailImg").description("찾을 멤버 썸네일 이미지")
                 )
         ));
     }
