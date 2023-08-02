@@ -9,6 +9,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.kakaobean.core.sprint.domain.QSprint.sprint;
@@ -24,7 +25,7 @@ public class SprintQueryRepositoryImpl implements SprintQueryRepository {
      * 프로젝트 id에 해당하는 모든 스프린트 Dto를 생성한다.
      */
     @Override
-    public FindAllSprintResponseDto findAllSprintsByProjectId(Long projectId) {
+    public FindAllSprintResponseDto findAllByProjectId(Long projectId) {
 
         List<SprintsDto> sprintsDto = queryFactory
                 .select(
@@ -33,8 +34,7 @@ public class SprintQueryRepositoryImpl implements SprintQueryRepository {
                                 sprint.id,
                                 sprint.title,
                                 sprint.startDate,
-                                sprint.endDate,
-                                null
+                                sprint.endDate
                         )
                 )
                 .from(sprint)

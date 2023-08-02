@@ -45,11 +45,9 @@ public class SprintController {
         return new ResponseEntity(CommandSuccessResponse.from("스프린트가 삭제되었습니다."), OK);
     }
 
-    // /sprints?projectId=1
     @GetMapping("/sprints")
-    public ResponseEntity findAllSprint(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                        @RequestParam Long projectId){
-        FindAllSprintResponseDto response = sprintQueryRepository.findAllSprintsByProjectId(projectId);
+    public ResponseEntity findAllSprints(@RequestParam Long projectId){
+        FindAllSprintResponseDto response = sprintQueryRepository.findAllByProjectId(projectId);
         return new ResponseEntity(response, OK);
     }
 }
