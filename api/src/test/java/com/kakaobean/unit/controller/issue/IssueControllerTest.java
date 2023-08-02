@@ -27,7 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class IssueControllerTest extends ControllerTest {
 
-    public
     @Test
     @WithMockUser
     void 이슈_생성_api_테스트() throws Exception{
@@ -59,62 +58,4 @@ public class IssueControllerTest extends ControllerTest {
                 )
         ));
     }
-
-//    @Test
-//    @WithMockUser
-//    void 이슈_정보수정_api_테스트() throws Exception{
-//        // given
-//        ModifyProjectInfoRequest request = new ModifyProjectInfoRequest("새로운 프로젝트 제목", "새로운 프로젝트 설명");
-//        String requestBody = objectMapper.writeValueAsString(request);
-//
-//        // when
-//        ResultActions perform = mockMvc.perform(patch("/projects/{projectId}", 1L)
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .accept(MediaType.APPLICATION_JSON)
-//                .content(requestBody)
-//        );
-//
-//        // then
-//        perform.andDo(print());
-//        perform.andExpect(status().is2xxSuccessful());
-//        perform.andDo(document("modify_projects_info",
-//                getDocumentRequest(),
-//                getDocumentResponse(),
-//                pathParameters(
-//                        parameterWithName("projectId").description("수정할 프로젝트 id")
-//                ),
-//                requestFields(
-//                        fieldWithPath("newTitle").type(STRING).description("수정할 프로젝트 이름"),
-//                        fieldWithPath("newContent").type(STRING).description("수정할 프로젝트 설명")
-//                ),
-//                responseFields(
-//                        fieldWithPath("message").type(STRING).description("프로젝트 정보가 변경 되었습니다.")
-//                )
-//        ));
-//    }
-//
-//    @Test
-//    @WithMockUser
-//    void 프로젝트_삭제_api_테스트() throws Exception{
-//
-//        // when
-//        ResultActions perform = mockMvc.perform(delete("/projects/{projectId}", 1L)
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .accept(MediaType.APPLICATION_JSON)
-//        );
-//
-//        // then
-//        perform.andDo(print());
-//        perform.andExpect(status().is2xxSuccessful());
-//        perform.andDo(document("remove_projects",
-//                getDocumentRequest(),
-//                getDocumentResponse(),
-//                pathParameters(
-//                        parameterWithName("projectId").description("삭제할 프로젝트 id")
-//                ),
-//                responseFields(
-//                        fieldWithPath("message").type(STRING).description("프로젝트가 삭제 되었습니다.")
-//                )
-//        ));
-//    }
 }

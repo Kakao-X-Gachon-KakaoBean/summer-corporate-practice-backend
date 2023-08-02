@@ -18,6 +18,7 @@ import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.project.exception.NotProjectAdminException;
 import com.kakaobean.core.project.exception.NotProjectInvitedPersonException;
 import org.assertj.core.api.AbstractThrowableAssert;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -44,6 +45,13 @@ public class ProjectMemberServiceTest extends IntegrationTest {
     @Autowired
     ProjectMemberRepository projectMemberRepository;
 
+    @BeforeEach
+    void beforeEach() {
+        memberRepository.deleteAll();
+        projectRepository.deleteAll();
+        projectMemberRepository.deleteAll();
+    }
+
     @Test
     void 관리자가_프로젝트_멤버_초대_이메일_전송_도메인_이벤트를_만든다(){
         //given
@@ -56,7 +64,7 @@ public class ProjectMemberServiceTest extends IntegrationTest {
         ProjectMemberInvitedEvent event = projectMemberService.registerInvitedProjectPersons(new InviteProjectMemberRequestDto(List.of(invitedMember.getAuth().getEmail()), project.getId(), member.getId()));
 
         //then
-        assertThat(event.getProject()).isSameAs(project);
+        assertThat(event.getProject().getId()).isEqualTo(project.getId());
         assertThat(event.getInvitedMemberEmails().size()).isEqualTo(1);
         assertThat(event.getInvitedMemberEmails().get(0)).isEqualTo(invitedMember.getAuth().getEmail());
     }
@@ -125,8 +133,10 @@ public class ProjectMemberServiceTest extends IntegrationTest {
         projectMemberService.modifyProjectMemberRole(create(admin.getMemberId(), project.getId(), member1.getMemberId(), member2.getMemberId()));
 
         //when
-        assertThat(member1.getProjectRole()).isSameAs(ADMIN);
-        assertThat(member2.getProjectRole()).isSameAs(VIEWER);
+        assertThat(projectMemberRepository.findByMemberIdAndProjectId(member1.getMemberId(), member1.getProjectId()).get().getProjectRole())
+                .isSameAs(ADMIN);
+        assertThat(projectMemberRepository.findByMemberIdAndProjectId(member2.getMemberId(), member2.getProjectId()).get().getProjectRole())
+                .isSameAs(VIEWER);
     }
 
     @Test

@@ -1,4 +1,4 @@
-package com.kakaobean.core.factory.task;
+package com.kakaobean.core.factory.sprint;
 
 import com.kakaobean.core.sprint.domain.Task;
 import com.kakaobean.core.sprint.domain.WorkStatus;
@@ -9,12 +9,10 @@ public class TaskFactory {
 
     private TaskFactory() {}
 
-    public static Task createTask(Long sprintId, Long workerId){
+    public static Task createWithId(Long sprintId, Long workerId){
         return Task.builder()
-                .id(1L)
                 .title("테스크 제목")
-                .startDate(LocalDate.of(2023, 8, 10))
-                .endDate(LocalDate.of(2023, 8, 20))
+                .content("테스크 내용")
                 .sprintId(sprintId)
                 .workerId(workerId)
                 .workStatus(WorkStatus.NOT_ASSIGNED)

@@ -1,0 +1,13 @@
+= 스프린트 생성
+
+== 요청
+
+include::{snippets}/register_sprint/http-request.adoc[]
+
+include::{snippets}/register_sprint/request-fields.adoc[]
+
+== 응답
+
+include::{snippets}/register_sprint/http-response.adoc[]
+
+include::{snippets}/register_sprint/response-fields.adoc[]

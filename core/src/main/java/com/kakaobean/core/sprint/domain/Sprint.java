@@ -3,8 +3,11 @@ package com.kakaobean.core.sprint.domain;
 
 import com.kakaobean.core.common.domain.BaseEntity;
 import com.kakaobean.core.common.domain.BaseStatus;
+import com.kakaobean.core.common.event.Events;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -15,6 +18,7 @@ import javax.persistence.Id;
 import java.time.LocalDate;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Where(clause = "status = 'ACTIVE'")
 @SQLDelete(sql = "UPDATE sprint SET status = 'INACTIVE' WHERE id = ?")
 @Entity
@@ -34,23 +38,38 @@ public class Sprint extends BaseEntity {
 
     private LocalDate endDate;
 
+    public Sprint(BaseStatus status, Long projectId, String title, String description, LocalDate startDate, LocalDate endDate) {
+        super(status);
+        this.projectId = projectId;
+        this.title = title;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
     /**
      * 테스트용
      */
     @Builder
-    public Sprint(BaseStatus status,
-                  Long id,
+    public Sprint(Long id,
                   Long projectId,
                   String title,
                   String description,
                   LocalDate startDate,
                   LocalDate endDate) {
-        super(status);
+        super(BaseStatus.ACTIVE);
         this.id = id;
         this.projectId = projectId;
         this.title = title;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    public void modify(String newTitle, String newDescription, LocalDate newStartDate, LocalDate newEndDate){
+        this.title = newTitle;
+        this.description = newDescription;
+        this.startDate = newStartDate;
+        this.endDate = newEndDate;
     }
 }

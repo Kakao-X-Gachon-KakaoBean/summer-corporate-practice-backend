@@ -4,8 +4,11 @@ public class RegisterCommentResponseDto {
 
     private final Long CommentId;
 
-    public RegisterCommentResponseDto(Long commentId){
+    private final String WrittenTime;
+
+    public RegisterCommentResponseDto(Long commentId, String writtenTime){
         CommentId = commentId;
+        WrittenTime = writtenTime;
     }
 }
 

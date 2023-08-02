@@ -8,20 +8,21 @@ import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.releasenote.domain.ReleaseNote;
 import com.kakaobean.core.releasenote.domain.repository.ReleaseNoteRepository;
 import com.kakaobean.project.dto.request.InviteProjectMemberRequest;
-import com.kakaobean.project.dto.request.ModifyProjectInfoRequest;
+import com.kakaobean.project.dto.request.ModifyProjectRequest;
 import com.kakaobean.project.dto.request.RegisterProjectMemberRequest;
 import com.kakaobean.project.dto.request.RegisterProjectRequest;
 import com.kakaobean.releasenote.dto.request.DeployReleaseNoteRequest;
 import io.restassured.response.ExtractableResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
 
-import static com.kakaobean.acceptance.TestMember.*;
-import static org.assertj.core.api.Assertions.*;
+import static com.kakaobean.acceptance.TestMember.MEMBER;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 public class ProjectAcceptanceTest extends AcceptanceTest {
@@ -34,6 +35,9 @@ public class ProjectAcceptanceTest extends AcceptanceTest {
 
     @Autowired
     ReleaseNoteRepository releaseNoteRepository;
+
+    @Autowired
+    AmqpAdmin amqpAdmin;
 
     @Test
     void 프로젝트를_만든다(){
@@ -65,6 +69,7 @@ public class ProjectAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 초대받은_멤버가_프로젝트에_가입한다(){
+
         //given
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
         ProjectAcceptanceTask.registerProjectTask(givenRequest);
@@ -86,7 +91,7 @@ public class ProjectAcceptanceTest extends AcceptanceTest {
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
         ProjectAcceptanceTask.registerProjectTask(givenRequest);
         Project project = projectRepository.findAll().get(0);
-        ModifyProjectInfoRequest request = new ModifyProjectInfoRequest("새로운 프로젝트 제목", "새로운 프로젝트 내용");
+        ModifyProjectRequest request = new ModifyProjectRequest("새로운 프로젝트 제목", "새로운 프로젝트 내용");
 
         //when
         ExtractableResponse response = ProjectAcceptanceTask.modifyProjectInfoTask(request, project.getId());
@@ -95,6 +100,7 @@ public class ProjectAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(200);
     }
 
+    // 비동기 때문에 가끔 실패할 때가 있음
     @Test
     @Rollback(value = false)
     void 어드민이_프로젝트를_삭제한다(){

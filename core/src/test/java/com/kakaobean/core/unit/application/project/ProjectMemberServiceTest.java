@@ -52,7 +52,7 @@ public class ProjectMemberServiceTest extends UnitTest {
                 projectMemberRepository,
                 memberRepository,
                 projectRepository,
-                new ProjectValidator()
+                new ProjectValidator(projectMemberRepository)
         );
     }
 

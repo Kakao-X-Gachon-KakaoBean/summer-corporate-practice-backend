@@ -2,8 +2,10 @@ package com.kakaobean.core.releasenote.application.dto.request;
 
 import com.kakaobean.core.common.domain.BaseStatus;
 import com.kakaobean.core.releasenote.domain.Manuscript;
+import com.kakaobean.core.releasenote.domain.ManuscriptStatus;
 
 import static com.kakaobean.core.common.domain.BaseStatus.*;
+import static com.kakaobean.core.releasenote.domain.ManuscriptStatus.*;
 
 public class RegisterManuscriptRequestDto {
 
@@ -22,6 +24,6 @@ public class RegisterManuscriptRequestDto {
     }
 
     public Manuscript toEntity() {
-        return new Manuscript(ACTIVE, title, content, version, memberId, projectId);
+        return new Manuscript(ACTIVE, title, content, version, memberId, projectId, Modifiable);
     }
 }

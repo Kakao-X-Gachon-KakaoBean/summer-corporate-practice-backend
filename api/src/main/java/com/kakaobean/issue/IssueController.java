@@ -34,17 +34,6 @@ public class IssueController {
         RegisterIssueResponseDto res = issueService.registerIssue(request.toServiceDto(projectId, userPrincipal.getId()));
         return new ResponseEntity(res, CREATED);
     }
-
-    @PostMapping("/issues/{issueId}/comments")
-    public ResponseEntity<RegisterCommentResponseDto> registerComment(@Validated @RequestBody RegisterCommentRequest request,
-                                                                    @PathVariable Long issueId,
-                                                                    @AuthenticationPrincipal UserPrincipal userPrincipal){
-        RegisterCommentResponseDto res = issueService.registerComment(request.toServiceDto(issueId, userPrincipal.getId()));
-        return new ResponseEntity(res, CREATED);
-    }
-
-
-
 //    TODO:
 //     1. 이슈 생성
 //     2. 이슈 삭제

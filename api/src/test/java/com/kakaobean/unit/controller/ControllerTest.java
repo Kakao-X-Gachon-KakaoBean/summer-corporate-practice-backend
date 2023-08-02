@@ -5,6 +5,7 @@ import com.kakaobean.common.ImageController;
 import com.kakaobean.config.AppProperties;
 import com.kakaobean.config.SecurityConfig;
 import com.kakaobean.config.WebMvcConfig;
+import com.kakaobean.core.issue.application.CommentService;
 import com.kakaobean.core.issue.application.IssueService;
 import com.kakaobean.core.member.application.MemberProvider;
 import com.kakaobean.core.member.domain.repository.MemberRepository;
@@ -16,6 +17,9 @@ import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
 import com.kakaobean.core.releasenote.application.ManuscriptService;
 import com.kakaobean.core.releasenote.application.ReleaseNoteService;
 import com.kakaobean.core.releasenote.domain.repository.query.ManuscriptQueryRepository;
+import com.kakaobean.core.releasenote.domain.repository.query.ReleaseNoteQueryRepository;
+import com.kakaobean.core.sprint.application.SprintService;
+import com.kakaobean.core.sprint.application.TaskService;
 import com.kakaobean.independentlysystem.image.ImageService;
 import com.kakaobean.issue.IssueController;
 import com.kakaobean.member.MemberController;
@@ -26,6 +30,8 @@ import com.kakaobean.releasenote.ReleaseNoteController;
 import com.kakaobean.security.token.RefreshTokenRepository;
 import com.kakaobean.security.token.TokenProvider;
 
+import com.kakaobean.sprint.SprintController;
+import com.kakaobean.sprint.TaskController;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +57,9 @@ import org.springframework.test.web.servlet.MockMvc;
         ReleaseNoteController.class,
         ManuscriptController.class,
         ImageController.class,
-        IssueController.class
+        IssueController.class,
+        SprintController.class,
+        TaskController.class
 })
 @AutoConfigureRestDocs
 @MockBean(JpaMetamodelMappingContext.class)
@@ -110,5 +118,17 @@ public abstract class ControllerTest {
     protected ManuscriptQueryRepository manuscriptQueryRepository;
 
     @MockBean
+    protected ReleaseNoteQueryRepository releaseNoteQueryRepository;
+
+    @MockBean
+    protected SprintService sprintService;
+
+    @MockBean
+    protected TaskService taskService;
+
+    @MockBean
     protected IssueService issueService;
+
+    @MockBean
+    protected CommentService commentService;
 }

@@ -2,10 +2,12 @@ package com.kakaobean.releasenote;
 
 import com.kakaobean.common.dto.CommandSuccessResponse;
 import com.kakaobean.core.releasenote.application.ManuscriptService;
+import com.kakaobean.core.releasenote.application.dto.response.ManuscriptResponseDto;
 import com.kakaobean.core.releasenote.domain.repository.query.FindManuscriptResponseDto;
 import com.kakaobean.core.releasenote.domain.repository.query.FindManuscriptsResponseDto;
 import com.kakaobean.core.releasenote.domain.repository.query.ManuscriptQueryRepository;
 import com.kakaobean.core.releasenote.exception.NotExistsManuscriptException;
+import com.kakaobean.releasenote.dto.request.ModifyManuscriptRequest;
 import com.kakaobean.releasenote.dto.request.RegisterManuscriptRequest;
 import com.kakaobean.security.UserPrincipal;
 
@@ -40,5 +42,27 @@ public class ManuscriptController {
     public ResponseEntity findManuscripts(@RequestParam Long projectId, @RequestParam Integer page){
         FindManuscriptsResponseDto response = manuscriptQueryRepository.findByProjectId(projectId, page);
         return new ResponseEntity(response, HttpStatus.OK);
+    }
+
+    @PatchMapping("/manuscripts/{manuscriptId}/access-status")
+    public ResponseEntity hasRightToModifyManuscript(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                                     @PathVariable Long manuscriptId) {
+        ManuscriptResponseDto response = manuscriptService.hasRightToModifyManuscript(userPrincipal.getId(), manuscriptId);
+        return new ResponseEntity(response, HttpStatus.OK);
+    }
+
+    @PatchMapping("/manuscripts/{manuscriptId}")
+    public ResponseEntity modifyManuscript(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                           @RequestBody @Validated ModifyManuscriptRequest request,
+                                           @PathVariable Long manuscriptId) {
+        manuscriptService.modifyManuscript(request.toServiceDto(userPrincipal.getId(), manuscriptId));
+        return new ResponseEntity(CommandSuccessResponse.from("릴리즈 노트 원고 수정에 성공했습니다."), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/manuscripts/{manuscriptId}")
+    public ResponseEntity deleteManuscript(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                           @PathVariable Long manuscriptId) {
+        manuscriptService.deleteManuscript(userPrincipal.getId(), manuscriptId);
+        return new ResponseEntity(CommandSuccessResponse.from("릴리즈 노트 원고 삭제에 성공했습니다."), HttpStatus.OK);
     }
 }

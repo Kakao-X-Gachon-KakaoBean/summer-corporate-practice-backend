@@ -1,0 +1,16 @@
+= 스프린트 수정
+
+== 요청
+
+include::{snippets}/modify_sprint/http-request.adoc[]
+
+include::{snippets}/modify_sprint/path-parameters.adoc[]
+
+include::{snippets}/modify_sprint/request-fields.adoc[]
+
+
+== 응답
+
+include::{snippets}/modify_sprint/http-response.adoc[]
+
+include::{snippets}/modify_sprint/response-fields.adoc[]

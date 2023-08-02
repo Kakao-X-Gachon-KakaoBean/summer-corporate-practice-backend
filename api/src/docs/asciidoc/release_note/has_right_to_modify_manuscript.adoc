@@ -1,0 +1,13 @@
+= 릴리즈 노트 원고 수정 권한 획득
+
+== 요청
+
+include::{snippets}/has_right_to_modify_manuscript/http-request.adoc[]
+
+include::{snippets}/has_right_to_modify_manuscript/path-parameters.adoc[]
+
+== 응답
+
+include::{snippets}/has_right_to_modify_manuscript/http-response.adoc[]
+
+include::{snippets}/has_right_to_modify_manuscript/response-fields.adoc[]

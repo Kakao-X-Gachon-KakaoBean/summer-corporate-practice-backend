@@ -1,0 +1,13 @@
+= 페이징을 사용한 릴리즈 노트 조회
+
+== 요청
+
+include::{snippets}/find_release_notes/http-request.adoc[]
+
+include::{snippets}/find_release_notes/request-parameters.adoc[]
+
+== 응답
+
+include::{snippets}/find_release_notes/http-response.adoc[]
+
+include::{snippets}/find_release_notes/response-fields.adoc[]

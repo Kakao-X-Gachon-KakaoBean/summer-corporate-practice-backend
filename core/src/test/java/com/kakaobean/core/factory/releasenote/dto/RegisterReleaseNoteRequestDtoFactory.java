@@ -1,4 +1,4 @@
-package com.kakaobean.core.factory.project.dto;
+package com.kakaobean.core.factory.releasenote.dto;
 
 import com.kakaobean.core.releasenote.application.dto.request.DeployReleaseNoteRequestDto;
 

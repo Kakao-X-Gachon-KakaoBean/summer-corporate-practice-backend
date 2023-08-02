@@ -8,7 +8,11 @@ public class RegisterIssueResponseDto {
 
     private final Long IssueId;
 
-    public RegisterIssueResponseDto(Long issueId){
+    private final String WrittenTime;
+
+
+    public RegisterIssueResponseDto(Long issueId, String writtenTime){
         IssueId = issueId;
+        WrittenTime = writtenTime;
     }
 }

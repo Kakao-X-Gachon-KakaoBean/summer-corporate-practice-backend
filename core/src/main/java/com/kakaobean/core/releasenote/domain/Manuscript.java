@@ -3,6 +3,8 @@ package com.kakaobean.core.releasenote.domain;
 import com.kakaobean.core.common.domain.BaseEntity;
 import com.kakaobean.core.common.domain.BaseStatus;
 import com.kakaobean.core.common.event.Events;
+import com.kakaobean.core.releasenote.domain.event.ManuscriptModificationStartedEvent;
+import com.kakaobean.core.releasenote.domain.event.ManuscriptModifiedEvent;
 import com.kakaobean.core.releasenote.domain.event.ManuscriptRegisteredEvent;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -34,21 +36,48 @@ public class Manuscript extends BaseEntity {
 
     private Long projectId;
 
+    @Enumerated(EnumType.STRING)
+    private ManuscriptStatus manuscriptStatus;
+
     public Manuscript(BaseStatus status,
                       String title,
                       String content,
                       String version,
                       Long lastEditedMemberId,
-                      Long projectId) {
+                      Long projectId,
+                      ManuscriptStatus manuscriptStatus) {
         super(status);
         this.title = title;
         this.content = content;
         this.version = version;
         this.lastEditedMemberId = lastEditedMemberId;
         this.projectId = projectId;
+        this.manuscriptStatus = manuscriptStatus;
     }
 
     public void registered() {
         Events.raise(new ManuscriptRegisteredEvent(projectId, id, title));
+    }
+
+    public void startModification() {
+        modifyManuscriptStatus(ManuscriptStatus.Modifying);
+        Events.raise(new ManuscriptModificationStartedEvent(id));
+    }
+
+    public void modify(String title, String content, String version, Long editingMemberId) {
+        this.title = title;
+        this.content = content;
+        this.version = version;
+        this.lastEditedMemberId = editingMemberId;
+        modified();
+    }
+
+    private void modified() {
+        modifyManuscriptStatus(ManuscriptStatus.Modifiable);
+        Events.raise(new ManuscriptModifiedEvent(id));
+    }
+
+    private void modifyManuscriptStatus(ManuscriptStatus status) {
+        this.manuscriptStatus = status;
     }
 }

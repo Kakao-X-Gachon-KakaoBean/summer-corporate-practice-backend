@@ -1,6 +1,6 @@
 package com.kakaobean.project.dto.request;
 
-import com.kakaobean.core.project.application.dto.request.ModifyProjectInfoReqeustDto;
+import com.kakaobean.core.project.application.dto.request.ModifyProjectInfoRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @NoArgsConstructor
-public class ModifyProjectInfoRequest {
+public class ModifyProjectRequest {
 
     @NotBlank
     private String newTitle;
@@ -16,13 +16,13 @@ public class ModifyProjectInfoRequest {
     @NotBlank
     private String newContent;
 
-    public ModifyProjectInfoRequest(String newTitle, String newContent) {
+    public ModifyProjectRequest(String newTitle, String newContent) {
         this.newTitle = newTitle;
         this.newContent = newContent;
     }
 
-    public ModifyProjectInfoReqeustDto toServiceDto(Long adminId, Long projectId){
-        return new ModifyProjectInfoReqeustDto(
+    public ModifyProjectInfoRequestDto toServiceDto(Long adminId, Long projectId){
+        return new ModifyProjectInfoRequestDto(
                 adminId,
                 projectId,
                 newTitle,

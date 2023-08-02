@@ -1,0 +1,13 @@
+= 릴리즈 노트 원고 삭제
+
+== 요청
+
+include::{snippets}/delete_release_note_manuscript/http-request.adoc[]
+
+include::{snippets}/delete_release_note_manuscript/path-parameters.adoc[]
+
+== 응답
+
+include::{snippets}/delete_release_note_manuscript/http-response.adoc[]
+
+include::{snippets}/delete_release_note_manuscript/response-fields.adoc[]
