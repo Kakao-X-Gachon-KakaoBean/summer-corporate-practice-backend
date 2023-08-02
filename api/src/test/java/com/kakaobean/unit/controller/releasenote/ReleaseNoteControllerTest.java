@@ -2,7 +2,7 @@ package com.kakaobean.unit.controller.releasenote;
 
 
 import com.kakaobean.core.releasenote.domain.repository.query.FindReleaseNoteResponseDto;
-import com.kakaobean.core.releasenote.domain.repository.query.FindReleaseNotesResponseDto;
+import com.kakaobean.core.releasenote.domain.repository.query.FindPagingReleaseNotesResponseDto;
 import com.kakaobean.releasenote.dto.request.DeployReleaseNoteRequest;
 import com.kakaobean.unit.controller.ControllerTest;
 import com.kakaobean.unit.controller.factory.releasenote.RegisterReleaseNoteRequestFactory;
@@ -13,7 +13,6 @@ import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,13 +67,13 @@ public class ReleaseNoteControllerTest extends ControllerTest {
     void 릴리즈_노트_페이징을_시용해서_조회() throws Exception {
 
         given(releaseNoteQueryRepository.findByProjectId(Mockito.anyLong(), Mockito.anyInt()))
-                .willReturn(new FindReleaseNotesResponseDto(
+                .willReturn(new FindPagingReleaseNotesResponseDto(
                         true,
-                        List.of(new FindReleaseNotesResponseDto.ReleaseNoteDto(
+                        List.of(new FindPagingReleaseNotesResponseDto.ReleaseNoteDto(
                                     1L,
                                 "1.1V releaseNote title",
                                 "1.1V"),
-                                new FindReleaseNotesResponseDto.ReleaseNoteDto(
+                                new FindPagingReleaseNotesResponseDto.ReleaseNoteDto(
                                         2L,
                                         "1.2V releaseNote title",
                                         "1.2V")
@@ -84,7 +83,7 @@ public class ReleaseNoteControllerTest extends ControllerTest {
 
 
         //when
-        ResultActions perform = mockMvc.perform(get("/release-notes")
+        ResultActions perform = mockMvc.perform(get("/release-notes/page")
                 .param("projectId", "0")
                 .param("page", "0")
                 .contentType(MediaType.APPLICATION_JSON)

@@ -47,7 +47,7 @@ public class ManuscriptAcceptanceTask {
                 .param("projectId", projectId)
                 .param("page", page)
                 .when()
-                .get("/manuscripts")
+                .get("/manuscripts/page")
                 .then().log().all()
                 .extract();
     }

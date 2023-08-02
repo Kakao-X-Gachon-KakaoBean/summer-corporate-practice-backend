@@ -1,25 +1,18 @@
 package com.kakaobean.acceptance.releasenote;
 
 import com.kakaobean.acceptance.AcceptanceTest;
-import com.kakaobean.acceptance.auth.AuthAcceptanceTask;
 import com.kakaobean.acceptance.member.MemberAcceptanceTask;
 import com.kakaobean.acceptance.project.ProjectAcceptanceTask;
-import com.kakaobean.core.member.domain.Member;
-import com.kakaobean.core.member.domain.repository.EmailRepository;
-import com.kakaobean.core.member.domain.repository.MemberRepository;
 import com.kakaobean.core.notification.domain.NotificationRepository;
 import com.kakaobean.core.project.domain.Project;
-import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.releasenote.domain.Manuscript;
 import com.kakaobean.core.releasenote.domain.repository.ManuscriptRepository;
-import com.kakaobean.core.releasenote.domain.repository.query.FindManuscriptResponseDto;
-import com.kakaobean.core.releasenote.domain.repository.query.FindManuscriptsResponseDto;
+import com.kakaobean.core.releasenote.domain.repository.query.FindPagingManuscriptsResponseDto;
 import com.kakaobean.member.dto.RegisterMemberRequest;
 import com.kakaobean.project.dto.request.InviteProjectMemberRequest;
 import com.kakaobean.project.dto.request.RegisterProjectMemberRequest;
 import com.kakaobean.project.dto.request.RegisterProjectRequest;
-import com.kakaobean.releasenote.dto.request.DeployReleaseNoteRequest;
 import com.kakaobean.releasenote.dto.request.ModifyManuscriptRequest;
 import com.kakaobean.releasenote.dto.request.RegisterManuscriptRequest;
 import com.kakaobean.unit.controller.factory.member.RegisterMemberRequestFactory;
@@ -134,7 +127,7 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
         ExtractableResponse response = ManuscriptAcceptanceTask.findManuscriptsTask(project.getId(), 0);
 
         //then
-        FindManuscriptsResponseDto dto = response.as(FindManuscriptsResponseDto.class);
+        FindPagingManuscriptsResponseDto dto = response.as(FindPagingManuscriptsResponseDto.class);
         assertThat(response.statusCode()).isEqualTo(200);
         assertThat(dto.isFinalPage()).isTrue();
     }
@@ -156,7 +149,7 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
         ExtractableResponse response = ManuscriptAcceptanceTask.findManuscriptsTask(project.getId(), 0);
 
         //then
-        FindManuscriptsResponseDto dto = response.as(FindManuscriptsResponseDto.class);
+        FindPagingManuscriptsResponseDto dto = response.as(FindPagingManuscriptsResponseDto.class);
         assertThat(response.statusCode()).isEqualTo(200);
         assertThat(dto.isFinalPage()).isFalse();
         assertThat(dto.getManuscripts().size()).isEqualTo(10);

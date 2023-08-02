@@ -5,16 +5,19 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class FindReleaseNotesResponseDto {
+public class FindPagingReleaseNotesResponseDto {
 
-    private final List<FindReleaseNotesResponseDto.ReleaseNoteDto> releaseNotes;
+    private final boolean finalPage;
+    private final List<ReleaseNoteDto> releaseNotes;
 
-    public FindReleaseNotesResponseDto(List<FindReleaseNotesResponseDto.ReleaseNoteDto> releaseNotes) {
+    public FindPagingReleaseNotesResponseDto(boolean finalPage, List<ReleaseNoteDto> releaseNotes) {
+        this.finalPage = finalPage;
         this.releaseNotes = releaseNotes;
     }
 
     @Getter
     public static class ReleaseNoteDto {
+
         private final Long id;
         private final String title;
         private final String version;

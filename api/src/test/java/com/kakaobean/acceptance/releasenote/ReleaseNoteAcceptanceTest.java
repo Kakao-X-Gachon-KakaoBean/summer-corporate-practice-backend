@@ -3,7 +3,6 @@ package com.kakaobean.acceptance.releasenote;
 import com.kakaobean.acceptance.AcceptanceTest;
 import com.kakaobean.acceptance.member.MemberAcceptanceTask;
 import com.kakaobean.acceptance.project.ProjectAcceptanceTask;
-import com.kakaobean.core.common.domain.BaseStatus;
 import com.kakaobean.core.member.domain.repository.EmailRepository;
 import com.kakaobean.core.member.domain.repository.MemberRepository;
 import com.kakaobean.core.notification.domain.NotificationRepository;
@@ -12,8 +11,7 @@ import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.releasenote.domain.ReleaseNote;
 import com.kakaobean.core.releasenote.domain.repository.ReleaseNoteRepository;
-import com.kakaobean.core.releasenote.domain.repository.query.FindReleaseNoteResponseDto;
-import com.kakaobean.core.releasenote.domain.repository.query.FindReleaseNotesResponseDto;
+import com.kakaobean.core.releasenote.domain.repository.query.FindPagingReleaseNotesResponseDto;
 import com.kakaobean.member.dto.RegisterMemberRequest;
 import com.kakaobean.project.dto.request.InviteProjectMemberRequest;
 import com.kakaobean.project.dto.request.RegisterProjectMemberRequest;
@@ -118,7 +116,7 @@ public class ReleaseNoteAcceptanceTest extends AcceptanceTest {
         ExtractableResponse response = ReleaseNoteAcceptanceTask.findReleaseNotesTask(project.getId(), 0);
 
         //then
-        FindReleaseNotesResponseDto result = response.as(FindReleaseNotesResponseDto.class);
+        FindPagingReleaseNotesResponseDto result = response.as(FindPagingReleaseNotesResponseDto.class);
         assertThat(response.statusCode()).isEqualTo(200);
         assertThat(result.isFinalPage()).isTrue();
         assertThat(result.getReleaseNotes().size()).isEqualTo(1);
@@ -141,7 +139,7 @@ public class ReleaseNoteAcceptanceTest extends AcceptanceTest {
         ExtractableResponse response = ReleaseNoteAcceptanceTask.findReleaseNotesTask(project.getId(), 0);
 
         //then
-        FindReleaseNotesResponseDto result = response.as(FindReleaseNotesResponseDto.class);
+        FindPagingReleaseNotesResponseDto result = response.as(FindPagingReleaseNotesResponseDto.class);
         assertThat(response.statusCode()).isEqualTo(200);
         assertThat(result.isFinalPage()).isFalse();
         assertThat(result.getReleaseNotes().size()).isEqualTo(10);

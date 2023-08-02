@@ -5,11 +5,13 @@ import lombok.Getter;
 import java.util.List;
 
 @Getter
-public class FindManuscriptsResponseDto {
+public class FindPagingManuscriptsResponseDto {
 
+    private final boolean finalPage;
     private final List<ManuscriptDto> manuscripts;
 
-    public FindManuscriptsResponseDto(List<ManuscriptDto> manuscripts) {
+    public FindPagingManuscriptsResponseDto(boolean finalPage, List<ManuscriptDto> manuscripts) {
+        this.finalPage = finalPage;
         this.manuscripts = manuscripts;
     }
 

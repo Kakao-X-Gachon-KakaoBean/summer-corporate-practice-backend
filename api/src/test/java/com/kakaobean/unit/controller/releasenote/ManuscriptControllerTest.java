@@ -3,13 +3,12 @@ package com.kakaobean.unit.controller.releasenote;
 
 import com.kakaobean.core.releasenote.application.dto.response.ManuscriptResponseDto;
 import com.kakaobean.core.releasenote.domain.repository.query.FindManuscriptResponseDto;
-import com.kakaobean.core.releasenote.domain.repository.query.FindManuscriptsResponseDto;
+import com.kakaobean.core.releasenote.domain.repository.query.FindPagingManuscriptsResponseDto;
 import com.kakaobean.releasenote.dto.request.ModifyManuscriptRequest;
 import com.kakaobean.releasenote.dto.request.RegisterManuscriptRequest;
 import com.kakaobean.unit.controller.ControllerTest;
 import com.kakaobean.unit.controller.security.WithMockUser;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
@@ -111,19 +110,19 @@ public class ManuscriptControllerTest extends ControllerTest {
     @WithMockUser
     void 릴리즈_노트_원고_전체_조회() throws Exception {
 
-        given(manuscriptQueryRepository.findByProjectId(Mockito.anyLong(), Mockito.anyInt()))
+        given(manuscriptQueryRepository.findByProjectIdWithPaging(Mockito.anyLong(), Mockito.anyInt()))
                 .willReturn(
-                        new FindManuscriptsResponseDto(
+                        new FindPagingManuscriptsResponseDto(
                                 true,
                                 List.of(
-                                        new FindManuscriptsResponseDto.ManuscriptDto(1L, "1.1V 릴리즈 노트", "1.1V"),
-                                        new FindManuscriptsResponseDto.ManuscriptDto(2L, "1.12V 릴리즈 노트", "1.2V")
+                                        new FindPagingManuscriptsResponseDto.ManuscriptDto(1L, "1.1V 릴리즈 노트", "1.1V"),
+                                        new FindPagingManuscriptsResponseDto.ManuscriptDto(2L, "1.12V 릴리즈 노트", "1.2V")
                                         )
                         )
                 );
 
         //when
-        ResultActions perform = mockMvc.perform(get("/manuscripts")
+        ResultActions perform = mockMvc.perform(get("/manuscripts/page")
                 .param("projectId", "3")
                 .param("page", "0")
                 .contentType(MediaType.APPLICATION_JSON)

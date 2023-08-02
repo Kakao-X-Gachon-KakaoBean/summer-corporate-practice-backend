@@ -34,7 +34,7 @@ public class ReleaseNoteAcceptanceTask {
                 .param("projectId", projectId)
                 .param("page", page)
                 .when()
-                .get("/release-notes")
+                .get("/release-notes/page")
                 .then().log().all()
                 .extract();
     }
