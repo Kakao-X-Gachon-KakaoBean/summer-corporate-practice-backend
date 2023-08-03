@@ -104,7 +104,7 @@ public class SprintQueryRepositoryImpl implements SprintQueryRepository {
                         )
                 )
                 .from(task)
-                .join(member)
+                .leftJoin(member)
                 .on(task.workerId.eq(member.id))
                 .where(task.sprintId.eq(sprintId))
                 .fetch();
