@@ -14,7 +14,7 @@ public class RemoveProjectMemberEventHandler {
 
     private final ProjectMemberRepository projectMemberRepository;
 
-    @Async
+//    @Async
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @TransactionalEventListener(RemovedProjectEvent.class)
     public void handle(RemovedProjectEvent event){

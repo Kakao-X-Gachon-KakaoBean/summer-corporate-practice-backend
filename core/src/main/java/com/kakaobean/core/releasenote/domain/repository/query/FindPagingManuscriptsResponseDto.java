@@ -1,17 +1,17 @@
 package com.kakaobean.core.releasenote.domain.repository.query;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
-public class FindManuscriptsResponseDto {
+public class FindPagingManuscriptsResponseDto {
 
-    private List<ManuscriptDto> manuscripts;
+    private final boolean finalPage;
+    private final List<ManuscriptDto> manuscripts;
 
-    public FindManuscriptsResponseDto(List<ManuscriptDto> manuscripts) {
+    public FindPagingManuscriptsResponseDto(boolean finalPage, List<ManuscriptDto> manuscripts) {
+        this.finalPage = finalPage;
         this.manuscripts = manuscripts;
     }
 

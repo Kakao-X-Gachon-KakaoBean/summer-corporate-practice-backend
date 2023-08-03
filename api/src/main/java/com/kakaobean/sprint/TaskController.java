@@ -2,6 +2,9 @@ package com.kakaobean.sprint;
 
 import com.kakaobean.common.dto.CommandSuccessResponse;
 import com.kakaobean.core.sprint.application.TaskService;
+import com.kakaobean.core.sprint.domain.repository.query.FindSprintResponseDto;
+import com.kakaobean.core.sprint.domain.repository.query.FindTaskResponseDto;
+import com.kakaobean.core.sprint.domain.repository.query.TaskQueryRepository;
 import com.kakaobean.security.UserPrincipal;
 import com.kakaobean.sprint.dto.request.ChangeWorkStatusRequest;
 import com.kakaobean.sprint.dto.request.ModifyTaskRequest;
@@ -20,6 +23,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class TaskController {
 
     private final TaskService taskService;
+    private final TaskQueryRepository taskQueryRepository;
 
     @PostMapping("/tasks")
     public ResponseEntity registerTask(@AuthenticationPrincipal UserPrincipal userPrincipal,
@@ -57,5 +61,11 @@ public class TaskController {
                                        @RequestBody ChangeWorkStatusRequest request){
         taskService.changeStatus(request.toServiceDto(userPrincipal.getId(), taskId));
         return new ResponseEntity(CommandSuccessResponse.from("작업 상태가 변경되었습니다."), OK);
+    }
+
+    @GetMapping("/tasks/{taskId}")
+    public ResponseEntity findTask(@PathVariable Long taskId){
+        FindTaskResponseDto response = taskQueryRepository.findTask(taskId);
+        return new ResponseEntity(response, OK);
     }
 }

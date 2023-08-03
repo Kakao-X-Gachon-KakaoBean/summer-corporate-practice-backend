@@ -117,7 +117,7 @@ public class ProjectServiceTest extends IntegrationTest {
         result.isInstanceOf(NotProjectAdminException.class);
     }
 
-    // 비동기 때문에 테스트에 실패하는 경우가 있음
+    // 비동기 테스트 적용X
     @Test
     void 어드민이_프로젝트_삭제에_성공한다() throws InterruptedException {
         //given

@@ -14,7 +14,7 @@ public class RemoveIssueEventHandler {
 
     private final IssueRepository issueRepository;
 
-    @Async
+//    @Async
     @Transactional
     @TransactionalEventListener(RemovedProjectEvent.class)
     public void handler(RemovedProjectEvent event){
