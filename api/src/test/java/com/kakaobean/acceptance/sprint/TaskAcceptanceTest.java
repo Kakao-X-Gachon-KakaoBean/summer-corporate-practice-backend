@@ -12,6 +12,7 @@ import com.kakaobean.core.sprint.domain.Task;
 import com.kakaobean.core.sprint.domain.WorkStatus;
 import com.kakaobean.core.sprint.domain.repository.SprintRepository;
 import com.kakaobean.core.sprint.domain.repository.TaskRepository;
+import com.kakaobean.core.sprint.domain.repository.query.FindAllSprintResponseDto;
 import com.kakaobean.member.dto.RegisterMemberRequest;
 import com.kakaobean.project.dto.request.InviteProjectMemberRequest;
 import com.kakaobean.project.dto.request.RegisterProjectMemberRequest;
@@ -227,10 +228,36 @@ public class TaskAcceptanceTest extends AcceptanceTest {
         //when
         //테스크 작업 상태 변경
         ChangeWorkStatusRequest request = new ChangeWorkStatusRequest("complete");
-        ExtractableResponse response = TaskAcceptanceTask.changeWorkStatusTask(task.getId(), request);
+        ExtractableResponse response = TaskAcceptanceTask.changeWorkStatusTaskTask(task.getId(), request);
 
         //then
         assertThat(response.statusCode()).isEqualTo(200);
         assertThat(taskRepository.findById(task.getId()).get().getWorkStatus()).isEqualTo(WorkStatus.COMPLETE);
+    }
+
+    @Test
+    void 테스크_조회(){
+
+        //프로젝트 생성
+        RegisterProjectRequest projectRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
+        ProjectAcceptanceTask.registerProjectTask(projectRequest);
+        Project project = projectRepository.findAll().get(0);
+
+        //스프린트 생성
+        RegisterSprintRequest sprintRequest = RegisterSprintRequestFactory.createWithId(project.getId());
+        SprintAcceptanceTask.registerSprintTask(sprintRequest);
+        Sprint sprint = sprintRepository.findAll().get(0);
+
+        //테스크 생성
+        RegisterTaskRequest taskRequest = RegisterTaskRequestFactory.createWithId(sprint.getId());
+        TaskAcceptanceTask.registerTaskTask(taskRequest);
+        Task task = taskRepository.findAll().get(0);
+
+        //테스크 조회
+        //when
+        ExtractableResponse response = TaskAcceptanceTask.findTaskTask(task.getId());
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(200);
     }
 }

@@ -1,6 +1,5 @@
 package com.kakaobean.acceptance.sprint;
 
-import com.kakaobean.sprint.dto.request.ChangeWorkStatusRequest;
 import com.kakaobean.sprint.dto.request.ModifySprintRequest;
 import com.kakaobean.sprint.dto.request.RegisterSprintRequest;
 import io.restassured.RestAssured;
@@ -52,7 +51,7 @@ public class SprintAcceptanceTask {
                 .extract();
     }
 
-    public static ExtractableResponse findAllSprints(Long projectId){
+    public static ExtractableResponse findAllSprintsTask(Long projectId){
         return RestAssured
                 .given()
                 .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
@@ -61,6 +60,18 @@ public class SprintAcceptanceTask {
                 .param("projectId", projectId)
                 .when()
                 .get("/sprints")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse findSprintTask(Long sprintId){
+        return RestAssured
+                .given()
+                .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
+                .accept(APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
+                .when()
+                .get("/sprints/{sprintId}", sprintId)
                 .then().log().all()
                 .extract();
     }
