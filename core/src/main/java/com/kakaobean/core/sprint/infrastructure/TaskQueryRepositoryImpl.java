@@ -31,7 +31,7 @@ public class TaskQueryRepositoryImpl implements TaskQueryRepository {
                         )
                 )
                 .from(task)
-                .join(member)
+                .leftJoin(member)
                 .on(task.workerId.eq(member.id))
                 .where(task.id.eq(taskId))
                 .fetchFirst();
