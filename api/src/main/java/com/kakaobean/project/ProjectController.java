@@ -2,7 +2,7 @@ package com.kakaobean.project;
 
 import com.kakaobean.common.dto.CommandSuccessResponse;
 import com.kakaobean.core.project.application.ProjectService;
-import com.kakaobean.core.project.application.dto.response.FindProjectMemberResponseDto;
+import com.kakaobean.core.project.application.dto.response.FindProjectInfoResponseDto;
 import com.kakaobean.core.project.application.dto.response.FindProjectResponseDto;
 import com.kakaobean.core.project.application.dto.response.RegisterProjectResponseDto;
 import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
@@ -56,4 +56,9 @@ public class ProjectController {
         return new ResponseEntity(CommandSuccessResponse.from("프로젝트가 삭제 되었습니다."), OK);
     }
 
+    @GetMapping("/projects/{projectId}")
+    public ResponseEntity findProjectMembers(@PathVariable Long projectId){
+        FindProjectInfoResponseDto response = projectQueryRepository.findProject(projectId);
+        return new ResponseEntity(response, OK);
+    }
 }

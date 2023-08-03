@@ -5,6 +5,7 @@ import com.kakaobean.core.project.application.dto.response.RegisterProjectRespon
 import com.kakaobean.project.dto.request.ModifyProjectRequest;
 import com.kakaobean.project.dto.request.RegisterProjectRequest;
 import com.kakaobean.unit.controller.ControllerTest;
+import com.kakaobean.unit.controller.factory.project.FindProjectInfoResponseDtoFactory;
 import com.kakaobean.unit.controller.factory.project.FindProjectResponseDtoFactory;
 import com.kakaobean.unit.controller.security.WithMockUser;
 import org.junit.jupiter.api.Test;
@@ -14,11 +15,11 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentRequest;
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentResponse;
+import static com.kakaobean.unit.controller.factory.project.FindProjectInfoResponseDtoFactory.create;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
-import static org.springframework.restdocs.payload.JsonFieldType.STRING;
+import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -143,6 +144,38 @@ public class ProjectControllerTest extends ControllerTest {
                 responseFields(
                         fieldWithPath("message").type(STRING).description("프로젝트가 삭제 되었습니다.")
                 )
+        ));
+    }
+
+    @Test
+    @WithMockUser
+    void 프로젝트_전체_조회_api_테스트() throws Exception{
+        // given
+        given(projectQueryRepository.findProject(Mockito.anyLong())).willReturn(create());
+
+        // when
+        ResultActions perform = mockMvc.perform(get("/projects/{projectId}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        // then
+        perform.andDo(print());
+        perform.andExpect(status().is2xxSuccessful());
+        perform.andDo(document("find_project_info",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                pathParameters(
+                        parameterWithName("projectId").description("조회할 프로젝트 id")
+                ),
+                responseFields(
+                        fieldWithPath("projectTitle").type(STRING).description("프로젝트 멤버 id"),
+                        fieldWithPath("projectContent").type(STRING).description("프로젝트 멤버 id"),
+                        fieldWithPath("projectMembers").type(ARRAY).description("프로젝트 멤버 리스트"),
+                        fieldWithPath("projectMembers[].projectMemberId").type(NUMBER).description("프로젝트 멤버 id"),
+                        fieldWithPath("projectMembers[].projectMemberName").type(STRING).description("프로젝트 멤버 이름"),
+                        fieldWithPath("projectMembers[].projectMemberEmail").type(STRING).description("프로젝트 멤버 이메일"),
+                        fieldWithPath("projectMembers[].projectMemberRole").type(STRING).description("프로젝트 멤버 역할")                )
         ));
     }
 }
