@@ -3,6 +3,7 @@ package com.kakaobean.releasenote;
 import com.kakaobean.common.dto.CommandSuccessResponse;
 import com.kakaobean.core.releasenote.application.ReleaseNoteService;
 import com.kakaobean.core.releasenote.domain.repository.query.FindReleaseNoteResponseDto;
+import com.kakaobean.core.releasenote.domain.repository.query.FindPagingReleaseNotesResponseDto;
 import com.kakaobean.core.releasenote.domain.repository.query.FindReleaseNotesResponseDto;
 import com.kakaobean.core.releasenote.domain.repository.query.ReleaseNoteQueryRepository;
 import com.kakaobean.core.releasenote.exception.NotExistsReleaseNoteException;
@@ -32,14 +33,20 @@ public class ReleaseNoteController {
         return new ResponseEntity(CommandSuccessResponse.from("릴리즈 노트 등록에 성공했습니다"), CREATED);
     }
 
-    @GetMapping("/release-notes")
+    @GetMapping("/release-notes/page")
     public ResponseEntity findReleaseNotes(@RequestParam Long projectId, @RequestParam Integer page) {
-        FindReleaseNotesResponseDto response = releaseNoteQueryRepository.findByProjectId(projectId, page);
+        FindPagingReleaseNotesResponseDto response = releaseNoteQueryRepository.findByProjectId(projectId, page);
+        return new ResponseEntity(response, OK);
+    }
+
+    @GetMapping("/release-notes")
+    public ResponseEntity findReleaseNotes(@RequestParam Long projectId) {
+        FindReleaseNotesResponseDto response = releaseNoteQueryRepository.findAllByProjectId(projectId);
         return new ResponseEntity(response, OK);
     }
 
     @GetMapping("/release-notes/{releaseNoteId}")
-    public ResponseEntity findReleaseNotes(@PathVariable Long releaseNoteId) {
+    public ResponseEntity findReleaseNote(@PathVariable Long releaseNoteId) {
         FindReleaseNoteResponseDto response = releaseNoteQueryRepository.findById(releaseNoteId)
                 .orElseThrow(NotExistsReleaseNoteException::new);
         return new ResponseEntity(response, OK);

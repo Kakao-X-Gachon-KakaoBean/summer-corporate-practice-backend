@@ -5,6 +5,7 @@ import com.kakaobean.core.releasenote.application.ManuscriptService;
 import com.kakaobean.core.releasenote.application.dto.response.ManuscriptResponseDto;
 import com.kakaobean.core.releasenote.domain.repository.query.FindManuscriptResponseDto;
 import com.kakaobean.core.releasenote.domain.repository.query.FindManuscriptsResponseDto;
+import com.kakaobean.core.releasenote.domain.repository.query.FindPagingManuscriptsResponseDto;
 import com.kakaobean.core.releasenote.domain.repository.query.ManuscriptQueryRepository;
 import com.kakaobean.core.releasenote.exception.NotExistsManuscriptException;
 import com.kakaobean.releasenote.dto.request.ModifyManuscriptRequest;
@@ -38,9 +39,15 @@ public class ManuscriptController {
         return new ResponseEntity(response, HttpStatus.OK);
     }
 
-    @GetMapping("/manuscripts")
+    @GetMapping("/manuscripts/page")
     public ResponseEntity findManuscripts(@RequestParam Long projectId, @RequestParam Integer page){
-        FindManuscriptsResponseDto response = manuscriptQueryRepository.findByProjectId(projectId, page);
+        FindPagingManuscriptsResponseDto response = manuscriptQueryRepository.findByProjectIdWithPaging(projectId, page);
+        return new ResponseEntity(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/manuscripts")
+    public ResponseEntity findManuscripts(@RequestParam Long projectId){
+        FindManuscriptsResponseDto response = manuscriptQueryRepository.findAllByProjectId(projectId);
         return new ResponseEntity(response, HttpStatus.OK);
     }
 

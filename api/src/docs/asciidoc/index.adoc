@@ -67,14 +67,16 @@
 
 * link:/docs/release_note/deploy_release_note.html[릴리즈 노트 배포 API, window=_blank ]
 * link:/docs/release_note/find_release_note.html[릴리즈 노트 단건 조회 API, window=_blank ]
-* link:/docs/release_note/find_release_notes.html[페이징을 사용한 릴리즈 노트 조회 API, window=_blank ]
+* link:/docs/release_note/find_release_notes_with_paging.html[페이징을 사용한 릴리즈 노트 조회 API, window=_blank ]
+* link:/docs/release_note/find_release_notes.html[릴리즈 노트 전체 조회 API, window=_blank ]
 
 
 == 릴리즈 노트 원고 API
 
 * link:/docs/release_note/register_manuscript.html[릴리즈 노트 원고 생성 API, window=_blank ]
 * link:/docs/release_note/find_manuscript.html[릴리즈 노트 원고 단건 조회 API, window=_blank ]
-* link:/docs/release_note/find_manuscripts.html[페이징 적용 릴리즈 노트 원고 조회 API, window=_blank ]
+* link:/docs/release_note/find_manuscripts_with_paging.html[페이징 적용 릴리즈 노트 원고 조회 API, window=_blank ]
+* link:/docs/release_note/find_manuscripts.html[전체 릴리즈 노트 원고 조회 API, window=_blank ]
 * link:/docs/release_note/has_right_to_modify_manuscript.html[릴리즈 노트 원고 수정 권한 획득 API, window=_blank ]
 * link:/docs/release_note/modify_manuscript.html[릴리즈 노트 원고 수정 API, window=_blank ]
 * link:/docs/release_note/delete_manuscript.html[릴리즈 노트 원고 삭제 API, window=_blank ]
@@ -84,8 +86,11 @@
 * link:/docs/sprint/register_sprint.html[스프린트 생성 API, window=_blank ]
 * link:/docs/sprint/modify_sprint.html[스프린트 수정 API, window=_blank ]
 * link:/docs/sprint/remove_sprint.html[스프린트 삭제 API, window=_blank ]
+* link:/docs/sprint/find_all_sprints.html[스프린트 전체 조회 API, window=_blank ]
+* link:/docs/sprint/find_sprint.html[스프린트 개별 조회 API, window=_blank ]
 * link:/docs/sprint/register_task.html[테스크 생성 API, window=_blank ]
 * link:/docs/sprint/modify_task.html[테스크 수정 API, window=_blank ]
 * link:/docs/sprint/remove_task.html[테스크 삭제 API, window=_blank ]
 * link:/docs/sprint/assign_task.html[테스크 할당 API, window=_blank ]
-* link:/docs/sprint/change_work_status.html[테스크 작업 상태 변 API, window=_blank ]
+* link:/docs/sprint/change_work_status.html[테스크 작업 상태 변경 API, window=_blank ]
+* link:/docs/sprint/find_task.html[테스크 개별 조회 API, window=_blank ]

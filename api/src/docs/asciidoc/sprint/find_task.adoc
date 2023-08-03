@@ -1,0 +1,13 @@
+= 테스크 별개 조회
+
+== 요청
+
+include::{snippets}/find_task/http-request.adoc[]
+
+include::{snippets}/find_task/path-parameters.adoc[]
+
+== 응답
+
+include::{snippets}/find_task/http-response.adoc[]
+
+include::{snippets}/find_task/response-fields.adoc[]

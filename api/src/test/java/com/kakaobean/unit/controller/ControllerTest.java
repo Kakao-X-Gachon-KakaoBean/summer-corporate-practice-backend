@@ -20,6 +20,8 @@ import com.kakaobean.core.releasenote.domain.repository.query.ManuscriptQueryRep
 import com.kakaobean.core.releasenote.domain.repository.query.ReleaseNoteQueryRepository;
 import com.kakaobean.core.sprint.application.SprintService;
 import com.kakaobean.core.sprint.application.TaskService;
+import com.kakaobean.core.sprint.domain.repository.query.SprintQueryRepository;
+import com.kakaobean.core.sprint.domain.repository.query.TaskQueryRepository;
 import com.kakaobean.independentlysystem.image.ImageService;
 import com.kakaobean.issue.CommentController;
 import com.kakaobean.issue.IssueController;
@@ -134,4 +136,9 @@ public abstract class ControllerTest {
     @MockBean
     protected CommentService commentService;
 
+    @MockBean
+    protected SprintQueryRepository sprintQueryRepository;
+
+    @MockBean
+    protected TaskQueryRepository taskQueryRepository;
 }
