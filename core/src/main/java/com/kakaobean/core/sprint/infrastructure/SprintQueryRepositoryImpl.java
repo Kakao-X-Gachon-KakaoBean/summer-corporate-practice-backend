@@ -1,17 +1,14 @@
 package com.kakaobean.core.sprint.infrastructure;
 
-import com.kakaobean.core.sprint.domain.repository.query.FindAllSprintResponseDto;
-import com.kakaobean.core.sprint.domain.repository.query.SprintQueryRepository;
-import com.kakaobean.core.sprint.domain.repository.query.SprintsDto;
-import com.kakaobean.core.sprint.domain.repository.query.TasksDto;
+import com.kakaobean.core.sprint.domain.repository.query.*;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import static com.kakaobean.core.member.domain.QMember.member;
 import static com.kakaobean.core.sprint.domain.QSprint.sprint;
 import static com.kakaobean.core.sprint.domain.QTask.task;
 
@@ -47,7 +44,7 @@ public class SprintQueryRepositoryImpl implements SprintQueryRepository {
     /**
      * 각 스프린트의 대한 테스크 Dto를 생성한다.
      */
-    private List<SprintsDto> findAllTasksBySprintId(List<SprintsDto> sprintsDto){
+    private List<SprintsDto> findAllTasksBySprintId(List<SprintsDto> sprintsDto) {
 
         for (SprintsDto dto : sprintsDto) {
 
@@ -68,4 +65,49 @@ public class SprintQueryRepositoryImpl implements SprintQueryRepository {
 
         return sprintsDto;
     }
+
+    /**
+     * 스프린트 개별 조회
+     */
+    @Override
+    public FindSprintResponseDto findSprintById(Long sprintId) {
+
+        FindSprintResponseDto result = queryFactory
+                .select(
+                        Projections.constructor(
+                                FindSprintResponseDto.class,
+                                sprint.title,
+                                sprint.description,
+                                sprint.startDate,
+                                sprint.endDate
+                        )
+                )
+                .from(sprint)
+                .where(sprint.id.eq(sprintId))
+                .fetchFirst();
+
+        result.getTasks().addAll(findTaskBySprintId(sprintId));
+
+        return result;
+    }
+
+    private List<FindSprintResponseDto.TaskDto> findTaskBySprintId(Long sprintId) {
+        return queryFactory
+                .select(
+                        Projections.constructor(
+                                FindSprintResponseDto.TaskDto.class,
+                                task.title,
+                                task.workStatus,
+                                task.workerId,
+                                member.name,
+                                member.thumbnailImg
+                        )
+                )
+                .from(task)
+                .join(member)
+                .on(task.workerId.eq(member.id))
+                .where(task.sprintId.eq(sprintId))
+                .fetch();
+    }
+
 }
