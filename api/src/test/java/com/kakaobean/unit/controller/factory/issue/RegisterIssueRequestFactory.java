@@ -9,7 +9,8 @@ public class RegisterIssueRequestFactory {
     public static RegisterIssueRequest create(){
         return new RegisterIssueRequest(
                 "이슈 제목",
-                "이슈 내용"
+                "이슈 내용",
+                1L
         );
     }
 }

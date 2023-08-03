@@ -39,7 +39,7 @@ public class CommentAcceptanceTest extends AcceptanceTest {
 
         ////이슈 생성
         RegisterIssueRequest issueRequest = RegisterIssueRequestFactory.create();
-        IssueAcceptanceTask.registerIssueTask(issueRequest, project.getId());
+        IssueAcceptanceTask.registerIssueTask(issueRequest);
         Issue issue = issueRepository.findAll().get(0);
 
         ////코멘트 생성

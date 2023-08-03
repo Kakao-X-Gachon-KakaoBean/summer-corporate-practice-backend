@@ -12,7 +12,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class IssueAcceptanceTask {
     private IssueAcceptanceTask() {}
 
-    public static ExtractableResponse registerIssueTask(RegisterIssueRequest request, Long projectId){
+    public static ExtractableResponse registerIssueTask(RegisterIssueRequest request){
         return RestAssured
                 .given()
                 .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
@@ -20,7 +20,7 @@ public class IssueAcceptanceTask {
                 .contentType(APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()
-                .post("/projects/{projectId}/issues", projectId)
+                .post("/issues")
                 .then().log().all()
                 .extract();
     }

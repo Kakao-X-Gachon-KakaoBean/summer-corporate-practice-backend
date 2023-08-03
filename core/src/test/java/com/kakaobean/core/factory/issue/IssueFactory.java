@@ -5,7 +5,7 @@ import com.kakaobean.core.issue.domain.Issue;
 public class IssueFactory {
     private IssueFactory() {}
 
-    public static Issue create(Long projectId){
+    public static Issue createIssue(Long projectId){
         return Issue.builder()
                 .id(1L)
                 .title("이슈 제목")

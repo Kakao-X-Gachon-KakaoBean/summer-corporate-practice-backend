@@ -1,9 +1,10 @@
 package com.kakaobean.core.issue.application;
 
 import com.kakaobean.core.issue.application.dto.request.RegisterCommentRequestDto;
-import com.kakaobean.core.issue.application.dto.response.RegisterCommentResponseDto;
 import com.kakaobean.core.issue.domain.Comment;
 import com.kakaobean.core.issue.domain.repository.CommentRepository;
+import com.kakaobean.core.issue.domain.repository.IssueRepository;
+import com.kakaobean.core.issue.exception.NotExistsIssueException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,11 +16,12 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
 
-    @Transactional(readOnly = false)
-    public RegisterCommentResponseDto registerComment(RegisterCommentRequestDto dto){
-        Comment comment = dto.toEntity();
-        commentRepository.save(comment);
+    private final IssueRepository issueRepository;
 
-        return new RegisterCommentResponseDto(comment.getCommentId());
+    @Transactional(readOnly = false)
+    public void registerComment(RegisterCommentRequestDto dto){
+        Comment comment = dto.toEntity();
+        issueRepository.findByIssueId(dto.getIssueId()).orElseThrow(NotExistsIssueException::new);
+        commentRepository.save(comment);
     }
 }

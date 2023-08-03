@@ -8,7 +8,8 @@ public class RegisterCommentRequestFactory {
 
     public static RegisterCommentRequest create(){
         return new RegisterCommentRequest(
-                "댓글 내용"
+                "댓글 내용",
+                1L
         );
     }
 }

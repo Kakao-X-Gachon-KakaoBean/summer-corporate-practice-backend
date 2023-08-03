@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @NoArgsConstructor
@@ -16,13 +17,17 @@ public class RegisterIssueRequest {
 
     private String content;
 
+    @NotNull
+    private Long projectId;
+
     @Builder
-    public RegisterIssueRequest(String title, String content){
+    public RegisterIssueRequest(String title, String content, Long projectId){
         this.title = title;
         this.content = content;
+        this.projectId = projectId;
     }
 
-    public RegisterIssueRequestDto toServiceDto(Long projectId, Long writerId){
+    public RegisterIssueRequestDto toServiceDto(Long writerId){
         return new RegisterIssueRequestDto(
                 projectId,
                 title,

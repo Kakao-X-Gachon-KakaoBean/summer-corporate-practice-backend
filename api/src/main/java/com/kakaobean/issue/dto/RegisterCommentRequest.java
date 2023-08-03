@@ -13,12 +13,15 @@ public class RegisterCommentRequest {
 
     private String content;
 
+    private Long issueId;
+
     @Builder
-    public RegisterCommentRequest(String content){
+    public RegisterCommentRequest(String content, Long issueId){
         this.content = content;
+        this.issueId = issueId;
     }
 
-    public RegisterCommentRequestDto toServiceDto(Long issueId, Long writerId){
+    public RegisterCommentRequestDto toServiceDto(Long writerId){
         return new RegisterCommentRequestDto(
                 issueId,
                 writerId,

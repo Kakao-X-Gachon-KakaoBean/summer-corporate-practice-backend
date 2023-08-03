@@ -2,14 +2,7 @@ package com.kakaobean.issue;
 
 import com.kakaobean.common.dto.CommandSuccessResponse;
 import com.kakaobean.core.issue.application.IssueService;
-import com.kakaobean.core.issue.application.dto.response.RegisterCommentResponseDto;
-import com.kakaobean.core.issue.application.dto.response.RegisterIssueResponseDto;
-import com.kakaobean.core.member.application.dto.response.RegisterMemberResponseDto;
-import com.kakaobean.core.project.application.dto.response.RegisterProjectResponseDto;
-import com.kakaobean.issue.dto.RegisterCommentRequest;
 import com.kakaobean.issue.dto.RegisterIssueRequest;
-import com.kakaobean.member.dto.ModifyMemberRequest;
-import com.kakaobean.member.dto.RegisterMemberRequest;
 import com.kakaobean.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,13 +20,11 @@ public class IssueController {
 
     private final IssueService issueService;
 
-    @PostMapping("/projects/{projectId}/issues")
-    //             ("/issues")
-    public ResponseEntity<RegisterIssueResponseDto> registerIssue(@Validated @RequestBody RegisterIssueRequest request,
-                                                                  @PathVariable Long projectId,
-                                                                  @AuthenticationPrincipal UserPrincipal userPrincipal){
-        RegisterIssueResponseDto res = issueService.registerIssue(request.toServiceDto(projectId, userPrincipal.getId()));
-        return new ResponseEntity(res, CREATED);
+    @PostMapping("/issues")
+    public ResponseEntity registerIssue(@Validated @RequestBody RegisterIssueRequest request,
+                                        @AuthenticationPrincipal UserPrincipal userPrincipal){
+        issueService.registerIssue(request.toServiceDto(userPrincipal.getId()));
+        return new ResponseEntity(CommandSuccessResponse.from("이슈가 생성되었습니다."), CREATED);
     }
 //    TODO:
 //     1. 이슈 생성

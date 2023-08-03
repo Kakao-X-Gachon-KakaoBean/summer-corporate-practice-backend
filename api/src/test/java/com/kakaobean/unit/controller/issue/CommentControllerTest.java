@@ -1,21 +1,15 @@
 package com.kakaobean.unit.controller.issue;
 
-import com.kakaobean.core.issue.application.dto.request.RegisterCommentRequestDto;
-import com.kakaobean.core.issue.application.dto.request.RegisterIssueRequestDto;
-import com.kakaobean.core.issue.application.dto.response.RegisterCommentResponseDto;
-import com.kakaobean.core.issue.application.dto.response.RegisterIssueResponseDto;
 import com.kakaobean.issue.dto.RegisterCommentRequest;
-import com.kakaobean.issue.dto.RegisterIssueRequest;
 import com.kakaobean.unit.controller.ControllerTest;
+import com.kakaobean.unit.controller.factory.issue.RegisterCommentRequestFactory;
 import com.kakaobean.unit.controller.security.WithMockUser;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentRequest;
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentResponse;
-import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
@@ -26,17 +20,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CommentControllerTest extends ControllerTest {
+
     @Test
     @WithMockUser
-    void 댓글_생성_api_테스트() throws Exception{
+    void 댓글_생성_테스트() throws Exception{
         // given
-        RegisterCommentRequest request = new RegisterCommentRequest("댓글 내용");
+        RegisterCommentRequest request = RegisterCommentRequestFactory.create();
         String requestBody = objectMapper.writeValueAsString(request);
-        given(commentService.registerComment(Mockito.any(RegisterCommentRequestDto.class)))
-                .willReturn(new RegisterCommentResponseDto(1L));
 
         // when
-        ResultActions perform = mockMvc.perform(post("/issues/{issueId}/comments", 1)
+        ResultActions perform = mockMvc.perform(post("/comments")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(requestBody)
@@ -49,10 +42,11 @@ public class CommentControllerTest extends ControllerTest {
                 getDocumentRequest(),
                 getDocumentResponse(),
                 requestFields(
-                        fieldWithPath("content").type(STRING).description("댓글 내용")
+                        fieldWithPath("content").type(STRING).description("댓글 내용"),
+                        fieldWithPath("issueId").type(NUMBER).description("이슈 id")
                 ),
                 responseFields(
-                        fieldWithPath("commentId").type(NUMBER).description("생성된 댓글 id")
+                        fieldWithPath("message").type(STRING).description("댓글이 생성되었습니다.")
                 )
         ));
     }

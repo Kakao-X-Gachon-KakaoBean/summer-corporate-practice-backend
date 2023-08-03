@@ -1,15 +1,8 @@
 package com.kakaobean.core.issue.application;
 
-import com.kakaobean.core.common.domain.BaseStatus;
-import com.kakaobean.core.issue.application.dto.request.RegisterCommentRequestDto;
 import com.kakaobean.core.issue.application.dto.request.RegisterIssueRequestDto;
-import com.kakaobean.core.issue.application.dto.response.RegisterCommentResponseDto;
-import com.kakaobean.core.issue.application.dto.response.RegisterIssueResponseDto;
-import com.kakaobean.core.issue.domain.Comment;
 import com.kakaobean.core.issue.domain.Issue;
-import com.kakaobean.core.issue.domain.repository.CommentRepository;
 import com.kakaobean.core.issue.domain.repository.IssueRepository;
-import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.exception.NotExistsProjectMemberException;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +18,12 @@ public class IssueService {
     private final ProjectMemberRepository projectMemberRepository;
 
     @Transactional(readOnly = false)
-    public RegisterIssueResponseDto registerIssue(RegisterIssueRequestDto dto) {
+    public void registerIssue(RegisterIssueRequestDto dto) {
         Issue issue = dto.toEntity();
         projectMemberRepository.findByMemberIdAndProjectId(dto.getWriterId(), dto.getProjectId()).
                 orElseThrow(NotExistsProjectMemberException::new);
         issueRepository.save(issue);
         //알림 필요 없으면 그냥 위 두 줄 합쳐도 됨.
 
-        return new RegisterIssueResponseDto(issue.getId());
     }
 }

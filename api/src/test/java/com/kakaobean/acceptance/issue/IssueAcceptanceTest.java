@@ -38,7 +38,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
         RegisterIssueRequest issueRequest = RegisterIssueRequestFactory.create();
 
         //when
-        ExtractableResponse response = IssueAcceptanceTask.registerIssueTask(issueRequest, project.getId());
+        ExtractableResponse response = IssueAcceptanceTask.registerIssueTask(issueRequest);
 
         //then
         assertThat(response.statusCode()).isEqualTo(201);
