@@ -49,8 +49,8 @@ public class TaskControllerTest extends ControllerTest {
                 getDocumentRequest(),
                 getDocumentResponse(),
                 requestFields(
-                        fieldWithPath("title").type(STRING).description("테스크 제목"),
-                        fieldWithPath("content").type(STRING).description("테스크 본문"),
+                        fieldWithPath("taskTitle").type(STRING).description("테스크 제목"),
+                        fieldWithPath("taskContent").type(STRING).description("테스크 본문"),
                         fieldWithPath("sprintId").type(NUMBER).description("테스크의 스프린트 id")
                 ),
                 responseFields(
@@ -83,8 +83,8 @@ public class TaskControllerTest extends ControllerTest {
                         parameterWithName("taskId").description("수정할 테스크의 id")
                 ),
                 requestFields(
-                        fieldWithPath("newTitle").type(STRING).description("수정된 테스크 제목"),
-                        fieldWithPath("newContent").type(STRING).description("수정된 테스크 본문"),
+                        fieldWithPath("taskTitle").type(STRING).description("수정된 테스크 제목"),
+                        fieldWithPath("taskContent").type(STRING).description("수정된 테스크 본문"),
                         fieldWithPath("sprintId").type(NUMBER).description("수정된 테스크의 스프린트 id")
                 ),
                 responseFields(
@@ -178,7 +178,7 @@ public class TaskControllerTest extends ControllerTest {
 
     @Test
     @WithMockUser
-    void 테스크_조회() throws Exception {
+    void 테스크_개별_조회() throws Exception {
         //given
         given(taskQueryRepository.findTask(Mockito.anyLong())).willReturn(FindTaskResponseDtoFactory.create());
 
@@ -200,7 +200,7 @@ public class TaskControllerTest extends ControllerTest {
                 responseFields(
                         fieldWithPath("taskTitle").type(STRING).description("테스크 제목"),
                         fieldWithPath("taskContent").type(STRING).description("테스크 설명"),
-                        fieldWithPath("taskWorkStatus").type(STRING).description("테스크 작업 상태"),
+                        fieldWithPath("workStatus").type(STRING).description("테스크 작업 상태"),
                         fieldWithPath("workerId").type(NUMBER).description("테스크 작업자 id"),
                         fieldWithPath("workerName").type(STRING).description("테스크 작업자 이름"),
                         fieldWithPath("workerThumbnailImg").type(STRING).description("테스크 작업자 프로필 이미지")

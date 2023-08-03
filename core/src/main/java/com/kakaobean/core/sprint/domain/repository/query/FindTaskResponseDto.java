@@ -10,15 +10,15 @@ public class FindTaskResponseDto {
 
     private String taskTitle;
     private String taskContent;
-    private WorkStatus taskWorkStatus;
+    private WorkStatus workStatus;
     private Long workerId;
     private String workerName;
     private String workerThumbnailImg;
 
-    public FindTaskResponseDto(String taskTitle, String taskContent, WorkStatus taskWorkStatus, Long workerId, String workerName, String workerThumbnailImg) {
+    public FindTaskResponseDto(String taskTitle, String taskContent, WorkStatus workStatus, Long workerId, String workerName, String workerThumbnailImg) {
         this.taskTitle = taskTitle;
         this.taskContent = taskContent;
-        this.taskWorkStatus = taskWorkStatus;
+        this.workStatus = workStatus;
         this.workerId = workerId;
         this.workerName = workerName;
         this.workerThumbnailImg = workerThumbnailImg;

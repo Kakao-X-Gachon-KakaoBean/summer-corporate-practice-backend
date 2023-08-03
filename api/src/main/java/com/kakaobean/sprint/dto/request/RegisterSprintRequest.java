@@ -13,10 +13,10 @@ import java.time.LocalDate;
 public class RegisterSprintRequest {
 
     @NotEmpty
-    private String title;
+    private String sprintTitle;
 
     @NotEmpty
-    private String description;
+    private String sprintDesc;
 
     @NotNull
     private Long projectId;
@@ -25,17 +25,17 @@ public class RegisterSprintRequest {
     private LocalDate startDate;
 
     @NotNull
-    private LocalDate endDate;
+    private LocalDate dueDate;
 
-    public RegisterSprintRequest(String title, String description, Long projectId, LocalDate startDate, LocalDate endDate) {
-        this.title = title;
-        this.description = description;
+    public RegisterSprintRequest(String sprintTitle, String sprintDesc, Long projectId, LocalDate startDate, LocalDate dueDate) {
+        this.sprintTitle = sprintTitle;
+        this.sprintDesc = sprintDesc;
         this.projectId = projectId;
         this.startDate = startDate;
-        this.endDate = endDate;
+        this.dueDate = dueDate;
     }
 
     public RegisterSprintRequestDto toServiceDto(Long memberId){
-        return new RegisterSprintRequestDto(title, description, projectId, startDate, endDate, memberId);
+        return new RegisterSprintRequestDto(sprintTitle, sprintDesc, projectId, startDate, dueDate, memberId);
     }
 }

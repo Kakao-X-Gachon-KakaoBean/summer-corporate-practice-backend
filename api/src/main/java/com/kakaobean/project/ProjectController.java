@@ -2,6 +2,7 @@ package com.kakaobean.project;
 
 import com.kakaobean.common.dto.CommandSuccessResponse;
 import com.kakaobean.core.project.application.ProjectService;
+import com.kakaobean.core.project.application.dto.response.FindProjectMemberResponseDto;
 import com.kakaobean.core.project.application.dto.response.FindProjectResponseDto;
 import com.kakaobean.core.project.application.dto.response.RegisterProjectResponseDto;
 import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
@@ -54,4 +55,5 @@ public class ProjectController {
         projectService.removeProject(userPrincipal.getId(), projectId);
         return new ResponseEntity(CommandSuccessResponse.from("프로젝트가 삭제 되었습니다."), OK);
     }
+
 }
