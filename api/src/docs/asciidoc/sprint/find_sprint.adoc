@@ -1,0 +1,13 @@
+= 스프린트 개별 조회
+
+== 요청
+
+include::{snippets}/find_sprint/http-request.adoc[]
+
+include::{snippets}/find_sprint/path-parameters.adoc[]
+
+== 응답
+
+include::{snippets}/find_sprint/http-response.adoc[]
+
+include::{snippets}/find_sprint/response-fields.adoc[]

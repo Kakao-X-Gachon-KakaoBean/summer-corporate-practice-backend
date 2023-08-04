@@ -2,6 +2,9 @@ package com.kakaobean.sprint;
 
 import com.kakaobean.common.dto.CommandSuccessResponse;
 import com.kakaobean.core.sprint.application.SprintService;
+import com.kakaobean.core.sprint.domain.repository.query.FindAllSprintResponseDto;
+import com.kakaobean.core.sprint.domain.repository.query.FindSprintResponseDto;
+import com.kakaobean.core.sprint.domain.repository.query.SprintQueryRepository;
 import com.kakaobean.security.UserPrincipal;
 import com.kakaobean.sprint.dto.request.ModifySprintRequest;
 import com.kakaobean.sprint.dto.request.RegisterSprintRequest;
@@ -19,6 +22,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class SprintController {
 
     private final SprintService sprintService;
+    private final SprintQueryRepository sprintQueryRepository;
 
     @PostMapping("/sprints")
     public ResponseEntity registerSprint(@AuthenticationPrincipal UserPrincipal userPrincipal,
@@ -40,4 +44,17 @@ public class SprintController {
                                        @PathVariable Long sprintId) {
         sprintService.removeSprint(userPrincipal.getId(), sprintId);
         return new ResponseEntity(CommandSuccessResponse.from("스프린트가 삭제되었습니다."), OK);
-    }}
+    }
+
+    @GetMapping("/sprints")
+    public ResponseEntity findAllSprints(@RequestParam Long projectId){
+        FindAllSprintResponseDto response = sprintQueryRepository.findAllByProjectId(projectId);
+        return new ResponseEntity(response, OK);
+    }
+
+    @GetMapping("/sprints/{sprintId}")
+    public ResponseEntity findSprint(@PathVariable Long sprintId){
+        FindSprintResponseDto response = sprintQueryRepository.findSprintById(sprintId);
+        return new ResponseEntity(response, OK);
+    }
+}

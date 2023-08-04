@@ -20,7 +20,7 @@ public class RemoveSprintEventHandler {
     private final SprintRepository sprintRepository;
     private final TaskRepository taskRepository;
 
-    @Async
+//    @Async
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @TransactionalEventListener(RemovedProjectEvent.class)
     public void handler(RemovedProjectEvent event){

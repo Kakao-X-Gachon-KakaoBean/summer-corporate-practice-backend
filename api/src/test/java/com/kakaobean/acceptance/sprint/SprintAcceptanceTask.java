@@ -50,4 +50,29 @@ public class SprintAcceptanceTask {
                 .then().log().all()
                 .extract();
     }
+
+    public static ExtractableResponse findAllSprintsTask(Long projectId){
+        return RestAssured
+                .given()
+                .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
+                .accept(APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
+                .param("projectId", projectId)
+                .when()
+                .get("/sprints")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse findSprintTask(Long sprintId){
+        return RestAssured
+                .given()
+                .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
+                .accept(APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
+                .when()
+                .get("/sprints/{sprintId}", sprintId)
+                .then().log().all()
+                .extract();
+    }
 }

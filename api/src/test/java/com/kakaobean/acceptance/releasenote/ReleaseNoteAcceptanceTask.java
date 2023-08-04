@@ -25,7 +25,7 @@ public class ReleaseNoteAcceptanceTask {
                 .extract();
     }
 
-    public static ExtractableResponse findReleaseNotesTask(Long projectId, Integer page){
+    public static ExtractableResponse findReleaseNotesTaskWithPaging(Long projectId, Integer page){
         return RestAssured
                 .given()
                 .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
@@ -34,7 +34,7 @@ public class ReleaseNoteAcceptanceTask {
                 .param("projectId", projectId)
                 .param("page", page)
                 .when()
-                .get("/release-notes")
+                .get("/release-notes/page")
                 .then().log().all()
                 .extract();
     }
@@ -47,6 +47,19 @@ public class ReleaseNoteAcceptanceTask {
                 .contentType(APPLICATION_JSON_VALUE)
                 .when()
                 .get("/release-notes/{releasenoteId}", releaseNoteId)
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse findReleaseNotesTask(Long projectId){
+        return RestAssured
+                .given()
+                .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
+                .accept(APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
+                .param("projectId", projectId)
+                .when()
+                .get("/release-notes")
                 .then().log().all()
                 .extract();
     }

@@ -1,0 +1,13 @@
+= 스프린트 전체 조회
+
+== 요청
+
+include::{snippets}/find_all_sprints/http-request.adoc[]
+
+include::{snippets}/find_all_sprints/request-parameters.adoc[]
+
+== 응답
+
+include::{snippets}/find_all_sprints/http-response.adoc[]
+
+include::{snippets}/find_all_sprints/response-fields.adoc[]
