@@ -23,7 +23,7 @@ public class Comment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentId;
+    private Long id;
 
     private Long issueId;
 
@@ -48,12 +48,12 @@ public class Comment extends BaseEntity {
      */
     @Builder
     public Comment(BaseStatus status,
-                 Long commentId,
+                 Long id,
                  Long issueId,
                  String content,
                  Long writerId) {
         super(BaseStatus.ACTIVE);
-        this.commentId = commentId;
+        this.id = id;
         this.issueId = issueId;
         this.content = content;
         this.writerId = writerId;

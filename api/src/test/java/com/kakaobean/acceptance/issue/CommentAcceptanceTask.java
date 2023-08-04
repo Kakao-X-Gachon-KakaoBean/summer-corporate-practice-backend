@@ -21,7 +21,7 @@ public class CommentAcceptanceTask {
                 .contentType(APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()
-                .post("/issues/{issueId}/comments", issueId)
+                .post("/comments")
                 .then().log().all()
                 .extract();
     }
