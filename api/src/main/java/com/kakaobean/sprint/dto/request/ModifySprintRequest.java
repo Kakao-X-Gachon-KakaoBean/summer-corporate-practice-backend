@@ -13,31 +13,30 @@ import java.time.LocalDate;
 public class ModifySprintRequest {
 
     @NotEmpty
-    private String newTitle;
+    private String sprintTitle;
 
     @NotEmpty
-    private String newDescription;
+    private String sprintDesc;
 
     @NotNull
-    private LocalDate newStartDate;
+    private LocalDate startDate;
 
     @NotNull
-    private LocalDate newEndDate;
+    private LocalDate dueDate;
 
-
-    public ModifySprintRequest(String newTitle, String newDescription, LocalDate newStartDate, LocalDate newEndDate) {
-        this.newTitle = newTitle;
-        this.newDescription = newDescription;
-        this.newStartDate = newStartDate;
-        this.newEndDate = newEndDate;
+    public ModifySprintRequest(String sprintTitle, String sprintDesc, LocalDate startDate, LocalDate dueDate) {
+        this.sprintTitle = sprintTitle;
+        this.sprintDesc = sprintDesc;
+        this.startDate = startDate;
+        this.dueDate = dueDate;
     }
 
     public ModifySprintRequestDto toServiceDto(Long adminId, Long sprintId){
         return new ModifySprintRequestDto(
-                newTitle,
-                newDescription,
-                newStartDate,
-                newEndDate,
+                sprintTitle,
+                sprintDesc,
+                startDate,
+                dueDate,
                 adminId,
                 sprintId
         );

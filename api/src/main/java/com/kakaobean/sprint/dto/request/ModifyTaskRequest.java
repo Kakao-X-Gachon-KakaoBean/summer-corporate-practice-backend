@@ -12,25 +12,25 @@ import javax.validation.constraints.NotNull;
 public class ModifyTaskRequest {
 
     @NotEmpty
-    private String newTitle;
+    private String taskTitle;
 
     @NotEmpty
-    private String newContent;
+    private String taskDesc;
 
     @NotNull
     private Long sprintId;
 
-    public ModifyTaskRequest(String newTitle, String newContent, Long sprintId) {
-        this.newTitle = newTitle;
-        this.newContent = newContent;
+    public ModifyTaskRequest(String taskTitle, String taskDesc, Long sprintId) {
+        this.taskTitle = taskTitle;
+        this.taskDesc = taskDesc;
         this.sprintId = sprintId;
     }
 
     public ModifyTaskRequestDto toServiceDto(Long adminId, Long taskId){
         return new ModifyTaskRequestDto(
                 taskId,
-                newTitle,
-                newContent,
+                taskTitle,
+                taskDesc,
                 sprintId,
                 adminId
         );

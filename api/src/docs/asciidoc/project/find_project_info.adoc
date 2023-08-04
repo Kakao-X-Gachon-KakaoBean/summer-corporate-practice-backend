@@ -1,0 +1,13 @@
+= 프로젝트 전체 정보 조회
+
+== 요청
+
+include::{snippets}/find_project_info/http-request.adoc[]
+
+include::{snippets}/find_project_info/path-parameters.adoc[]
+
+== 응답
+
+include::{snippets}/find_project_info/http-response.adoc[]
+
+include::{snippets}/find_project_info/response-fields.adoc[]
