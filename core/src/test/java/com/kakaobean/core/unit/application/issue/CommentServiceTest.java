@@ -5,7 +5,6 @@ import com.kakaobean.core.issue.application.dto.request.RegisterCommentRequestDt
 import com.kakaobean.core.issue.domain.Comment;
 import com.kakaobean.core.issue.domain.repository.CommentRepository;
 import com.kakaobean.core.issue.domain.repository.IssueRepository;
-import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.unit.UnitTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,6 @@ import org.mockito.Mockito;
 import java.util.Optional;
 
 import static com.kakaobean.core.factory.issue.IssueFactory.createIssue;
-import static com.kakaobean.core.factory.project.ProjectMemberFactory.createMember;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -42,7 +40,7 @@ public class CommentServiceTest extends UnitTest {
     @Test
     void 댓글_작성(){
         //given
-        given(issueRepository.findByIssueId(Mockito.anyLong())).willReturn(Optional.ofNullable(createIssue(3L)));
+        given(issueRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(createIssue(3L)));
 
         //when
         commentService.registerComment(new RegisterCommentRequestDto(1L, 2L,"댓글 내용"));
