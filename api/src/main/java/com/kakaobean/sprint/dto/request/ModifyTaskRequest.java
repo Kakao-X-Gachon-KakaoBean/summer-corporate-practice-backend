@@ -15,14 +15,14 @@ public class ModifyTaskRequest {
     private String taskTitle;
 
     @NotEmpty
-    private String taskContent;
+    private String taskDesc;
 
     @NotNull
     private Long sprintId;
 
-    public ModifyTaskRequest(String taskTitle, String taskContent, Long sprintId) {
+    public ModifyTaskRequest(String taskTitle, String taskDesc, Long sprintId) {
         this.taskTitle = taskTitle;
-        this.taskContent = taskContent;
+        this.taskDesc = taskDesc;
         this.sprintId = sprintId;
     }
 
@@ -30,7 +30,7 @@ public class ModifyTaskRequest {
         return new ModifyTaskRequestDto(
                 taskId,
                 taskTitle,
-                taskContent,
+                taskDesc,
                 sprintId,
                 adminId
         );

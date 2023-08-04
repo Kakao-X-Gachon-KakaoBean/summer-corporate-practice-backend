@@ -15,21 +15,21 @@ public class RegisterTaskRequest {
     private String taskTitle;
 
     @NotEmpty
-    private String taskContent;
+    private String taskDesc;
 
     @NotNull
     private Long sprintId;
 
-    public RegisterTaskRequest(String taskTitle, String taskContent, Long sprintId) {
+    public RegisterTaskRequest(String taskTitle, String taskDesc, Long sprintId) {
         this.taskTitle = taskTitle;
-        this.taskContent = taskContent;
+        this.taskDesc = taskDesc;
         this.sprintId = sprintId;
     }
 
     public RegisterTaskRequestDto toServiceDto(Long adminId) {
         return new RegisterTaskRequestDto(
                 taskTitle,
-                taskContent,
+                taskDesc,
                 sprintId,
                 adminId
         );
