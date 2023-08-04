@@ -50,7 +50,7 @@ public class TaskControllerTest extends ControllerTest {
                 getDocumentResponse(),
                 requestFields(
                         fieldWithPath("taskTitle").type(STRING).description("테스크 제목"),
-                        fieldWithPath("taskContent").type(STRING).description("테스크 본문"),
+                        fieldWithPath("taskDesc").type(STRING).description("테스크 본문"),
                         fieldWithPath("sprintId").type(NUMBER).description("테스크의 스프린트 id")
                 ),
                 responseFields(
@@ -84,7 +84,7 @@ public class TaskControllerTest extends ControllerTest {
                 ),
                 requestFields(
                         fieldWithPath("taskTitle").type(STRING).description("수정된 테스크 제목"),
-                        fieldWithPath("taskContent").type(STRING).description("수정된 테스크 본문"),
+                        fieldWithPath("taskDesc").type(STRING).description("수정된 테스크 본문"),
                         fieldWithPath("sprintId").type(NUMBER).description("수정된 테스크의 스프린트 id")
                 ),
                 responseFields(
@@ -199,7 +199,7 @@ public class TaskControllerTest extends ControllerTest {
                 ),
                 responseFields(
                         fieldWithPath("taskTitle").type(STRING).description("테스크 제목"),
-                        fieldWithPath("taskContent").type(STRING).description("테스크 설명"),
+                        fieldWithPath("taskDesc").type(STRING).description("테스크 설명"),
                         fieldWithPath("workStatus").type(STRING).description("테스크 작업 상태"),
                         fieldWithPath("workerId").type(NUMBER).description("테스크 작업자 id"),
                         fieldWithPath("workerName").type(STRING).description("테스크 작업자 이름"),
