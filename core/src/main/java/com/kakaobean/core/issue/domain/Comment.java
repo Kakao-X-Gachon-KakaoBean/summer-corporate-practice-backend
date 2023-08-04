@@ -1,10 +1,10 @@
 package com.kakaobean.core.issue.domain;
 
+
 import com.kakaobean.core.common.domain.BaseEntity;
 import com.kakaobean.core.common.domain.BaseStatus;
 import com.kakaobean.core.common.event.Events;
-import com.kakaobean.core.issue.domain.event.RegisterIssueEvent;
-import com.kakaobean.core.project.domain.event.ProjectRegisteredEvent;
+import com.kakaobean.core.issue.domain.event.RegisterCommentEvent;
 import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.SQLDelete;
@@ -17,32 +17,28 @@ import javax.persistence.Id;
 
 @Getter
 @Where(clause = "status = 'ACTIVE'")
-@SQLDelete(sql = "UPDATE issue SET status = 'INACTIVE' WHERE id = ?")
+@SQLDelete(sql = "UPDATE comment SET status = 'INACTIVE' WHERE id = ?")
 @Entity
-public class Issue extends BaseEntity {
+public class Comment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long commentId;
 
-    private Long projectId;
-
-    private String title;
+    private Long issueId;
 
     private String content;
 
     private Long writerId;
 
-    protected Issue(){}
+    protected Comment(){}
 
-    public Issue(BaseStatus status,
-                 Long projectId,
-                 String title,
+    public Comment(BaseStatus status,
+                 Long issueId,
                  String content,
                  Long writerId) {
         super(status);
-        this.projectId = projectId;
-        this.title = title;
+        this.issueId = issueId;
         this.content = content;
         this.writerId = writerId;
     }
@@ -51,20 +47,18 @@ public class Issue extends BaseEntity {
      * 테스트용
      */
     @Builder
-    public Issue(BaseStatus status,
-                 Long id,
-                 Long projectId,
-                 String title,
+    public Comment(BaseStatus status,
+                 Long commentId,
+                 Long issueId,
                  String content,
                  Long writerId) {
         super(BaseStatus.ACTIVE);
-        this.id = id;
-        this.projectId = projectId;
-        this.title = title;
+        this.commentId = commentId;
+        this.issueId = issueId;
         this.content = content;
         this.writerId = writerId;
     }
-    public void registered(Long issueId) {
-        Events.raise(new RegisterIssueEvent(issueId));
+    public void registered(Long commentId) {
+        Events.raise(new RegisterCommentEvent(commentId));
     }
 }
