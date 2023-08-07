@@ -16,7 +16,7 @@ public class FindSprintResponseDto {
     private String sprintDesc;
     private LocalDate startDate;
     private LocalDate dueDate;
-    private List<TaskDto> tasks = new ArrayList<>();
+    private List<TaskDto> children = new ArrayList<>();
 
     public FindSprintResponseDto(String sprintTitle, String sprintDesc, LocalDate startDate, LocalDate dueDate) {
         this.sprintTitle = sprintTitle;
@@ -44,11 +44,11 @@ public class FindSprintResponseDto {
 
 
     // 테스트용
-    public FindSprintResponseDto(String sprintTitle, String sprintDesc, LocalDate startDate, LocalDate dueDate, List<TaskDto> tasks) {
+    public FindSprintResponseDto(String sprintTitle, String sprintDesc, LocalDate startDate, LocalDate dueDate, List<TaskDto> children) {
         this.sprintTitle = sprintTitle;
         this.sprintDesc = sprintDesc;
         this.startDate = startDate;
         this.dueDate = dueDate;
-        this.tasks = tasks;
+        this.children = children;
     }
 }

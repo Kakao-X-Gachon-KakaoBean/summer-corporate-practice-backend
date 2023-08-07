@@ -33,7 +33,8 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                                 member.id,
                                 member.name,
                                 member.auth.email,
-                                projectMember.projectRole
+                                projectMember.projectRole,
+                                member.thumbnailImg
                         ))
                 .from(projectMember)
                 .join(member).on(member.id.eq(projectMember.memberId))

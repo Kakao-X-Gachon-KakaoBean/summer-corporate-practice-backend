@@ -58,7 +58,7 @@ public class ProjectControllerTest extends ControllerTest {
 
     @Test
     @WithMockUser
-    void 프로젝트_생성_api_테스트() throws Exception{
+    void 프로젝트_생성_api_테스트() throws Exception {
         // given
         RegisterProjectRequest request = new RegisterProjectRequest("프로젝트 이름", "프로젝트 설명");
         String requestBody = objectMapper.writeValueAsString(request);
@@ -91,7 +91,7 @@ public class ProjectControllerTest extends ControllerTest {
 
     @Test
     @WithMockUser
-    void 프로젝트_정보수정_api_테스트() throws Exception{
+    void 프로젝트_정보수정_api_테스트() throws Exception {
         // given
         ModifyProjectRequest request = new ModifyProjectRequest("새로운 프로젝트 제목", "새로운 프로젝트 설명");
         String requestBody = objectMapper.writeValueAsString(request);
@@ -124,7 +124,7 @@ public class ProjectControllerTest extends ControllerTest {
 
     @Test
     @WithMockUser
-    void 프로젝트_삭제_api_테스트() throws Exception{
+    void 프로젝트_삭제_api_테스트() throws Exception {
 
         // when
         ResultActions perform = mockMvc.perform(delete("/projects/{projectId}", 1L)
@@ -149,7 +149,7 @@ public class ProjectControllerTest extends ControllerTest {
 
     @Test
     @WithMockUser
-    void 프로젝트_전체_조회_api_테스트() throws Exception{
+    void 프로젝트_전체_조회_api_테스트() throws Exception {
         // given
         given(projectQueryRepository.findProject(Mockito.anyLong())).willReturn(create());
 
@@ -175,7 +175,10 @@ public class ProjectControllerTest extends ControllerTest {
                         fieldWithPath("projectMembers[].projectMemberId").type(NUMBER).description("프로젝트 멤버 id"),
                         fieldWithPath("projectMembers[].projectMemberName").type(STRING).description("프로젝트 멤버 이름"),
                         fieldWithPath("projectMembers[].projectMemberEmail").type(STRING).description("프로젝트 멤버 이메일"),
-                        fieldWithPath("projectMembers[].projectMemberRole").type(STRING).description("프로젝트 멤버 역할")                )
+                        fieldWithPath("projectMembers[].projectMemberRole").type(STRING).description("프로젝트 멤버 역할"),
+                        fieldWithPath("projectMembers[].memberThumbnailImg").type(STRING).description("프로젝트 멤버 썸네일 이미지")
+                )
         ));
+
     }
 }

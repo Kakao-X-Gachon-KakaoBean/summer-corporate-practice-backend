@@ -86,7 +86,7 @@ public class SprintQueryRepositoryImpl implements SprintQueryRepository {
                 .where(sprint.id.eq(sprintId))
                 .fetchFirst();
 
-        result.getTasks().addAll(findTaskBySprintId(sprintId));
+        result.getChildren().addAll(findTaskBySprintId(sprintId));
 
         return result;
     }

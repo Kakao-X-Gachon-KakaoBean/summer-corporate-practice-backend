@@ -7,8 +7,8 @@ public class RegisterCommentRequestDtoFactory {
 
     public static RegisterCommentRequestDto createWithId(Long issueId, Long writerId){
         return new RegisterCommentRequestDto(
-                writerId,
                 issueId,
+                writerId,
                 "댓글 내용"
         );
     }
