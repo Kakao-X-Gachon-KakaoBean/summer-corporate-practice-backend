@@ -3,6 +3,7 @@ package com.kakaobean.common;
 import com.kakaobean.common.dto.ApplicationExceptionResponse;
 import com.kakaobean.core.common.ApplicationException;
 
+import com.kakaobean.security.exception.AuthException;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.dao.DataAccessException;
@@ -31,6 +32,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApplicationExceptionResponse> handleApplicationException(ApplicationException e) {
         log.info(LOG_FORMAT, e.getClass().getSimpleName(), BAD_REQUEST, e.getMessage());
         ApplicationExceptionResponse exceptionResponse = new ApplicationExceptionResponse(e.getMessage(), e.getErrorCode(), e.getStatus());
+        return ResponseEntity.status(HttpStatus.valueOf(exceptionResponse.getStatus())).body(exceptionResponse);
+    }
+
+    @ExceptionHandler(AuthException.class)
+    public ResponseEntity<ApplicationExceptionResponse> handleAuthException(AuthException e) {
+        log.info(LOG_FORMAT, e.getClass().getSimpleName(), BAD_REQUEST, e.getMessage());
+        ApplicationExceptionResponse exceptionResponse = new ApplicationExceptionResponse(e.getMessage(), "A001", 401);
         return ResponseEntity.status(HttpStatus.valueOf(exceptionResponse.getStatus())).body(exceptionResponse);
     }
 

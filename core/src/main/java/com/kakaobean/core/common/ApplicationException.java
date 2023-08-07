@@ -3,7 +3,7 @@ package com.kakaobean.core.common;
 import lombok.Getter;
 
 @Getter
-public abstract class ApplicationException extends RuntimeException{
+public abstract class ApplicationException extends RuntimeException {
 
     private Integer status;
     private String errorCode;

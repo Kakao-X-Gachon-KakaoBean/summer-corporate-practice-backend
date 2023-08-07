@@ -17,19 +17,19 @@ public class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
     private final StringRedisTemplate redisTemplate;
     private final AppProperties appProperties;
 
-    public void save(Authentication authentication, String refreshToken){
+    public void save(String key, String refreshToken){
         long refreshTokenExpirationMsec = appProperties.getAuth().getRefreshTokenExpirationMsec();
-        redisTemplate.opsForValue().set(authentication.getName(), refreshToken, Duration.ofSeconds(refreshTokenExpirationMsec));
+        redisTemplate.opsForValue().set(key, refreshToken, Duration.ofSeconds(refreshTokenExpirationMsec));
     }
 
     @Override
-    public Optional<String> findByAuthentication(Authentication authentication) {
-        String refreshToken = redisTemplate.opsForValue().get(authentication.getName());
+    public Optional<String> findByAuthentication(String key) {
+        String refreshToken = redisTemplate.opsForValue().get(key);
         return Optional.ofNullable(refreshToken);
     }
 
     @Override
-    public void deleteByAuthentication(Authentication authentication) {
-        redisTemplate.delete(authentication.getName());
+    public void deleteByAuthentication(String key) {
+        redisTemplate.delete(key);
     }
 }
