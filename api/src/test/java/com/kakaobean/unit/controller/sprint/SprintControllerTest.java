@@ -52,11 +52,11 @@ public class SprintControllerTest extends ControllerTest {
                 getDocumentRequest(),
                 getDocumentResponse(),
                 requestFields(
-                        fieldWithPath("title").type(STRING).description("스프린트 제목"),
-                        fieldWithPath("description").type(STRING).description("스프린트 본문"),
+                        fieldWithPath("sprintTitle").type(STRING).description("스프린트 제목"),
+                        fieldWithPath("sprintDesc").type(STRING).description("스프린트 본문"),
                         fieldWithPath("projectId").type(NUMBER).description("스프린트 프로젝트 id"),
                         fieldWithPath("startDate").type(STRING).description("스프린트 시작 날짜"),
-                        fieldWithPath("endDate").type(STRING).description("스프린트 마감 날짜")
+                        fieldWithPath("dueDate").type(STRING).description("스프린트 마감 날짜")
                 ),
                 responseFields(
                         fieldWithPath("message").type(STRING).description("스프린트가 생성 되었습니다.")
@@ -88,10 +88,10 @@ public class SprintControllerTest extends ControllerTest {
                         parameterWithName("sprintId").description("수정할 스프린트의 id")
                 ),
                 requestFields(
-                        fieldWithPath("newTitle").type(STRING).description("수정된 스프린트 제목"),
-                        fieldWithPath("newDescription").type(STRING).description("수정된 스프린트 본문"),
-                        fieldWithPath("newStartDate").type(STRING).description("수정된 스프린트 시작 날짜"),
-                        fieldWithPath("newEndDate").type(STRING).description("수정된 스프린트 마감 날짜")
+                        fieldWithPath("sprintTitle").type(STRING).description("수정된 스프린트 제목"),
+                        fieldWithPath("sprintDesc").type(STRING).description("수정된 스프린트 본문"),
+                        fieldWithPath("startDate").type(STRING).description("수정된 스프린트 시작 날짜"),
+                        fieldWithPath("dueDate").type(STRING).description("수정된 스프린트 마감 날짜")
                 ),
                 responseFields(
                         fieldWithPath("message").type(STRING).description("스프린트가 수정 되었습니다.")
@@ -161,7 +161,7 @@ public class SprintControllerTest extends ControllerTest {
 
     @Test
     @WithMockUser
-    void 스프린트_조회() throws Exception {
+    void 스프린트_개별_조회() throws Exception {
         //given
         given(sprintQueryRepository.findSprintById(Mockito.anyLong())).willReturn(FindSprintResponseDtoFactory.create());
 
@@ -183,11 +183,11 @@ public class SprintControllerTest extends ControllerTest {
                 responseFields(
                         fieldWithPath("sprintTitle").type(STRING).description("스프린트 제목"),
                         fieldWithPath("sprintDesc").type(STRING).description("스프린트 설명"),
-                        fieldWithPath("sprintStartDate").type(STRING).description("스프린트 시작 날짜"),
-                        fieldWithPath("sprintDueDate").type(STRING).description("스프린트 마감 날짜"),
+                        fieldWithPath("startDate").type(STRING).description("스프린트 시작 날짜"),
+                        fieldWithPath("dueDate").type(STRING).description("스프린트 마감 날짜"),
                         fieldWithPath("tasks").type(ARRAY).description("테스크 목록"),
                         fieldWithPath("tasks[].taskTitle").type(STRING).description("테스크 제목"),
-                        fieldWithPath("tasks[].workerStatus").type(STRING).description("테스크 작업 상태"),
+                        fieldWithPath("tasks[].workStatus").type(STRING).description("테스크 작업 상태"),
                         fieldWithPath("tasks[].workerId").type(NUMBER).description("테스크 작업자 id"),
                         fieldWithPath("tasks[].workerName").type(STRING).description("테스크 작업자 이름"),
                         fieldWithPath("tasks[].workerThumbnailImg").type(STRING).description("테스크 작업자 프로필 이미지")

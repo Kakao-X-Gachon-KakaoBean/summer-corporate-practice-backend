@@ -64,7 +64,9 @@ public class ManuscriptQueryRepositoryImpl implements ManuscriptQueryRepository 
                                 manuscript.id,
                                 manuscript.title,
                                 manuscript.content,
-                                manuscript.version
+                                manuscript.version,
+                                manuscript.createdAt,
+                                manuscript.manuscriptStatus
                         )
                 )
                 .from(manuscript)

@@ -2,6 +2,7 @@ package com.kakaobean.unit.controller.releasenote;
 
 
 import com.kakaobean.core.releasenote.application.dto.response.ManuscriptResponseDto;
+import com.kakaobean.core.releasenote.domain.ManuscriptStatus;
 import com.kakaobean.core.releasenote.domain.repository.query.FindManuscriptResponseDto;
 import com.kakaobean.core.releasenote.domain.repository.query.FindManuscriptsResponseDto;
 import com.kakaobean.core.releasenote.domain.repository.query.FindPagingManuscriptsResponseDto;
@@ -79,7 +80,9 @@ public class ManuscriptControllerTest extends ControllerTest {
                         1L,
                         "1.1V 릴리즈 노트",
                         "내용..",
-                        "1.1"
+                        "1.1",
+                        "23. 8. 3. 오후 12:17",
+                        ManuscriptStatus.Modifiable
                 )));
 
         //when
@@ -102,7 +105,9 @@ public class ManuscriptControllerTest extends ControllerTest {
                         fieldWithPath("manuscriptId").type(NUMBER).description("릴리즈 노트 원고 id"),
                         fieldWithPath("manuscriptTitle").type(STRING).description("릴리즈 노트 원고 제목"),
                         fieldWithPath("manuscriptContent").type(STRING).description("릴리즈 노트 원고 내용"),
-                        fieldWithPath("manuscriptVersion").type(STRING).description("릴리즈 노트 원고 버전")
+                        fieldWithPath("manuscriptVersion").type(STRING).description("릴리즈 노트 원고 버전"),
+                        fieldWithPath("createdAt").type(STRING).description("릴리즈 노트 생성 날짜"),
+                        fieldWithPath("manuscriptStatus").type(STRING).description("릴리즈 노트 수정 상태")
                 )
         ));
     }

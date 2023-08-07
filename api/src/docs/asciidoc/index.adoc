@@ -60,6 +60,7 @@
 * link:/docs/project/modify_project_members_roles.html[프로젝트 멤버 역할(권한) 수정 API, window=_blank ]
 * link:/docs/project/modify_project_info.html[프로젝트 정보(제목&내용) 수정 API, window=_blank ]
 * link:/docs/project/remove_project.html[프로젝트 삭제 API, window=_blank ]
+* link:/docs/project/find_project_info.html[프로젝트 전체 정보 조회 API, window=_blank ]
 
 == 공통 API
 

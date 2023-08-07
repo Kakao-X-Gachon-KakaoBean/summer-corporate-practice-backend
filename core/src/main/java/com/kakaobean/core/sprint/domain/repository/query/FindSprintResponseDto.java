@@ -14,41 +14,41 @@ public class FindSprintResponseDto {
 
     private String sprintTitle;
     private String sprintDesc;
-    private LocalDate sprintStartDate;
-    private LocalDate sprintDueDate;
+    private LocalDate startDate;
+    private LocalDate dueDate;
     private List<TaskDto> tasks = new ArrayList<>();
 
-    public FindSprintResponseDto(String sprintTitle, String sprintDesc, LocalDate sprintStartDate, LocalDate sprintDueDate) {
+    public FindSprintResponseDto(String sprintTitle, String sprintDesc, LocalDate startDate, LocalDate dueDate) {
         this.sprintTitle = sprintTitle;
         this.sprintDesc = sprintDesc;
-        this.sprintStartDate = sprintStartDate;
-        this.sprintDueDate = sprintDueDate;
+        this.startDate = startDate;
+        this.dueDate = dueDate;
     }
 
     @Getter
     public static class TaskDto{
         private final String taskTitle;
-        private final WorkStatus workerStatus;
+        private final WorkStatus workStatus;
         private final Long workerId;
         private final String workerName;
         private final String workerThumbnailImg;
 
-        public TaskDto(String taskTitle, WorkStatus workerStatus, Long workerId, String workerName, String workerThumbnailImg) {
+        public TaskDto(String taskTitle, WorkStatus workStatus, Long workerId, String workerName, String workerThumbnailImg) {
             this.taskTitle = taskTitle;
             this.workerId = workerId;
             this.workerName = workerName;
-            this.workerStatus = workerStatus;
+            this.workStatus = workStatus;
             this.workerThumbnailImg = workerThumbnailImg;
         }
     }
 
 
     // 테스트용
-    public FindSprintResponseDto(String sprintTitle, String sprintDesc, LocalDate sprintStartDate, LocalDate sprintDueDate, List<TaskDto> tasks) {
+    public FindSprintResponseDto(String sprintTitle, String sprintDesc, LocalDate startDate, LocalDate dueDate, List<TaskDto> tasks) {
         this.sprintTitle = sprintTitle;
         this.sprintDesc = sprintDesc;
-        this.sprintStartDate = sprintStartDate;
-        this.sprintDueDate = sprintDueDate;
+        this.startDate = startDate;
+        this.dueDate = dueDate;
         this.tasks = tasks;
     }
 }

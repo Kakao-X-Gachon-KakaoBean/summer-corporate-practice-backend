@@ -5,6 +5,8 @@ import com.kakaobean.common.ImageController;
 import com.kakaobean.config.AppProperties;
 import com.kakaobean.config.SecurityConfig;
 import com.kakaobean.config.WebMvcConfig;
+import com.kakaobean.core.issue.application.CommentService;
+import com.kakaobean.core.issue.application.IssueService;
 import com.kakaobean.core.member.application.MemberProvider;
 import com.kakaobean.core.member.domain.repository.MemberRepository;
 import com.kakaobean.core.member.application.MemberService;
@@ -21,6 +23,8 @@ import com.kakaobean.core.sprint.application.TaskService;
 import com.kakaobean.core.sprint.domain.repository.query.SprintQueryRepository;
 import com.kakaobean.core.sprint.domain.repository.query.TaskQueryRepository;
 import com.kakaobean.independentlysystem.image.ImageService;
+import com.kakaobean.issue.CommentController;
+import com.kakaobean.issue.IssueController;
 import com.kakaobean.member.MemberController;
 import com.kakaobean.project.ProjectController;
 import com.kakaobean.project.ProjectMemberController;
@@ -56,8 +60,10 @@ import org.springframework.test.web.servlet.MockMvc;
         ReleaseNoteController.class,
         ManuscriptController.class,
         ImageController.class,
+        IssueController.class,
         SprintController.class,
-        TaskController.class
+        TaskController.class,
+        CommentController.class
 })
 @AutoConfigureRestDocs
 @MockBean(JpaMetamodelMappingContext.class)
@@ -123,6 +129,12 @@ public abstract class ControllerTest {
 
     @MockBean
     protected TaskService taskService;
+
+    @MockBean
+    protected IssueService issueService;
+
+    @MockBean
+    protected CommentService commentService;
 
     @MockBean
     protected SprintQueryRepository sprintQueryRepository;
