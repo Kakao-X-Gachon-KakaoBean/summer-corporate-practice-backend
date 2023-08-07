@@ -1,5 +1,6 @@
 package com.kakaobean.acceptance.auth;
 
+import com.kakaobean.auth.dto.GetAccessTokenRequest;
 import com.kakaobean.security.local.LocalLoginRequest;
 import com.kakaobean.security.local.LocalLoginResponse;
 import io.restassured.RestAssured;
@@ -64,6 +65,28 @@ public class AuthAcceptanceTask {
         ExtractableResponse response = requestLogin(new LocalLoginRequest(MEMBER.getEmail(), MEMBER.getPassword()));
         String accessToken = response.as(LocalLoginResponse.class).getAccessToken();
         return "Bearer " + accessToken;
+    }
+
+
+    public static ExtractableResponse getAccessTokenTask(GetAccessTokenRequest request, RequestSpecification spec){
+        return RestAssured
+                .given(spec)
+                .accept(APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
+                .body(request)
+                .filter(document("get_access_token",
+                        getDocumentRequest(),
+                        getDocumentResponse(),
+                        requestFields(
+                                fieldWithPath("refreshToken").type(STRING).description("리프레쉬 토큰")
+                        ),
+                        responseFields(
+                                fieldWithPath("accessToken").type(STRING).description("로그인 액세스 토큰")
+                        )
+                ))
+                .when().post("/access-tokens")
+                .then().log().all()
+                .extract();
     }
 
 }

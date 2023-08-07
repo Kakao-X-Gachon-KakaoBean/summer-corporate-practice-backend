@@ -53,7 +53,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String accessToken = tokenProvider.createAccessToken(authentication);
         String refreshToken = tokenProvider.createRefreshToken(authentication);
 
-        refreshTokenRepository.save(authentication, refreshToken);
+        refreshTokenRepository.save(authentication.getName(), refreshToken);
 
         return UriComponentsBuilder
                 .fromUriString(targetUrl)

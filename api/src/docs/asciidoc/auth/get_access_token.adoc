@@ -1,0 +1,15 @@
+= 리프레쉬 토큰을 기반으로 액세스 토큰 요청
+
+Authorization 헤더가 필요 없다.
+
+== 요청
+
+include::{snippets}/get_access_token/http-request.adoc[]
+
+include::{snippets}/get_access_token/request-fields.adoc[]
+
+== 응답
+
+include::{snippets}/get_access_token/http-response.adoc[]
+
+include::{snippets}/get_access_token/response-fields.adoc[]
