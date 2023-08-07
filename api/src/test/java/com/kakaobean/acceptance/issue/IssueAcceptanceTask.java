@@ -24,4 +24,18 @@ public class IssueAcceptanceTask {
                 .then().log().all()
                 .extract();
     }
+
+    public static ExtractableResponse findIssueTaskWithPaging(Long projectId, Integer page){
+        return RestAssured
+                .given()
+                .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
+                .accept(APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
+                .param("projectId", projectId)
+                .param("page", page)
+                .when()
+                .get("/issues/page")
+                .then().log().all()
+                .extract();
+    }
 }

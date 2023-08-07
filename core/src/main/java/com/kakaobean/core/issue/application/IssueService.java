@@ -24,6 +24,5 @@ public class IssueService {
                 orElseThrow(NotExistsProjectMemberException::new);
         issueRepository.save(issue);
         //알림 필요 없으면 그냥 위 두 줄 합쳐도 됨.
-
     }
 }

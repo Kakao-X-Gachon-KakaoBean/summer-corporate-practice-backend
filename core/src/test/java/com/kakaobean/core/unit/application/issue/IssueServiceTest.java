@@ -47,6 +47,4 @@ public class IssueServiceTest extends UnitTest {
         //then
         verify(issueRepository, times(1)).save(Mockito.any(Issue.class));
     }
-
-
 }
