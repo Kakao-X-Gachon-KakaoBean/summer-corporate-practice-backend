@@ -1,6 +1,7 @@
 package com.kakaobean.core.project.infrastructure;
 
 import com.kakaobean.core.common.domain.BaseStatus;
+import com.kakaobean.core.project.application.dto.response.FindProjectInfoResponseDto;
 import com.kakaobean.core.project.application.dto.response.FindProjectMemberResponseDto;
 import com.kakaobean.core.project.application.dto.response.FindProjectResponseDto;
 import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
@@ -27,13 +28,13 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
     @Override
     public List<FindProjectMemberResponseDto> findProjectMembers(Long projectId) {
         return queryFactory.select(
-                Projections.constructor(
-                        FindProjectMemberResponseDto.class,
-                        member.id,
-                        member.name,
-                        member.auth.email,
-                        projectMember.projectRole
-                ))
+                        Projections.constructor(
+                                FindProjectMemberResponseDto.class,
+                                member.id,
+                                member.name,
+                                member.auth.email,
+                                projectMember.projectRole
+                        ))
                 .from(projectMember)
                 .join(member).on(member.id.eq(projectMember.memberId))
                 .where(
@@ -46,13 +47,12 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
     @Override
     public List<FindProjectResponseDto> findProjects(Long memberId) {
         return queryFactory.select(
-                Projections.constructor(
-                        FindProjectResponseDto.class,
-                        project.id,
-                        project.title,
-                        project.content,
-                        project.status
-                ))
+                        Projections.constructor(
+                                FindProjectResponseDto.class,
+                                project.id,
+                                project.title,
+                                project.content
+                        ))
                 .from(project)
                 .join(projectMember).on(projectMember.id.eq(project.id))
                 .where(
@@ -60,5 +60,23 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                         projectMember.memberId.eq(memberId)
                 )
                 .fetch();
+    }
+
+    @Override
+    public FindProjectInfoResponseDto findProject(Long projectId) {
+        FindProjectInfoResponseDto result = queryFactory.select(
+                        Projections.constructor(
+                                FindProjectInfoResponseDto.class,
+                                project.title,
+                                project.content
+                        )
+                )
+                .from(project)
+                .where(project.id.eq(projectId))
+                .fetchFirst();
+
+        result.getProjectMembers().addAll(findProjectMembers(projectId));
+
+        return result;
     }
 }

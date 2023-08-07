@@ -21,7 +21,7 @@ public class RemoveReleaseNoteEventHandler {
     private final ReleaseNoteRepository releaseNoteRepository;
     private final ManuscriptRepository manuscriptRepository;
 
-    @Async
+//    @Async
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @TransactionalEventListener(RemovedProjectEvent.class)
     public void handle(RemovedProjectEvent event){

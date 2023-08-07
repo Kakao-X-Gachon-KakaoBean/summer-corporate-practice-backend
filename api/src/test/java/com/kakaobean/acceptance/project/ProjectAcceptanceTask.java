@@ -94,4 +94,16 @@ public class ProjectAcceptanceTask {
                 .then().log().all()
                 .extract();
     }
+
+    public static ExtractableResponse findProjectInfoTask(Long projectId){
+        return RestAssured
+                .given()
+                .header(AUTHORIZATION, getMemberAuthorizationHeaderToken())
+                .accept(APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
+                .when()
+                .get("/projects/{projectId}", projectId)
+                .then().log().all()
+                .extract();
+    }
 }

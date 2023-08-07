@@ -12,24 +12,24 @@ import javax.validation.constraints.NotNull;
 public class RegisterTaskRequest {
 
     @NotEmpty
-    private String title;
+    private String taskTitle;
 
     @NotEmpty
-    private String content;
+    private String taskDesc;
 
     @NotNull
     private Long sprintId;
 
-    public RegisterTaskRequest(String title, String content, Long sprintId) {
-        this.title = title;
-        this.content = content;
+    public RegisterTaskRequest(String taskTitle, String taskDesc, Long sprintId) {
+        this.taskTitle = taskTitle;
+        this.taskDesc = taskDesc;
         this.sprintId = sprintId;
     }
 
     public RegisterTaskRequestDto toServiceDto(Long adminId) {
         return new RegisterTaskRequestDto(
-                title,
-                content,
+                taskTitle,
+                taskDesc,
                 sprintId,
                 adminId
         );

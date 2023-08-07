@@ -71,11 +71,16 @@ public class ProjectAcceptanceTest extends AcceptanceTest {
     void 초대받은_멤버가_프로젝트에_가입한다(){
 
         //given
+        //프로젝트 생성
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
         ProjectAcceptanceTask.registerProjectTask(givenRequest);
         Project project = projectRepository.findAll().get(0);
+
+        //프로젝트 초대
         InviteProjectMemberRequest givenDto = new InviteProjectMemberRequest(List.of(MEMBER.getEmail()));
         ProjectAcceptanceTask.inviteProjectMemberTask(givenDto, project.getId());
+
+        //프로젝트 가입
         RegisterProjectMemberRequest request = new RegisterProjectMemberRequest(project.getSecretKey());
 
         //when
@@ -100,7 +105,7 @@ public class ProjectAcceptanceTest extends AcceptanceTest {
         assertThat(response.statusCode()).isEqualTo(200);
     }
 
-    // 비동기 때문에 가끔 실패할 때가 있음
+    // 비동기 테스트 적용X
     @Test
     @Rollback(value = false)
     void 어드민이_프로젝트를_삭제한다(){
@@ -121,6 +126,30 @@ public class ProjectAcceptanceTest extends AcceptanceTest {
         assertThat(projectRepository.findAll().size()).isEqualTo(0);
         assertThat(projectMemberRepository.findAll().size()).isEqualTo(0);
         assertThat(releaseNoteRepository.findAll().size()).isEqualTo(0);
+    }
+
+    @Test
+    void 프로젝트_전체_정보를_조회한다(){
+
+        //given
+        //프로젝트 생성
+        RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
+        ProjectAcceptanceTask.registerProjectTask(givenRequest);
+        Project project = projectRepository.findAll().get(0);
+
+        //프로젝트 초대
+        InviteProjectMemberRequest givenDto = new InviteProjectMemberRequest(List.of(MEMBER.getEmail()));
+        ProjectAcceptanceTask.inviteProjectMemberTask(givenDto, project.getId());
+
+        //프로젝트 가입
+        RegisterProjectMemberRequest request = new RegisterProjectMemberRequest(project.getSecretKey());
+        ProjectAcceptanceTask.joinProjectMemberTask(request);
+
+        //when
+        ExtractableResponse response = ProjectAcceptanceTask.findProjectInfoTask(project.getId());
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(200);
     }
 }
 
