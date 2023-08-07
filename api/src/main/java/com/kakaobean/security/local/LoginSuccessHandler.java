@@ -30,7 +30,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         String accessToken = tokenProvider.createAccessToken(authentication);
         String refreshToken = tokenProvider.createRefreshToken(authentication);
 
-        refreshTokenRepository.save(authentication, refreshToken);
+        refreshTokenRepository.save(authentication.getName(), refreshToken);
 
         objectMapper.writeValue(response.getWriter(), new LocalLoginResponse(accessToken, refreshToken));
     }

@@ -12,6 +12,7 @@ import com.kakaobean.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import com.kakaobean.security.token.RefreshTokenRepository;
 import com.kakaobean.security.TokenAuthenticationFilter;
 import com.kakaobean.security.token.TokenProvider;
+import com.kakaobean.security.token.TokenValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -39,7 +40,7 @@ public class SecurityConfig {
 
     @Bean
     OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler(){
-        return new OAuth2AuthenticationSuccessHandler(tokenProvider, appProperties,httpCookieOAuth2AuthorizationRequestRepository(), refreshTokenRepository);
+        return new OAuth2AuthenticationSuccessHandler(tokenProvider, appProperties, httpCookieOAuth2AuthorizationRequestRepository(), refreshTokenRepository);
     }
 
     @Bean
@@ -78,12 +79,17 @@ public class SecurityConfig {
 
     @Bean
     public TokenAuthenticationFilter tokenAuthenticationFilter() {
-        return new TokenAuthenticationFilter(tokenProvider, customUserDetailsService(), refreshTokenRepository);
+        return new TokenAuthenticationFilter(tokenValidator());
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public TokenValidator tokenValidator() {
+        return new TokenValidator(tokenProvider, customUserDetailsService());
     }
 
     @Bean
@@ -115,7 +121,7 @@ public class SecurityConfig {
                         "/**/*.css",
                         "/**/*.js")
                 .permitAll()
-                .antMatchers("/auth/**", "/oauth2/**","/members/**", "/emails/**","/actuator/**")
+                .antMatchers("/auth/**", "/oauth2/**", "/members/**", "/emails/**", "/actuator/**", "/access-tokens/**")
                 .permitAll()
                 .antMatchers("/members/name")
                 .authenticated()
