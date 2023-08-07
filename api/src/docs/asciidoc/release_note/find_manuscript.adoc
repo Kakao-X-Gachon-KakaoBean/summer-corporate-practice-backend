@@ -10,4 +10,7 @@ include::{snippets}/find_release_note_manuscript/path-parameters.adoc[]
 
 include::{snippets}/find_release_note_manuscript/http-response.adoc[]
 
+* manuscriptStatus: Modifiable -> 수정 가능
+* manuscriptStatus: Modifying -> 수정 중. 수정 불가능
+
 include::{snippets}/find_release_note_manuscript/response-fields.adoc[]
