@@ -2,6 +2,7 @@ package com.kakaobean.issue;
 
 import com.kakaobean.common.dto.CommandSuccessResponse;
 import com.kakaobean.core.issue.application.IssueService;
+import com.kakaobean.core.issue.domain.repository.query.FindIndividualIssueResponseDto;
 import com.kakaobean.core.issue.domain.repository.query.FindIssuesWithinPageResponseDto;
 import com.kakaobean.core.issue.domain.repository.query.IssueQueryRepository;
 import com.kakaobean.issue.dto.RegisterIssueRequest;
@@ -22,8 +23,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class IssueController {
 
     private final IssueService issueService;
-
-    private final IssueQueryRepository issueRepository;
+    private final IssueQueryRepository issueQueryRepository;
 
     @PostMapping("/issues")
     public ResponseEntity registerIssue(@Validated @RequestBody RegisterIssueRequest request,
@@ -33,12 +33,17 @@ public class IssueController {
     }
 
     @GetMapping("/issues/page")
-    public ResponseEntity findAllIssue(@RequestParam Long projectId, @RequestParam Integer page){
-        FindIssuesWithinPageResponseDto responseDto = issueRepository.findByProjectId(projectId, page);
+    public ResponseEntity findAllIssues(@RequestParam Long projectId, @RequestParam Integer page){
+        FindIssuesWithinPageResponseDto responseDto = issueQueryRepository.findByProjectId(projectId, page);
         return new ResponseEntity(responseDto, OK);
-
-
     }
+
+    @GetMapping("/issues")
+    public ResponseEntity findIssue(@RequestParam Long issueId){
+        FindIndividualIssueResponseDto responseDto = issueQueryRepository.findByIssueId(issueId);
+        return new ResponseEntity(responseDto, OK);
+    }
+
 
 //    TODO:
 //     1. 이슈 생성 ㄷ

@@ -20,12 +20,14 @@ public class FindIssuesWithinPageResponseDto {
         private final Long id;
         private final String title;
         private final Long writerId;
+        private final String writerName;
         private final String writtenTime;
 
-        public IssueDto(Long id, String title, Long writerId, String writtenTime) {
+        public IssueDto(Long id, String title, Long writerId, String writerName, String writtenTime) {
             this.id = id;
             this.title = title;
             this.writerId = writerId;
+            this.writerName = writerName;
             this.writtenTime = writtenTime;
         }
     }
