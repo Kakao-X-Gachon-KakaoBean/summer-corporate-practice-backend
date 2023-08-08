@@ -68,7 +68,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
         }
 
         //when
-        ExtractableResponse response = IssueAcceptanceTask.findIssueTaskWithPaging(project.getId(), 0);
+        ExtractableResponse response = IssueAcceptanceTask.findIssueWithPagingTask(project.getId(), 0);
 
         //then
         FindIssuesWithinPageResponseDto result = response.as(FindIssuesWithinPageResponseDto.class);

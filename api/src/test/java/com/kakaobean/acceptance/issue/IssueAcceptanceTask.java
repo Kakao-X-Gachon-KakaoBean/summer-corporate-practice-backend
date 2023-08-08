@@ -25,7 +25,7 @@ public class IssueAcceptanceTask {
                 .extract();
     }
 
-    public static ExtractableResponse findIssueTaskWithPaging(Long projectId, Integer page){
+    public static ExtractableResponse findIssueWithPagingTask(Long projectId, Integer page){
         return RestAssured
                 .given()
                 .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
