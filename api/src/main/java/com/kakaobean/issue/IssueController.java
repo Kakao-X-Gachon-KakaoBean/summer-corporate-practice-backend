@@ -36,11 +36,13 @@ public class IssueController {
     public ResponseEntity findAllIssue(@RequestParam Long projectId, @RequestParam Integer page){
         FindIssuesWithinPageResponseDto responseDto = issueRepository.findByProjectId(projectId, page);
         return new ResponseEntity(responseDto, OK);
+
+
     }
 
 //    TODO:
-//     1. 이슈 생성
+//     1. 이슈 생성 ㄷ
 //     2. 이슈 삭제
-//     3. 이슈 전체 조회
-//     4. 개별 이슈 조회
+//     3. 이슈 전체 조회 ㄷ
+//     4. 개별 이슈 조회 + 코맨트 조회
 }

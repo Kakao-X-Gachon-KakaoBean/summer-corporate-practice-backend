@@ -63,7 +63,7 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
         //이슈 생성
         for (int i = 0; i < 8; i++) {
-            RegisterIssueRequest request = RegisterIssueRequestFactory.create();
+            RegisterIssueRequest request = RegisterIssueRequestFactory.createWithProjectId(project.getId());
             IssueAcceptanceTask.registerIssueTask(request);
         }
 
