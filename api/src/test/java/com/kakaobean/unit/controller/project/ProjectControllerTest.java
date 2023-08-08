@@ -1,6 +1,7 @@
 package com.kakaobean.unit.controller.project;
 
 import com.kakaobean.core.project.application.dto.request.RegisterProjectRequestDto;
+import com.kakaobean.core.project.application.dto.response.FindProjectTitleResponseDto;
 import com.kakaobean.core.project.application.dto.response.RegisterProjectResponseDto;
 import com.kakaobean.project.dto.request.ModifyProjectRequest;
 import com.kakaobean.project.dto.request.RegisterProjectRequest;
@@ -21,8 +22,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -177,6 +177,35 @@ public class ProjectControllerTest extends ControllerTest {
                         fieldWithPath("projectMembers[].projectMemberEmail").type(STRING).description("프로젝트 멤버 이메일"),
                         fieldWithPath("projectMembers[].projectMemberRole").type(STRING).description("프로젝트 멤버 역할"),
                         fieldWithPath("projectMembers[].memberThumbnailImg").type(STRING).description("프로젝트 멤버 썸네일 이미지")
+                )
+        ));
+
+    }
+
+    @Test
+    @WithMockUser
+    void 프로젝트_타이틀_조회_api_테스트() throws Exception {
+        // given
+        given(projectQueryRepository.findBySecretKey(Mockito.anyString())).willReturn(new FindProjectTitleResponseDto("코코노트"));
+
+        // when
+        ResultActions perform = mockMvc.perform(get("/projects/title")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("projectSecretKey","asdfadsad")
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        // then
+        perform.andDo(print());
+        perform.andExpect(status().is2xxSuccessful());
+        perform.andDo(document("find_project_title",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestParameters(
+                        parameterWithName("projectSecretKey").description("조회할 프로젝트 secretKey")
+                ),
+                responseFields(
+                        fieldWithPath("projectTitle").type(STRING).description("프로젝트 타이틀")
                 )
         ));
 

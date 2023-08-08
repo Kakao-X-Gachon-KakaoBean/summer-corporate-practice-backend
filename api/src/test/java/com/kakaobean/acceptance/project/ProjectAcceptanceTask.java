@@ -106,4 +106,17 @@ public class ProjectAcceptanceTask {
                 .then().log().all()
                 .extract();
     }
+
+    public static ExtractableResponse findProjectTitleTask(String projectSecretKey){
+        return RestAssured
+                .given()
+                .header(AUTHORIZATION, getMemberAuthorizationHeaderToken())
+                .accept(APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
+                .param("projectSecretKey", projectSecretKey)
+                .when()
+                .get("/projects/title")
+                .then().log().all()
+                .extract();
+    }
 }
