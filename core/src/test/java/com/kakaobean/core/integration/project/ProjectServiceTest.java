@@ -67,6 +67,10 @@ public class ProjectServiceTest extends IntegrationTest {
         memberRepository.deleteAll();
         projectRepository.deleteAll();;
         projectMemberRepository.deleteAll();
+        manuscriptRepository.deleteAll();
+        releaseNoteRepository.deleteAll();
+        sprintRepository.deleteAll();
+        taskRepository.deleteAll();
     }
 
     @Test

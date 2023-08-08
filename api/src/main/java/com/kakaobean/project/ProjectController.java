@@ -4,6 +4,7 @@ import com.kakaobean.common.dto.CommandSuccessResponse;
 import com.kakaobean.core.project.application.ProjectService;
 import com.kakaobean.core.project.application.dto.response.FindProjectInfoResponseDto;
 import com.kakaobean.core.project.application.dto.response.FindProjectResponseDto;
+import com.kakaobean.core.project.application.dto.response.FindProjectTitleResponseDto;
 import com.kakaobean.core.project.application.dto.response.RegisterProjectResponseDto;
 import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
 import com.kakaobean.project.dto.request.ModifyProjectRequest;
@@ -60,5 +61,11 @@ public class ProjectController {
     public ResponseEntity findProjectMembers(@PathVariable Long projectId){
         FindProjectInfoResponseDto response = projectQueryRepository.findProject(projectId);
         return new ResponseEntity(response, OK);
+    }
+
+    @GetMapping("/projects/title")
+    public ResponseEntity findProjectTitle(@RequestParam String projectSecretKey){
+        FindProjectTitleResponseDto response = projectQueryRepository.findBySecretKey(projectSecretKey);
+        return new ResponseEntity(response,OK);
     }
 }
