@@ -2,22 +2,25 @@ package com.kakaobean.unit.controller.issue;
 
 import com.kakaobean.issue.dto.RegisterIssueRequest;
 import com.kakaobean.unit.controller.ControllerTest;
+import com.kakaobean.unit.controller.factory.issue.FindIssuesWithinPageResponseDtoFactory;
 import com.kakaobean.unit.controller.factory.issue.RegisterIssueRequestFactory;
 import com.kakaobean.unit.controller.security.WithMockUser;
 import org.junit.jupiter.api.Test;
+
+import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentRequest;
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentResponse;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.payload.JsonFieldType.NUMBER;
-import static org.springframework.restdocs.payload.JsonFieldType.STRING;
+import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -50,6 +53,44 @@ public class IssueControllerTest extends ControllerTest {
                 ),
                 responseFields(
                         fieldWithPath("message").type(STRING).description("이슈가 생성되었습니다.")
+                )
+        ));
+    }
+
+
+    @Test
+    @WithMockUser
+    void 이슈_조회_테스트() throws Exception{
+
+        // given
+        given(issueQueryRepository.findByProjectId(Mockito.anyLong(), Mockito.anyInt()))
+                .willReturn(FindIssuesWithinPageResponseDtoFactory.create());
+
+        //when
+        ResultActions perform = mockMvc.perform(get("/issues/page")
+                .param("projectId", "1")
+                .param("page", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        //then
+        perform.andDo(print());
+        perform.andExpect(status().is2xxSuccessful());
+        perform.andDo(document("find_issues_with_paging",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestParameters(
+                        parameterWithName("projectId").description("이슈를 조회할 프로젝트 id"),
+                        parameterWithName("page").description("페이징 커서")
+                ),
+                responseFields(
+                        fieldWithPath("finalPage").type(BOOLEAN).description("마지막 페이지인가"),
+                        fieldWithPath("issues").type(ARRAY).description("이슈 리스트"),
+                        fieldWithPath("issues[].id").type(NUMBER).description("이슈 id"),
+                        fieldWithPath("issues[].title").type(STRING).description("이슈 제목"),
+                        fieldWithPath("issues[].writerId").type(NUMBER).description("이슈 작성자"),
+                        fieldWithPath("issues[].writtenTime").type(STRING).description("이슈 작성 시간")
                 )
         ));
     }
