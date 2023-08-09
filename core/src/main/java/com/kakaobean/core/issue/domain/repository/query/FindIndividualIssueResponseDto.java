@@ -10,18 +10,18 @@ public class FindIndividualIssueResponseDto {
     private Long id;
     private String title;
     private String content;
-    private Long writerId;
-    private String writerName;
     private String writtenTime;
+    private String writerName;
+    private String thumbnailImg;
     private List<CommentDto> comments;
 
-    public FindIndividualIssueResponseDto(Long id, String title, String content, Long writerId, String writerName, String writtenTime, List<CommentDto> comments) {
+    public FindIndividualIssueResponseDto(Long id, String title, String content, String writtenTime, String writerName, String thumbnailImg, List<CommentDto> comments) {
             this.id = id;
             this.title = title;
             this.content = content;
-            this.writerId = writerId;
-            this.writerName = writerName;
             this.writtenTime = writtenTime;
+            this.writerName = writerName;
+            this.thumbnailImg = thumbnailImg;
             this.comments = comments;
     }
 

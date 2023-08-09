@@ -64,8 +64,9 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
                                 issue.title,
                                 issue.content,
                                 issue.updatedAt,
-                                member.name
-                        )
+                                member.name,
+                                member.thumbnailImg
+                                )
                 )
                 .from(issue)
                 .leftJoin(member)
@@ -84,7 +85,8 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
                                 FindIndividualIssueResponseDto.CommentDto.class,
                                 comment.content,
                                 comment.updatedAt,
-                                member.name
+                                member.name,
+                                member.thumbnailImg
                                 )
                 )
                 .from(comment)
