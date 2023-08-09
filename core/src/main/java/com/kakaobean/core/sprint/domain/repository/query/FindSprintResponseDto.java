@@ -27,13 +27,15 @@ public class FindSprintResponseDto {
 
     @Getter
     public static class TaskDto{
+        private final Long taskId;
         private final String taskTitle;
         private final WorkStatus workStatus;
         private final Long workerId;
         private final String workerName;
         private final String workerThumbnailImg;
 
-        public TaskDto(String taskTitle, WorkStatus workStatus, Long workerId, String workerName, String workerThumbnailImg) {
+        public TaskDto(Long taskId, String taskTitle, WorkStatus workStatus, Long workerId, String workerName, String workerThumbnailImg) {
+            this.taskId = taskId;
             this.taskTitle = taskTitle;
             this.workerId = workerId;
             this.workerName = workerName;
