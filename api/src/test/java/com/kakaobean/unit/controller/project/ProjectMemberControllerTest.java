@@ -118,7 +118,8 @@ public class ProjectMemberControllerTest extends ControllerTest {
                         fieldWithPath("[].projectMemberId").type(NUMBER).description("프로젝트 멤버 id"),
                         fieldWithPath("[].projectMemberName").type(STRING).description("프로젝트 멤버 이름"),
                         fieldWithPath("[].projectMemberEmail").type(STRING).description("프로젝트 멤버 이메일"),
-                        fieldWithPath("[].projectMemberRole").type(STRING).description("프로젝트 멤버 역할")
+                        fieldWithPath("[].projectMemberRole").type(STRING).description("프로젝트 멤버 역할"),
+                        fieldWithPath("[].memberThumbnailImg").type(STRING).description("프로젝트 멤버 썸네일 이미지")
                 )
         ));
     }

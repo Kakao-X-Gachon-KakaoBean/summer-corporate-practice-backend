@@ -10,16 +10,19 @@ public class FindProjectMemberResponseDto {
     private String projectMemberName;
     private String projectMemberEmail;
     private ProjectRole projectMemberRole;
+    private String memberThumbnailImg;
 
     protected FindProjectMemberResponseDto() {}
 
     public FindProjectMemberResponseDto(Long projectMemberId,
                                         String projectMemberName,
                                         String projectMemberEmail,
-                                        ProjectRole projectMemberRole) {
+                                        ProjectRole projectMemberRole,
+                                        String memberThumbnailImg) {
         this.projectMemberId = projectMemberId;
         this.projectMemberName = projectMemberName;
         this.projectMemberEmail = projectMemberEmail;
         this.projectMemberRole = projectMemberRole;
+        this.memberThumbnailImg = memberThumbnailImg;
     }
 }

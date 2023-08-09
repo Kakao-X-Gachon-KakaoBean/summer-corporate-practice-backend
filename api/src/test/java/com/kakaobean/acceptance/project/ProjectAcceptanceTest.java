@@ -151,6 +151,22 @@ public class ProjectAcceptanceTest extends AcceptanceTest {
         //then
         assertThat(response.statusCode()).isEqualTo(200);
     }
+
+    @Test
+    void 프로젝트_타이틀을_조회한다(){
+
+        //given
+        //프로젝트 생성
+        RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
+        ProjectAcceptanceTask.registerProjectTask(givenRequest);
+        Project project = projectRepository.findAll().get(0);
+
+        //when
+        ExtractableResponse response = ProjectAcceptanceTask.findProjectTitleTask(project.getSecretKey());
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(200);
+    }
 }
 
 /**
