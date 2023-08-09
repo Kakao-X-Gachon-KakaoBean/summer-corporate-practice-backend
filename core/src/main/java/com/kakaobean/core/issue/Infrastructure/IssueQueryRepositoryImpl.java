@@ -61,6 +61,7 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
                 .select(
                         Projections.constructor(
                                 FindIndividualIssueResponseDto.class,
+                                issue.id,
                                 issue.title,
                                 issue.content,
                                 issue.updatedAt,
@@ -83,6 +84,7 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
                 .select(
                         Projections.constructor(
                                 FindIndividualIssueResponseDto.CommentDto.class,
+                                comment.id,
                                 comment.content,
                                 comment.updatedAt,
                                 member.name,

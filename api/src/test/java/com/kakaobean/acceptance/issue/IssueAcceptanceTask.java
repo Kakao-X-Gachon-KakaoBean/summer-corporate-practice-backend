@@ -38,4 +38,17 @@ public class IssueAcceptanceTask {
                 .then().log().all()
                 .extract();
     }
+
+    public static ExtractableResponse findIssueWithId(Long issueId){
+        return RestAssured
+                .given()
+                .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
+                .accept(APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
+                .param("issueId", issueId)
+                .when()
+                .get("/issues")
+                .then().log().all()
+                .extract();
+    }
 }

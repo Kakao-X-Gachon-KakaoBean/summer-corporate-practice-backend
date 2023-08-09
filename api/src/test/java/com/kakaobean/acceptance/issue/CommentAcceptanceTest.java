@@ -46,7 +46,7 @@ public class CommentAcceptanceTest extends AcceptanceTest {
         RegisterCommentRequest commentRequest = RegisterCommentRequestFactory.create();
 
         //when
-        ExtractableResponse response = CommentAcceptanceTask.registerCommentTask(commentRequest, issue.getId());
+        ExtractableResponse response = CommentAcceptanceTask.registerCommentTask(commentRequest);
 
         //then
         assertThat(response.statusCode()).isEqualTo(201);

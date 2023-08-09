@@ -32,18 +32,19 @@ public class FindIndividualIssueResponseDto {
 
         private final String content;
 
-        private final Long writerId;
+        private final String writtenTime;
 
         private final String writerName;
 
-        private final String writtenTime;
+        private final String thumbnailImg;
 
-        public CommentDto(Long id, String content, Long writerId, String writerName, String writtenTime) {
+
+        public CommentDto(Long id, String content, String writtenTime, String writerName, String thumbnailImg) {
             this.id = id;
             this.content = content;
-            this.writerId = writerId;
-            this.writerName = writerName;
             this.writtenTime = writtenTime;
+            this.writerName = writerName;
+            this.thumbnailImg = thumbnailImg;
         }
     }
 }
