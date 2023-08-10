@@ -1,0 +1,13 @@
+= 댓글 생성
+
+== 요청
+
+include::{snippets}/register_comment/http-request.adoc[]
+
+include::{snippets}/register_comment/request-fields.adoc[]
+
+== 응답
+
+include::{snippets}/register_comment/http-response.adoc[]
+
+include::{snippets}/register_comment/response-fields.adoc[]

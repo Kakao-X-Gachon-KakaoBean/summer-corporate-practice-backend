@@ -196,7 +196,7 @@ public class TaskServiceTest extends UnitTest {
     }
 
     @Test
-    void Viewr는_테스크를_할당받을_수_없다() {
+    void Viewer는_테스크를_할당받을_수_없다() {
         // given
         Task task = TaskFactory.createWithId(1L, null);
         given(taskRepository.findById(Mockito.anyLong())).willReturn(Optional.of(task));

@@ -26,7 +26,7 @@ public class ReleaseNoteQueryRepositoryImpl implements ReleaseNoteQueryRepositor
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public FindPagingReleaseNotesResponseDto findByProjectId(Long projectId, Integer page) {
+    public FindPagingReleaseNotesResponseDto  findByProjectId(Long projectId, Integer page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, PAGING_STANDARD));
         List<FindPagingReleaseNotesResponseDto.ReleaseNoteDto> result = queryFactory
                 .select(

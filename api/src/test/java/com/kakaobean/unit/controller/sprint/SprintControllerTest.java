@@ -185,12 +185,12 @@ public class SprintControllerTest extends ControllerTest {
                         fieldWithPath("sprintDesc").type(STRING).description("스프린트 설명"),
                         fieldWithPath("startDate").type(STRING).description("스프린트 시작 날짜"),
                         fieldWithPath("dueDate").type(STRING).description("스프린트 마감 날짜"),
-                        fieldWithPath("tasks").type(ARRAY).description("테스크 목록"),
-                        fieldWithPath("tasks[].taskTitle").type(STRING).description("테스크 제목"),
-                        fieldWithPath("tasks[].workStatus").type(STRING).description("테스크 작업 상태"),
-                        fieldWithPath("tasks[].workerId").type(NUMBER).description("테스크 작업자 id"),
-                        fieldWithPath("tasks[].workerName").type(STRING).description("테스크 작업자 이름"),
-                        fieldWithPath("tasks[].workerThumbnailImg").type(STRING).description("테스크 작업자 프로필 이미지")
+                        fieldWithPath("children").type(ARRAY).description("테스크 목록"),
+                        fieldWithPath("children[].taskTitle").type(STRING).description("테스크 제목"),
+                        fieldWithPath("children[].workStatus").type(STRING).description("테스크 작업 상태"),
+                        fieldWithPath("children[].workerId").type(NUMBER).description("테스크 작업자 id"),
+                        fieldWithPath("children[].workerName").type(STRING).description("테스크 작업자 이름"),
+                        fieldWithPath("children[].workerThumbnailImg").type(STRING).description("테스크 작업자 프로필 이미지")
                 )
         ));
     }

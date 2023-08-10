@@ -13,4 +13,12 @@ public class RegisterIssueRequestFactory {
                 1L
         );
     }
+
+    public static RegisterIssueRequest createWithProjectId(Long projectId){
+        return new RegisterIssueRequest(
+                "이슈 제목",
+                "이슈 내용",
+                projectId
+        );
+    }
 }

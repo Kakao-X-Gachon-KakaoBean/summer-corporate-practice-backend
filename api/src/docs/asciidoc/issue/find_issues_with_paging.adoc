@@ -1,0 +1,13 @@
+= 이슈 페이지 별 조회
+
+== 요청
+
+include::{snippets}/find_issues_with_paging/http-request.adoc[]
+
+include::{snippets}/find_issues_with_paging/request-parameters.adoc[]
+
+== 응답
+
+include::{snippets}/find_issues_with_paging/http-response.adoc[]
+
+include::{snippets}/find_issues_with_paging/response-fields.adoc[]

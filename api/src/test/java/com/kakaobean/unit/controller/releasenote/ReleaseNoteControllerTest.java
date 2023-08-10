@@ -65,7 +65,7 @@ public class ReleaseNoteControllerTest extends ControllerTest {
 
     @Test
     @WithMockUser
-    void 릴리즈_노트_페이징을_시용해서_조회() throws Exception {
+    void 릴리즈_노트_페이징을_사용해서_조회() throws Exception {
 
         given(releaseNoteQueryRepository.findByProjectId(Mockito.anyLong(), Mockito.anyInt()))
                 .willReturn(new FindPagingReleaseNotesResponseDto(

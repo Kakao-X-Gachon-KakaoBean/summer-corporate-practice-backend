@@ -1,0 +1,13 @@
+= 이슈 생성
+
+== 요청
+
+include::{snippets}/register_issue/http-request.adoc[]
+
+include::{snippets}/register_issue/request-fields.adoc[]
+
+== 응답
+
+include::{snippets}/register_issue/http-response.adoc[]
+
+include::{snippets}/register_issue/response-fields.adoc[]
