@@ -34,7 +34,8 @@ public class ReleaseNoteQueryRepositoryImpl implements ReleaseNoteQueryRepositor
                                 FindPagingReleaseNotesResponseDto.ReleaseNoteDto.class,
                                 releaseNote.id,
                                 releaseNote.title,
-                                releaseNote.version
+                                releaseNote.version,
+                                releaseNote.content
                         )
                 )
                 .from(releaseNote)
