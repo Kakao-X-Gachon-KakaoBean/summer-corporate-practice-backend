@@ -13,7 +13,7 @@ public class CommentAcceptanceTask {
 
     private CommentAcceptanceTask() {}
 
-    public static ExtractableResponse registerCommentTask(RegisterCommentRequest request, Long issueId){
+    public static ExtractableResponse registerCommentTask(RegisterCommentRequest request){
         return RestAssured
                 .given()
                 .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())

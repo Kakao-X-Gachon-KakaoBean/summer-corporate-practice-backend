@@ -12,4 +12,11 @@ public class RegisterCommentRequestFactory {
                 1L
         );
     }
+
+    public static RegisterCommentRequest createWithIssueId(Long issueId){
+        return new RegisterCommentRequest(
+                "댓글내용",
+                issueId
+        );
+    }
 }

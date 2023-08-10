@@ -1,0 +1,13 @@
+= 이슈 개별 조회
+
+== 요청
+
+include::{snippets}/find_individual_issue/http-request.adoc[]
+
+include::{snippets}/find_individual_issue/request-parameters.adoc[]
+
+== 응답
+
+include::{snippets}/find_individual_issue/http-response.adoc[]
+
+include::{snippets}/find_individual_issue/response-fields.adoc[]

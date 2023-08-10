@@ -89,7 +89,9 @@
 
 * link:/docs/issue/register_issue.html[이슈 생성 API, window=_blank ]
 * link:/docs/issue/register_comment.html[댓글 생성 API, window=_blank ]
-* link:/docs/issue/find_issues_with_paging.html[페이징 적용 이슈 조회 API, window=_blank ]
+* link:/docs/issue/find_issues_with_paging.html[이슈 페이징 적용 조회 API, window=_blank ]
+* link:/docs/issue/find_individual_issue.html[이슈 개별 조회 API, window=_blank ]
+
 
 == 스프린트 API
 

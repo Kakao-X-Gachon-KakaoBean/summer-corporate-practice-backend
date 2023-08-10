@@ -16,12 +16,14 @@ public class FindIssuesWithinPageResponseDtoFactory {
                                 1L,
                                 "1번 이슈",
                                 1L,
+                                "Jason",
                                 " 23. 8. 7. ?? 9:49"
                         ),
                         new FindIssuesWithinPageResponseDto.IssueDto(
                                 2L,
                                 "2번 이슈",
                                 2L,
+                                "Anne",
                                 "23. 8. 7. ?? 10:00"                        )
                 )
         );
