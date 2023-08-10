@@ -1,7 +1,9 @@
 package com.kakaobean.unit.controller.issue;
 
+import com.kakaobean.core.issue.domain.repository.query.FindIndividualIssueResponseDto;
 import com.kakaobean.issue.dto.RegisterIssueRequest;
 import com.kakaobean.unit.controller.ControllerTest;
+import com.kakaobean.unit.controller.factory.issue.FindIndividualIssueResponseDtoFactory;
 import com.kakaobean.unit.controller.factory.issue.FindIssuesWithinPageResponseDtoFactory;
 import com.kakaobean.unit.controller.factory.issue.RegisterIssueRequestFactory;
 import com.kakaobean.unit.controller.security.WithMockUser;
@@ -60,7 +62,7 @@ public class IssueControllerTest extends ControllerTest {
 
     @Test
     @WithMockUser
-    void 이슈_조회_테스트() throws Exception{
+    void 이슈_페이지_별_조회_테스트() throws Exception{
 
         // given
         given(issueQueryRepository.findByProjectId(Mockito.anyLong(), Mockito.anyInt()))
@@ -90,7 +92,48 @@ public class IssueControllerTest extends ControllerTest {
                         fieldWithPath("issues[].id").type(NUMBER).description("이슈 id"),
                         fieldWithPath("issues[].title").type(STRING).description("이슈 제목"),
                         fieldWithPath("issues[].writerId").type(NUMBER).description("이슈 작성자"),
+                        fieldWithPath("issues[].writerName").type(STRING).description("이슈 작성자 닉네임"),
                         fieldWithPath("issues[].writtenTime").type(STRING).description("이슈 작성 시간")
+                )
+        ));
+    }
+
+    @Test
+    @WithMockUser
+    void 이슈_개별_조회_테스트() throws Exception{
+
+        // given
+        given(issueQueryRepository.findByIssueId(Mockito.anyLong()))
+                .willReturn(FindIndividualIssueResponseDtoFactory.create());
+
+        //when
+        ResultActions perform = mockMvc.perform(get("/issues")
+                .param("issueId", "11")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        //then
+        perform.andDo(print());
+        perform.andExpect(status().is2xxSuccessful());
+        perform.andDo(document("find_individual_issue",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                requestParameters(
+                        parameterWithName("issueId").description("조회할 이슈 id")
+                ),
+                responseFields(
+                        fieldWithPath("issueId").type(NUMBER).description("이슈 id"),
+                        fieldWithPath("title").type(STRING).description("이슈 제목"),
+                        fieldWithPath("content").type(STRING).description("이슈 내용"),
+                        fieldWithPath("writtenTime").type(STRING).description("이슈 작성 시간"),
+                        fieldWithPath("writerName").type(STRING).description("이슈 작성자 닉네임"),
+                        fieldWithPath("thumbnailImg").type(STRING).description("이슈 작성자의 프로필 섬네일 이미지"),
+                        fieldWithPath("comments[].commentId").type(NUMBER).description("댓글 id"),
+                        fieldWithPath("comments[].content").type(STRING).description("댓글 내용"),
+                        fieldWithPath("comments[].writtenTime").type(STRING).description("댓글 작성 시간"),
+                        fieldWithPath("comments[].writerName").type(STRING).description("댓글 작성자 닉네임"),
+                        fieldWithPath("comments[].thumbnailImg").type(STRING).description("댓글 작성자의 프로필 섬네일 이미지")
                 )
         ));
     }

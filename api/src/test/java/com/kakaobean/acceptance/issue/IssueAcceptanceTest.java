@@ -9,6 +9,7 @@ import com.kakaobean.core.issue.domain.Comment;
 import com.kakaobean.core.issue.domain.Issue;
 import com.kakaobean.core.issue.domain.repository.CommentRepository;
 import com.kakaobean.core.issue.domain.repository.IssueRepository;
+import com.kakaobean.core.issue.domain.repository.query.FindIndividualIssueResponseDto;
 import com.kakaobean.core.issue.domain.repository.query.FindIssuesWithinPageResponseDto;
 import com.kakaobean.core.issue.domain.repository.query.IssueQueryRepository;
 import com.kakaobean.core.project.domain.Project;
@@ -106,7 +107,6 @@ public class IssueAcceptanceTest extends AcceptanceTest {
         //댓글 생성
         RegisterCommentRequest commentRequest = RegisterCommentRequestFactory.createWithIssueId(issue.getId());
         CommentAcceptanceTask.registerCommentTask(commentRequest);
-        Comment comment = commentRepository.findAll().get(0);
 
         //이슈 조회
         //when
@@ -115,5 +115,4 @@ public class IssueAcceptanceTest extends AcceptanceTest {
         //then
         assertThat(response.statusCode()).isEqualTo(200);
     }
-
 }

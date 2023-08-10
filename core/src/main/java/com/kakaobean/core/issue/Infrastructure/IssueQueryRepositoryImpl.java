@@ -2,6 +2,7 @@ package com.kakaobean.core.issue.Infrastructure;
 
 import com.kakaobean.common.PagingUtils;
 import com.kakaobean.core.issue.domain.repository.query.FindIndividualIssueResponseDto;
+import com.kakaobean.core.issue.domain.repository.query.FindIndividualIssueResponseDto.CommentDto;
 import com.kakaobean.core.issue.domain.repository.query.FindIssuesWithinPageResponseDto;
 import com.kakaobean.core.issue.domain.repository.query.IssueQueryRepository;
 import com.querydsl.core.types.Projections;
@@ -27,6 +28,9 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
+    /**
+     * 이슈 리스트를 페이징하여 출력
+     */
     @Override
     public FindIssuesWithinPageResponseDto findByProjectId(Long projectId, Integer page) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, PAGING_STANDARD));
@@ -55,6 +59,9 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
         return new FindIssuesWithinPageResponseDto(true, result);
     }
 
+    /**
+     * 이슈 개별 출력 + 하위 댓글들
+     */
     @Override
     public FindIndividualIssueResponseDto findByIssueId(Long issueId){
         FindIndividualIssueResponseDto result = queryFactory
@@ -79,11 +86,11 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
         return result;
     }
 
-    private List<FindIndividualIssueResponseDto.CommentDto> findCommentByIssueId(Long issueId){
+    private List<CommentDto> findCommentByIssueId(Long issueId){
         return queryFactory
                 .select(
                         Projections.constructor(
-                                FindIndividualIssueResponseDto.CommentDto.class,
+                                CommentDto.class,
                                 comment.id,
                                 comment.content,
                                 comment.updatedAt,
