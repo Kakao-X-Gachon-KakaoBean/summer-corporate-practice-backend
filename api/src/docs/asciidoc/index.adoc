@@ -76,13 +76,13 @@
 * link:/docs/release_note/find_release_notes.html[릴리즈 노트 전체 조회 API, window=_blank ]
 
 
-== 릴리즈 노트 원고 API
+== 이슈 API
 
 * link:/docs/issue/register_issue.html[이슈 생성 API, window=_blank ]
 * link:/docs/issue/register_comment.html[댓글 생성 API, window=_blank ]
 * link:/docs/issue/find_issue_with_paging.html[페이징 적용 이슈 조회 API, window=_blank ]
 
-== 이슈 API
+== 릴리즈 노트 원고 API
 
 * link:/docs/release_note/register_manuscript.html[릴리즈 노트 원고 생성 API, window=_blank ]
 * link:/docs/release_note/find_manuscript.html[릴리즈 노트 원고 단건 조회 API, window=_blank ]
