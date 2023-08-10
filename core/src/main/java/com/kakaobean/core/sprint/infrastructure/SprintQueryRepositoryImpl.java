@@ -96,6 +96,7 @@ public class SprintQueryRepositoryImpl implements SprintQueryRepository {
                 .select(
                         Projections.constructor(
                                 FindSprintResponseDto.TaskDto.class,
+                                task.id,
                                 task.title,
                                 task.workStatus,
                                 task.workerId,

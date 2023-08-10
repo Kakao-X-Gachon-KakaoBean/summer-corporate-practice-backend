@@ -186,6 +186,7 @@ public class SprintControllerTest extends ControllerTest {
                         fieldWithPath("startDate").type(STRING).description("스프린트 시작 날짜"),
                         fieldWithPath("dueDate").type(STRING).description("스프린트 마감 날짜"),
                         fieldWithPath("children").type(ARRAY).description("테스크 목록"),
+                        fieldWithPath("children[].taskId").type(NUMBER).description("테스크 id"),
                         fieldWithPath("children[].taskTitle").type(STRING).description("테스크 제목"),
                         fieldWithPath("children[].workStatus").type(STRING).description("테스크 작업 상태"),
                         fieldWithPath("children[].workerId").type(NUMBER).description("테스크 작업자 id"),
