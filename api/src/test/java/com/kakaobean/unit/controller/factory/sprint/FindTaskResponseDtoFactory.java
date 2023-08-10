@@ -15,7 +15,8 @@ public class FindTaskResponseDtoFactory {
                 WorkStatus.WORKING,
                 1L,
                 "임인범",
-                "https://bucket.s3.ap-northeast-5.amazonaws.com/8d78cf624c99-%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%851%85%AE%206.23.05.png"
+                "https://bucket.s3.ap-northeast-5.amazonaws.com/8d78cf624c99-%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%851%85%AE%206.23.05.png",
+                1L
         );
     }
 }

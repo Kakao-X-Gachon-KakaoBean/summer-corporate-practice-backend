@@ -27,7 +27,8 @@ public class TaskQueryRepositoryImpl implements TaskQueryRepository {
                                 task.workStatus,
                                 task.workerId,
                                 member.name,
-                                member.thumbnailImg
+                                member.thumbnailImg,
+                                task.sprintId
                         )
                 )
                 .from(task)
