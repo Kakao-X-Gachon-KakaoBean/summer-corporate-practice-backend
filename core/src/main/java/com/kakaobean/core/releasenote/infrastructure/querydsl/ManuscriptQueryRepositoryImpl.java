@@ -1,4 +1,4 @@
-package com.kakaobean.core.releasenote.infrastructure;
+package com.kakaobean.core.releasenote.infrastructure.querydsl;
 
 
 import com.kakaobean.common.PagingUtils;

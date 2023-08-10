@@ -1,6 +1,5 @@
-package com.kakaobean.core.project.infrastructure;
+package com.kakaobean.core.project.infrastructure.querydsl;
 
-import com.kakaobean.core.common.domain.BaseStatus;
 import com.kakaobean.core.project.application.dto.response.FindProjectInfoResponseDto;
 import com.kakaobean.core.project.application.dto.response.FindProjectMemberResponseDto;
 import com.kakaobean.core.project.application.dto.response.FindProjectResponseDto;

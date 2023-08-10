@@ -1,4 +1,4 @@
-package com.kakaobean.core.sprint.Exception;
+package com.kakaobean.core.sprint.exception;
 
 public class ChangeOperationNotAllowedException extends SprintException{
 
