@@ -73,11 +73,13 @@ public class ReleaseNoteControllerTest extends ControllerTest {
                         List.of(new FindPagingReleaseNotesResponseDto.ReleaseNoteDto(
                                     1L,
                                 "1.1V releaseNote title",
-                                "1.1V"),
+                                "1.1V",
+                                        "Contents..."),
                                 new FindPagingReleaseNotesResponseDto.ReleaseNoteDto(
                                         2L,
                                         "1.2V releaseNote title",
-                                        "1.2V")
+                                        "1.2V",
+                                        "Contents..")
                                 )
                         )
                 );
@@ -106,7 +108,9 @@ public class ReleaseNoteControllerTest extends ControllerTest {
                         fieldWithPath("releaseNotes").type(ARRAY).description("릴리즈 노트 리스트"),
                         fieldWithPath("releaseNotes[].id").type(NUMBER).description("릴리즈 노트 id"),
                         fieldWithPath("releaseNotes[].title").type(STRING).description("릴리즈 노트 제목"),
-                        fieldWithPath("releaseNotes[].version").type(STRING).description("릴리즈 노트 버전")                )
+                        fieldWithPath("releaseNotes[].version").type(STRING).description("릴리즈 노트 버전"),
+                        fieldWithPath("releaseNotes[].content").type(STRING).description("릴리즈 노트 내용")
+                )
         ));
     }
 
