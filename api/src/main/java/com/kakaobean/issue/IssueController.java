@@ -38,8 +38,8 @@ public class IssueController {
         return new ResponseEntity(responseDto, OK);
     }
 
-    @GetMapping("/issues")
-    public ResponseEntity findIssue(@RequestParam Long issueId){
+    @GetMapping("/issues/{issueId}")
+    public ResponseEntity findIssue(@PathVariable Long issueId){
         FindIndividualIssueResponseDto responseDto = issueQueryRepository.findByIssueId(issueId);
         return new ResponseEntity(responseDto, OK);
     }
@@ -49,5 +49,5 @@ public class IssueController {
 //     1. 이슈 생성 ㄷ
 //     2. 이슈 삭제
 //     3. 이슈 전체 조회 ㄷ
-//     4. 개별 이슈 조회 + 코맨트 조회
+//     4. 개별 이슈 조회 + 코맨트 조회 ㄷ
 }

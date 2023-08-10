@@ -45,9 +45,8 @@ public class IssueAcceptanceTask {
                 .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
                 .accept(APPLICATION_JSON_VALUE)
                 .contentType(APPLICATION_JSON_VALUE)
-                .param("issueId", issueId)
                 .when()
-                .get("/issues")
+                .get("/issues/{issueId}",issueId)
                 .then().log().all()
                 .extract();
     }
