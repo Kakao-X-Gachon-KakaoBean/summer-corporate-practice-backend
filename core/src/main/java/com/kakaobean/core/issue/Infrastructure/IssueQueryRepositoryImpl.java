@@ -64,10 +64,10 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
      */
     @Override
     public FindIndividualIssueResponseDto findByIssueId(Long issueId){
-        FindIndividualIssueResponseDto result = queryFactory
+        FindIndividualIssueResponseDto.IssueDto result = queryFactory
                 .select(
                         Projections.constructor(
-                                FindIndividualIssueResponseDto.class,
+                                FindIndividualIssueResponseDto.IssueDto.class,
                                 issue.id,
                                 issue.title,
                                 issue.content,
@@ -81,9 +81,10 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
                 .on(issue.writerId.eq(member.id))
                 .where(issue.id.eq(issueId))
                 .fetchFirst();
-        result.getComments().addAll(findCommentByIssueId(issueId));
 
-        return result;
+        FindIndividualIssueResponseDto finalResponse = new FindIndividualIssueResponseDto(result, findCommentByIssueId(issueId));
+
+        return finalResponse;
     }
 
     private List<CommentDto> findCommentByIssueId(Long issueId){

@@ -1,5 +1,6 @@
 package com.kakaobean.core.issue.domain.repository.query;
 
+import com.kakaobean.core.issue.domain.Issue;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,30 +11,33 @@ import java.util.List;
 @NoArgsConstructor
 public class FindIndividualIssueResponseDto {
 
-    private Long issueId;
-    private String title;
-    private String content;
-    private String writtenTime;
-    private String writerName;
-    private String thumbnailImg;
-    private List<CommentDto> comments = new ArrayList<>();
+    private IssueDto issue;
 
-    public FindIndividualIssueResponseDto(Long issueId, String title, String content, String writtenTime, String writerName, String thumbnailImg) {
-        this.issueId = issueId;
-        this.title = title;
-        this.content = content;
-        this.writtenTime = writtenTime;
-        this.writerName = writerName;
-        this.thumbnailImg = thumbnailImg;
-    }
-    public FindIndividualIssueResponseDto(Long issueId, String title, String content, String writtenTime, String writerName, String thumbnailImg, List<CommentDto> comments) {
-        this.issueId = issueId;
-        this.title = title;
-        this.content = content;
-        this.writtenTime = writtenTime;
-        this.writerName = writerName;
-        this.thumbnailImg = thumbnailImg;
+    private List<CommentDto> comments;
+
+    public FindIndividualIssueResponseDto(IssueDto issue, List<CommentDto> comments) {
+        this.issue = issue;
         this.comments = comments;
+    }
+
+    @Getter
+    public static class IssueDto {
+
+        private Long issueId;
+        private String title;
+        private String content;
+        private String writtenTime;
+        private String writerName;
+        private String thumbnailImg;
+
+        public IssueDto(Long issueId, String title, String content, String writtenTime, String writerName, String thumbnailImg) {
+            this.issueId = issueId;
+            this.title = title;
+            this.content = content;
+            this.writtenTime = writtenTime;
+            this.writerName = writerName;
+            this.thumbnailImg = thumbnailImg;
+        }
     }
 
     @Getter
