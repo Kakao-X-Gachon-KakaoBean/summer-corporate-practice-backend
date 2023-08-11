@@ -3,8 +3,8 @@ package com.kakaobean.core.sprint.domain;
 import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.exception.NotExistsProjectMemberException;
-import com.kakaobean.core.sprint.Exception.InvalidSprintDateException;
-import com.kakaobean.core.sprint.Exception.SprintAccessException;
+import com.kakaobean.core.sprint.exception.InvalidSprintDateException;
+import com.kakaobean.core.sprint.exception.SprintAccessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

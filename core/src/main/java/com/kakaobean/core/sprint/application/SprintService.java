@@ -1,6 +1,6 @@
 package com.kakaobean.core.sprint.application;
 
-import com.kakaobean.core.sprint.Exception.NotExistsSprintException;
+import com.kakaobean.core.sprint.exception.NotExistsSprintException;
 import com.kakaobean.core.sprint.application.dto.ModifySprintRequestDto;
 import com.kakaobean.core.sprint.application.dto.RegisterSprintRequestDto;
 import com.kakaobean.core.sprint.domain.Sprint;

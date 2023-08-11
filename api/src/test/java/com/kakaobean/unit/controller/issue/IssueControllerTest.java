@@ -107,8 +107,7 @@ public class IssueControllerTest extends ControllerTest {
                 .willReturn(FindIndividualIssueResponseDtoFactory.create());
 
         //when
-        ResultActions perform = mockMvc.perform(get("/issues")
-                .param("issueId", "11")
+        ResultActions perform = mockMvc.perform(get("/issues/{issueId}", 1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
         );
@@ -119,16 +118,17 @@ public class IssueControllerTest extends ControllerTest {
         perform.andDo(document("find_individual_issue",
                 getDocumentRequest(),
                 getDocumentResponse(),
-                requestParameters(
+                pathParameters(
                         parameterWithName("issueId").description("조회할 이슈 id")
                 ),
                 responseFields(
-                        fieldWithPath("issueId").type(NUMBER).description("이슈 id"),
-                        fieldWithPath("title").type(STRING).description("이슈 제목"),
-                        fieldWithPath("content").type(STRING).description("이슈 내용"),
-                        fieldWithPath("writtenTime").type(STRING).description("이슈 작성 시간"),
-                        fieldWithPath("writerName").type(STRING).description("이슈 작성자 닉네임"),
-                        fieldWithPath("thumbnailImg").type(STRING).description("이슈 작성자의 프로필 섬네일 이미지"),
+                        fieldWithPath("issue").type(OBJECT).description("이슈"),
+                        fieldWithPath("issue.issueId").type(NUMBER).description("이슈 id"),
+                        fieldWithPath("issue.title").type(STRING).description("이슈 제목"),
+                        fieldWithPath("issue.content").type(STRING).description("이슈 내용"),
+                        fieldWithPath("issue.writtenTime").type(STRING).description("이슈 작성 시간"),
+                        fieldWithPath("issue.writerName").type(STRING).description("이슈 작성자 닉네임"),
+                        fieldWithPath("issue.thumbnailImg").type(STRING).description("이슈 작성자의 프로필 섬네일 이미지"),
                         fieldWithPath("comments[].commentId").type(NUMBER).description("댓글 id"),
                         fieldWithPath("comments[].content").type(STRING).description("댓글 내용"),
                         fieldWithPath("comments[].writtenTime").type(STRING).description("댓글 작성 시간"),

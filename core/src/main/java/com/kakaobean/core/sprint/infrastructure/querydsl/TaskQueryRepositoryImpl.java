@@ -1,4 +1,4 @@
-package com.kakaobean.core.sprint.infrastructure;
+package com.kakaobean.core.sprint.infrastructure.querydsl;
 
 import com.kakaobean.core.sprint.domain.repository.query.FindTaskResponseDto;
 import com.kakaobean.core.sprint.domain.repository.query.TaskQueryRepository;
