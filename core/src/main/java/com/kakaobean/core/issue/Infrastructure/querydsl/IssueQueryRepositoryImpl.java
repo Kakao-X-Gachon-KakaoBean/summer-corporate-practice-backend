@@ -1,4 +1,4 @@
-package com.kakaobean.core.issue.Infrastructure;
+package com.kakaobean.core.issue.Infrastructure.querydsl;
 
 import com.kakaobean.common.PagingUtils;
 import com.kakaobean.core.issue.domain.repository.query.FindIndividualIssueResponseDto;

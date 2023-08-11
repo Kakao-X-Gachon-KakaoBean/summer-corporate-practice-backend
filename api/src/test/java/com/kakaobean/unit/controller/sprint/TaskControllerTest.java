@@ -203,7 +203,8 @@ public class TaskControllerTest extends ControllerTest {
                         fieldWithPath("workStatus").type(STRING).description("테스크 작업 상태"),
                         fieldWithPath("workerId").type(NUMBER).description("테스크 작업자 id"),
                         fieldWithPath("workerName").type(STRING).description("테스크 작업자 이름"),
-                        fieldWithPath("workerThumbnailImg").type(STRING).description("테스크 작업자 프로필 이미지")
+                        fieldWithPath("workerThumbnailImg").type(STRING).description("테스크 작업자 프로필 이미지"),
+                        fieldWithPath("sprintId").type(NUMBER).description("테스크가 포함된 스프린트 id")
                 )
         ));
     }

@@ -1,4 +1,4 @@
-package com.kakaobean.core.sprint.Exception;
+package com.kakaobean.core.sprint.exception;
 
 import com.kakaobean.core.common.ApplicationException;
 import lombok.Getter;

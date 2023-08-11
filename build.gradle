@@ -68,6 +68,9 @@ subprojects {
 						"**/util*",
 						"**/exception*",
 						"**/Q*",
+						"**/query*",
+						"**/querydsl*",
+
 				])
 			}))
 		}
@@ -97,6 +100,8 @@ subprojects {
 						"**.util*",
 						"**.common*",
 						"**.Q*",
+						"**/query*",
+						"**/querydsl*",
 				]
 			}
 		}

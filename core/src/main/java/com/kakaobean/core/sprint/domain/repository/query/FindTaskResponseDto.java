@@ -14,13 +14,15 @@ public class FindTaskResponseDto {
     private Long workerId;
     private String workerName;
     private String workerThumbnailImg;
+    private Long sprintId;
 
-    public FindTaskResponseDto(String taskTitle, String taskDesc, WorkStatus workStatus, Long workerId, String workerName, String workerThumbnailImg) {
+    public FindTaskResponseDto(String taskTitle, String taskDesc, WorkStatus workStatus, Long workerId, String workerName, String workerThumbnailImg, Long sprintId) {
         this.taskTitle = taskTitle;
         this.taskDesc = taskDesc;
         this.workStatus = workStatus;
         this.workerId = workerId;
         this.workerName = workerName;
         this.workerThumbnailImg = workerThumbnailImg;
+        this.sprintId = sprintId;
     }
 }

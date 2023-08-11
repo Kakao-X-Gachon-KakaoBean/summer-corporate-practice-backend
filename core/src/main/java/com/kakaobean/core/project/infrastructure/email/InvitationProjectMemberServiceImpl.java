@@ -1,4 +1,4 @@
-package com.kakaobean.core.project.infrastructure;
+package com.kakaobean.core.project.infrastructure.email;
 
 import com.kakaobean.common.EmailHtmlUtils;
 import com.kakaobean.core.project.domain.Project;
