@@ -1,6 +1,7 @@
 package com.kakaobean.security.oauth2;
 
 import com.kakaobean.config.AppProperties;
+import com.kakaobean.security.UserPrincipal;
 import com.kakaobean.security.token.RefreshTokenRepository;
 import com.kakaobean.security.token.TokenProvider;
 import com.kakaobean.util.CookieUtils;
@@ -53,12 +54,14 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String accessToken = tokenProvider.createAccessToken(authentication);
         String refreshToken = tokenProvider.createRefreshToken(authentication);
 
-        refreshTokenRepository.save(authentication.getName(), refreshToken);
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+        refreshTokenRepository.save(String.valueOf(principal.getId()), refreshToken);
 
         return UriComponentsBuilder
                 .fromUriString(targetUrl)
                 .queryParam("accessToken", accessToken)
                 .queryParam("refreshToken", refreshToken)
+                .queryParam("memberId", principal.getId())
                 .build().toUriString();
     }
 
