@@ -11,10 +11,12 @@ public class LocalLoginResponse {
 
     private String accessToken;
     private String refreshToken;
+    private Long memberId;
     private String tokenType = "Bearer";
 
-    public LocalLoginResponse(String accessToken, String refreshToken) {
+    public LocalLoginResponse(String accessToken, String refreshToken, Long memberId) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
+        this.memberId = memberId;
     }
 }
