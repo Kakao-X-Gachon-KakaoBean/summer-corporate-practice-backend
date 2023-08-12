@@ -1,5 +1,6 @@
 package com.kakaobean.security.token;
 
+import com.kakaobean.security.UserPrincipal;
 import com.kakaobean.security.exception.NotExistsRefreshTokenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -13,12 +14,13 @@ public class RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     public String save(Authentication authentication, String refreshToken) {
-        String key = authentication.getName();
-        if(refreshTokenRepository.findByAuthentication(key).isEmpty()){
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        String id = String.valueOf(userPrincipal.getId());
+        if(refreshTokenRepository.findByAuthentication(id).isEmpty()){
             throw new NotExistsRefreshTokenException();
         }
-        refreshTokenRepository.deleteByAuthentication(key);
-        refreshTokenRepository.save(key, refreshToken);
+        refreshTokenRepository.deleteByAuthentication(id);
+        refreshTokenRepository.save(id, refreshToken);
         return tokenProvider.createAccessToken(authentication);
     }
 }
