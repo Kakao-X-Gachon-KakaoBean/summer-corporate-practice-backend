@@ -1,6 +1,5 @@
 package com.kakaobean.core.issue.exception;
 
-import com.kakaobean.core.sprint.Exception.SprintException;
 
 public class IssueAccessException extends IssueException {
 

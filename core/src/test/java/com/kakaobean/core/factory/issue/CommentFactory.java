@@ -12,4 +12,12 @@ public class CommentFactory {
                 .writerId(2L)
                 .build();
     }
+
+    public static Comment createCommentWithMemberIdAndIssueId(Long memberId, Long issueId){
+        return Comment.builder()
+                .issueId(issueId)
+                .content("이슈 내용")
+                .writerId(2L)
+                .build();
+    }
 }

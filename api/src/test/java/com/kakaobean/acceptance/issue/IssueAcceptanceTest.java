@@ -67,6 +67,33 @@ public class IssueAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
+    void 이슈_삭제(){
+
+        //프로젝트 생성
+        RegisterProjectRequest projectRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
+        ProjectAcceptanceTask.registerProjectTask(projectRequest);
+        Project project = projectRepository.findAll().get(0);
+
+        //이슈 생성
+        RegisterIssueRequest issueRequest = RegisterIssueRequestFactory.createWithProjectId(project.getId());
+        IssueAcceptanceTask.registerIssueTask(issueRequest);
+        Issue issue = issueRepository.findAll().get(0);
+
+        //댓글 생성
+        RegisterCommentRequest commentRequest = RegisterCommentRequestFactory.createWithIssueId(issue.getId());
+        CommentAcceptanceTask.registerCommentTask(commentRequest);
+
+        //이슈 삭제
+        //when
+        ExtractableResponse response = IssueAcceptanceTask.removeIssueTask(issue.getId());
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(issueRepository.findAll().size()).isEqualTo(0);
+        assertThat(commentRepository.findAll().size()).isEqualTo(0);
+    }
+
+    @Test
     void 이슈를_8개씩_페이징을_사용해_조회한다(){
 
         //프로젝트 생성

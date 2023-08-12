@@ -1,9 +1,16 @@
 package com.kakaobean.core.integration.issue;
 
 
+import com.kakaobean.core.factory.issue.CommentFactory;
+import com.kakaobean.core.factory.issue.IssueFactory;
+import com.kakaobean.core.factory.issue.dto.RegisterCommentRequestDtoFactory;
 import com.kakaobean.core.factory.project.ProjectFactory;
 import com.kakaobean.core.integration.IntegrationTest;
+import com.kakaobean.core.issue.application.CommentService;
 import com.kakaobean.core.issue.application.IssueService;
+import com.kakaobean.core.issue.application.dto.request.RegisterCommentRequestDto;
+import com.kakaobean.core.issue.domain.Comment;
+import com.kakaobean.core.issue.domain.Issue;
 import com.kakaobean.core.issue.domain.repository.CommentRepository;
 import com.kakaobean.core.issue.domain.repository.IssueRepository;
 import com.kakaobean.core.project.domain.Project;
@@ -24,6 +31,9 @@ public class IssueServiceTest extends IntegrationTest {
 
     @Autowired
     IssueService issueService;
+
+    @Autowired
+    CommentService commentService;
 
     @Autowired
     IssueRepository issueRepository;
@@ -83,5 +93,24 @@ public class IssueServiceTest extends IntegrationTest {
 
         // then
         assertThat(issueRepository.findAll().size()).isEqualTo(1);
+    }
+
+    @Test
+    void 이슈_작성자가_이슈_삭제에_성공한다(){
+        //given
+        Project project = projectRepository.save(ProjectFactory.create());
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), MEMBER));
+        Issue issue = IssueFactory.createIssueWithMemberIdAndProjectId(projectMember.getMemberId(), project.getId());
+        Comment comment = CommentFactory.createComment(issue.getId());
+
+        issueRepository.save(issue);
+        commentRepository.save(comment);
+
+        //when
+        issueService.removeIssue(projectMember.getMemberId(), issue.getId());
+
+        //then
+        assertThat(issueRepository.findAll().size()).isEqualTo(0);
+        assertThat(commentRepository.findAll().size()).isEqualTo(0);
     }
 }

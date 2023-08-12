@@ -25,6 +25,18 @@ public class IssueAcceptanceTask {
                 .extract();
     }
 
+    public static ExtractableResponse removeIssueTask(Long issueId){
+        return RestAssured
+                .given()
+                .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
+                .accept(APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
+                .when()
+                .delete("/issues/{issueId}", issueId)
+                .then().log().all()
+                .extract();
+    }
+
     public static ExtractableResponse findIssueWithPagingTask(Long projectId, Integer page){
         return RestAssured
                 .given()
