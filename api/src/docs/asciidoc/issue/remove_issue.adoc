@@ -1,0 +1,13 @@
+= 이슈 삭제
+
+== 요청
+
+include::{snippets}/remove_issue/http-request.adoc[]
+
+include::{snippets}/remove_issue/path-parameters.adoc[]
+
+== 응답
+
+include::{snippets}/remove_issue/http-response.adoc[]
+
+include::{snippets}/remove_issue/response-fields.adoc[]

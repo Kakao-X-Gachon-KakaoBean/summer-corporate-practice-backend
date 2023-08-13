@@ -44,6 +44,13 @@ public class IssueController {
         return new ResponseEntity(responseDto, OK);
     }
 
+    @DeleteMapping("/issues/{issueId}")
+    public ResponseEntity removeIssue(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                       @PathVariable Long issueId) {
+        issueService.removeIssue(userPrincipal.getId(), issueId);
+        return new ResponseEntity(CommandSuccessResponse.from("이슈가 삭제되었습니다."), OK);
+    }
+
 
 //    TODO:
 //     1. 이슈 생성 ㄷ
