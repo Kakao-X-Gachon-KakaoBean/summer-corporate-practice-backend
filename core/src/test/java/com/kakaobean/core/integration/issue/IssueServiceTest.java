@@ -102,13 +102,15 @@ public class IssueServiceTest extends IntegrationTest {
         // given
         Project project = projectRepository.save(ProjectFactory.createWithoutId());
         ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
-        Issue issue = issueRepository.save(IssueFactory.createIssue(project.getId()));
+        Issue issue = issueRepository.save(IssueFactory.createIssueWithMemberIdAndProjectId(projectMember.getMemberId(), project.getId()));
 
         // when
         issueService.modifyIssue(ModifyIssueRequestDtoFactory.createWithId(projectMember.getMemberId(), issue.getId()));
 
         // then
-        assertThat(issueRepository.findById(issue.getId()).get().getTitle()).isEqualTo("수정된 스프린트 제목");
+        assertThat(issueRepository.findById(issue.getId()).get().getTitle()).isEqualTo("수정된 이슈 제목");
+        assertThat(issueRepository.findById(issue.getId()).get().getContent()).isEqualTo("수정된 이슈 내용");
+
     }
 
     @Test

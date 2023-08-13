@@ -107,10 +107,11 @@ public class IssueServiceTest extends UnitTest {
                 .willReturn(Optional.of(createMember()));
 
         // when
-        issueService.modifyIssue(ModifyIssueRequestDtoFactory.createWithId(2L, 1L));
+        issueService.modifyIssue(ModifyIssueRequestDtoFactory.createWithId(issue.getWriterId(), 1L));
 
         // then
         assertThat(issue.getTitle()).isEqualTo("수정된 이슈 제목");
+        assertThat(issue.getContent()).isEqualTo("수정된 이슈 내용");
     }
 
     @Test
