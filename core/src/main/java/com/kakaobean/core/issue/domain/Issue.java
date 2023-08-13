@@ -14,6 +14,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.time.LocalDate;
 
 @Getter
 @Where(clause = "status = 'ACTIVE'")
@@ -66,5 +67,10 @@ public class Issue extends BaseEntity {
     }
     public void registered(Long issueId) {
         Events.raise(new RegisterIssueEvent(issueId));
+    }
+
+    public void modify(String newTitle, String newContent, ){
+        this.title = newTitle;
+        this.content = content;
     }
 }
