@@ -59,6 +59,31 @@ public class IssueControllerTest extends ControllerTest {
         ));
     }
 
+    @Test
+    @WithMockUser
+    void 이슈_삭제() throws Exception {
+
+        // when
+        ResultActions perform = mockMvc.perform(delete("/issues/{issueId}",1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+        );
+
+        //then
+        perform.andDo(print());
+        perform.andExpect(status().is2xxSuccessful());
+        perform.andDo(document("remove_issue",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                pathParameters(
+                        parameterWithName("issueId").description("삭제할 이슈의 id")
+                ),
+                responseFields(
+                        fieldWithPath("message").type(STRING).description("이슈가 삭제 되었습니다.")
+                )
+        ));
+    }
+
 
     @Test
     @WithMockUser

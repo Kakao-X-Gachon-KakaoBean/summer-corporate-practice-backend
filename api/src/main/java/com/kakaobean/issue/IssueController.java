@@ -8,7 +8,6 @@ import com.kakaobean.core.issue.domain.repository.query.IssueQueryRepository;
 import com.kakaobean.issue.dto.ModifyIssueRequest;
 import com.kakaobean.issue.dto.RegisterIssueRequest;
 import com.kakaobean.security.UserPrincipal;
-import com.kakaobean.sprint.dto.request.ModifySprintRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +43,13 @@ public class IssueController {
     public ResponseEntity findIssue(@PathVariable Long issueId){
         FindIndividualIssueResponseDto responseDto = issueQueryRepository.findByIssueId(issueId);
         return new ResponseEntity(responseDto, OK);
+    }
+
+    @DeleteMapping("/issues/{issueId}")
+    public ResponseEntity removeIssue(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                       @PathVariable Long issueId) {
+        issueService.removeIssue(userPrincipal.getId(), issueId);
+        return new ResponseEntity(CommandSuccessResponse.from("이슈가 삭제되었습니다."), OK);
     }
 
     @PatchMapping("/issues/{issueId}")
