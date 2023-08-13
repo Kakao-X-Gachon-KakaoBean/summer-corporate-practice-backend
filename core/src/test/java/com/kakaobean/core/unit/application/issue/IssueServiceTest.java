@@ -5,9 +5,11 @@ import com.kakaobean.core.factory.project.ProjectMemberFactory;
 import com.kakaobean.core.issue.application.IssueService;
 import com.kakaobean.core.issue.application.dto.request.RegisterIssueRequestDto;
 import com.kakaobean.core.issue.domain.Issue;
+import com.kakaobean.core.issue.domain.IssueValidator;
 import com.kakaobean.core.issue.domain.repository.CommentRepository;
 import com.kakaobean.core.issue.domain.repository.IssueRepository;
 import com.kakaobean.core.issue.exception.IssueAccessException;
+import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.sprint.exception.SprintAccessException;
 import com.kakaobean.core.unit.UnitTest;
@@ -43,7 +45,7 @@ public class IssueServiceTest extends UnitTest {
         issueService = new IssueService(
                 issueRepository,
                 commentRepository,
-                projectMemberRepository
+                new IssueValidator(projectMemberRepository)
         );
     }
 
@@ -65,8 +67,10 @@ public class IssueServiceTest extends UnitTest {
         //given
         Issue issue = IssueFactory.createIssue(1L);
         given(issueRepository.findById(issue.getId())).willReturn(Optional.of(issue));
-        given(projectMemberRepository.findByMemberIdAndProjectId(issue.getWriterId(), issue.getProjectId()))
-                .willReturn(Optional.of(ProjectMemberFactory.createWithMemberIdAndProjectId(issue.getWriterId(), issue.getProjectId(),MEMBER)));
+        given(projectMemberRepository.findByMemberIdAndProjectId(3L, 1L))
+                .willReturn(Optional.of(ProjectMemberFactory.createMember()));
+
+
         //when
         issueService.removeIssue(issue.getWriterId(), issue.getId());
 
@@ -79,15 +83,14 @@ public class IssueServiceTest extends UnitTest {
     @Test
     void 이슈_생성자가_아닌_사람이_이슈를_삭제할_수_없다(){
         //given
-        Issue issue = IssueFactory.createIssue(1L);
-        given(issueRepository.findById(Mockito.anyLong()))
-                .willReturn(Optional.of(issue));
         given(projectMemberRepository.findByMemberIdAndProjectId(Mockito.anyLong(), Mockito.anyLong()))
                 .willReturn(Optional.of(ProjectMemberFactory.createMember()));
+        given(issueRepository.findById(Mockito.anyLong()))
+                .willReturn(Optional.of(IssueFactory.createIssue(1L)));
 
         // when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
-            issueService.removeIssue(3L, 4L);
+            issueService.removeIssue(5L, 1L);
         });
 
         // then

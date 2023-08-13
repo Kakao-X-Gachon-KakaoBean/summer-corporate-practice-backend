@@ -10,7 +10,7 @@ public class IssueFactory {
                 .title("이슈 제목")
                 .content("이슈 내용")
                 .projectId(projectId)
-                .writerId(2L)
+                .writerId(3L)
                 .build();
     }
 
