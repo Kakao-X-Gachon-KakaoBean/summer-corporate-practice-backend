@@ -1,7 +1,7 @@
 package com.kakaobean.acceptance.issue;
 
+import com.kakaobean.issue.dto.ModifyIssueRequest;
 import com.kakaobean.issue.dto.RegisterIssueRequest;
-import com.kakaobean.sprint.dto.request.RegisterSprintRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 
@@ -24,6 +24,20 @@ public class IssueAcceptanceTask {
                 .then().log().all()
                 .extract();
     }
+
+    public static ExtractableResponse modifyIssueTask(ModifyIssueRequest request, Long issueId){
+        return RestAssured
+                .given()
+                .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
+                .accept(APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .patch("/issues/{issueId}", issueId)
+                .then().log().all()
+                .extract();
+    }
+
 
     public static ExtractableResponse removeIssueTask(Long issueId){
         return RestAssured

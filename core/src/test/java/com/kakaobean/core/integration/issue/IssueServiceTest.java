@@ -3,14 +3,11 @@ package com.kakaobean.core.integration.issue;
 
 import com.kakaobean.core.factory.issue.CommentFactory;
 import com.kakaobean.core.factory.issue.IssueFactory;
-import com.kakaobean.core.factory.issue.dto.RegisterCommentRequestDtoFactory;
+import com.kakaobean.core.factory.issue.dto.ModifyIssueRequestDtoFactory;
 import com.kakaobean.core.factory.project.ProjectFactory;
-import com.kakaobean.core.factory.sprint.SprintFactory;
-import com.kakaobean.core.factory.sprint.TaskFactory;
 import com.kakaobean.core.integration.IntegrationTest;
 import com.kakaobean.core.issue.application.CommentService;
 import com.kakaobean.core.issue.application.IssueService;
-import com.kakaobean.core.issue.application.dto.request.RegisterCommentRequestDto;
 import com.kakaobean.core.issue.domain.Comment;
 import com.kakaobean.core.issue.domain.Issue;
 import com.kakaobean.core.issue.domain.repository.CommentRepository;
@@ -20,8 +17,6 @@ import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
-import com.kakaobean.core.sprint.domain.Sprint;
-import com.kakaobean.core.sprint.exception.SprintAccessException;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -100,6 +95,36 @@ public class IssueServiceTest extends IntegrationTest {
 
         // then
         assertThat(issueRepository.findAll().size()).isEqualTo(1);
+    }
+
+    @Test
+    void 작성자가_이슈를_수정한다() {
+        // given
+        Project project = projectRepository.save(ProjectFactory.createWithoutId());
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
+        Issue issue = issueRepository.save(IssueFactory.createIssue(project.getId()));
+
+        // when
+        issueService.modifyIssue(ModifyIssueRequestDtoFactory.createWithId(projectMember.getMemberId(), issue.getId()));
+
+        // then
+        assertThat(issueRepository.findById(issue.getId()).get().getTitle()).isEqualTo("수정된 스프린트 제목");
+    }
+
+    @Test
+    void 작성자가_아닌_멤버는_이슈를_수정할_수_없다() {
+        // given
+        Project project = projectRepository.save(ProjectFactory.createWithoutId());
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), MEMBER));
+        Issue issue = issueRepository.save(IssueFactory.createIssue(project.getId()));
+
+        // when
+        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
+            issueService.modifyIssue(ModifyIssueRequestDtoFactory.createWithId(projectMember.getMemberId(), issue.getId()));
+        });
+
+        // then
+        result.isInstanceOf(IssueAccessException.class);
     }
 
     @Test

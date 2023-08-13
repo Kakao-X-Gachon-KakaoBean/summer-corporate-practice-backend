@@ -1,17 +1,17 @@
 package com.kakaobean.core.unit.application.issue;
 
 import com.kakaobean.core.factory.issue.IssueFactory;
+import com.kakaobean.core.factory.issue.dto.ModifyIssueRequestDtoFactory;
 import com.kakaobean.core.factory.project.ProjectMemberFactory;
 import com.kakaobean.core.issue.application.IssueService;
+
 import com.kakaobean.core.issue.application.dto.request.RegisterIssueRequestDto;
 import com.kakaobean.core.issue.domain.Issue;
 import com.kakaobean.core.issue.domain.IssueValidator;
 import com.kakaobean.core.issue.domain.repository.CommentRepository;
 import com.kakaobean.core.issue.domain.repository.IssueRepository;
 import com.kakaobean.core.issue.exception.IssueAccessException;
-import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
-import com.kakaobean.core.sprint.exception.SprintAccessException;
 import com.kakaobean.core.unit.UnitTest;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +21,8 @@ import org.mockito.Mockito;
 
 import java.util.Optional;
 
-import static com.kakaobean.core.project.domain.ProjectRole.MEMBER;
+import static com.kakaobean.core.factory.project.ProjectMemberFactory.createMember;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -91,6 +92,38 @@ public class IssueServiceTest extends UnitTest {
         // when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
             issueService.removeIssue(5L, 1L);
+        });
+
+        // then
+        result.isInstanceOf(IssueAccessException.class);
+    }
+
+    @Test
+    void 작성자가_이슈를_수정한다() {
+        // given
+        Issue issue = IssueFactory.createIssue(1L);
+        given(issueRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(issue));
+        given(projectMemberRepository.findByMemberIdAndProjectId(Mockito.anyLong(), Mockito.anyLong()))
+                .willReturn(Optional.of(createMember()));
+
+        // when
+        issueService.modifyIssue(ModifyIssueRequestDtoFactory.createWithId(2L, 1L));
+
+        // then
+        assertThat(issue.getTitle()).isEqualTo("수정된 이슈 제목");
+    }
+
+    @Test
+    void 작성자가_아니면_이슈를_수정할_수_없다() {
+        // given
+        Issue issue = IssueFactory.createIssue(1L);
+        given(issueRepository.findById(Mockito.anyLong())).willReturn(Optional.ofNullable(issue));
+        given(projectMemberRepository.findByMemberIdAndProjectId(Mockito.anyLong(), Mockito.anyLong()))
+                .willReturn(Optional.of(createMember()));
+
+        // when
+        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
+            issueService.modifyIssue(ModifyIssueRequestDtoFactory.createWithId(2L, 1L));
         });
 
         // then
