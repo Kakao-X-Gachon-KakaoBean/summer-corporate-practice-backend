@@ -17,7 +17,7 @@ public class CommentFactory {
         return Comment.builder()
                 .issueId(issueId)
                 .content("이슈 내용")
-                .writerId(2L)
+                .writerId(memberId)
                 .build();
     }
 }
