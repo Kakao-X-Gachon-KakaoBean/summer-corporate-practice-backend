@@ -21,11 +21,13 @@ public class FindPagingReleaseNotesResponseDto {
         private final Long id;
         private final String title;
         private final String version;
+        private final String content;
 
-        public ReleaseNoteDto(Long id, String title, String version) {
+        public ReleaseNoteDto(Long id, String title, String version, String content) {
             this.id = id;
             this.title = title;
             this.version = version;
+            this.content = content;
         }
     }
 }

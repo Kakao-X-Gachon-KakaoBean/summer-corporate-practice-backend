@@ -1,6 +1,7 @@
 package com.kakaobean.security.local;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kakaobean.security.UserPrincipal;
 import com.kakaobean.security.token.RefreshTokenRepository;
 import com.kakaobean.security.token.TokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +31,12 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         String accessToken = tokenProvider.createAccessToken(authentication);
         String refreshToken = tokenProvider.createRefreshToken(authentication);
 
-        refreshTokenRepository.save(authentication.getName(), refreshToken);
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+        refreshTokenRepository.save(String.valueOf(principal.getId()), refreshToken);
 
-        objectMapper.writeValue(response.getWriter(), new LocalLoginResponse(accessToken, refreshToken));
+        objectMapper.writeValue(
+                response.getWriter(),
+                new LocalLoginResponse(accessToken, refreshToken, principal.getId())
+        );
     }
 }

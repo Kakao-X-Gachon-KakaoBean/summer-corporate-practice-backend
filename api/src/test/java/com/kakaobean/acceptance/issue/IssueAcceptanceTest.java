@@ -2,27 +2,27 @@ package com.kakaobean.acceptance.issue;
 
 import com.kakaobean.acceptance.AcceptanceTest;
 import com.kakaobean.acceptance.project.ProjectAcceptanceTask;
-import com.kakaobean.acceptance.releasenote.ReleaseNoteAcceptanceTask;
-import com.kakaobean.acceptance.sprint.SprintAcceptanceTask;
+
+import com.kakaobean.core.issue.domain.Issue;
+import com.kakaobean.core.issue.domain.repository.CommentRepository;
 import com.kakaobean.core.issue.domain.repository.IssueRepository;
 import com.kakaobean.core.issue.domain.repository.query.FindIssuesWithinPageResponseDto;
-import com.kakaobean.core.issue.domain.repository.query.IssueQueryRepository;
 import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
-import com.kakaobean.core.releasenote.domain.ReleaseNote;
-import com.kakaobean.core.releasenote.domain.repository.query.FindPagingReleaseNotesResponseDto;
-import com.kakaobean.core.sprint.domain.repository.SprintRepository;
+
+import com.kakaobean.issue.dto.ModifyIssueRequest;
+import com.kakaobean.issue.dto.RegisterCommentRequest;
 import com.kakaobean.issue.dto.RegisterIssueRequest;
 import com.kakaobean.project.dto.request.RegisterProjectRequest;
-import com.kakaobean.releasenote.dto.request.DeployReleaseNoteRequest;
-import com.kakaobean.sprint.dto.request.RegisterSprintRequest;
+
+import com.kakaobean.unit.controller.factory.issue.ModifyIssueRequestFactory;
+import com.kakaobean.unit.controller.factory.issue.RegisterCommentRequestFactory;
 import com.kakaobean.unit.controller.factory.issue.RegisterIssueRequestFactory;
-import com.kakaobean.unit.controller.factory.sprint.RegisterSprintRequestFactory;
+
 import io.restassured.response.ExtractableResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static com.kakaobean.core.common.domain.BaseStatus.ACTIVE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class IssueAcceptanceTest extends AcceptanceTest {
@@ -31,6 +31,9 @@ public class IssueAcceptanceTest extends AcceptanceTest {
 
     @Autowired
     IssueRepository issueRepository;
+
+    @Autowired
+    CommentRepository commentRepository;
 
     @Test
     void 이슈_생성(){
@@ -50,6 +53,57 @@ public class IssueAcceptanceTest extends AcceptanceTest {
         //then
         assertThat(response.statusCode()).isEqualTo(201);
         assertThat(issueRepository.findAll().size()).isEqualTo(1);
+    }
+
+    @Test
+    void 이슈_수정(){
+
+        //프로젝트 생성
+        RegisterProjectRequest projectRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
+        ProjectAcceptanceTask.registerProjectTask(projectRequest);
+        Project project = projectRepository.findAll().get(0);
+
+        //스프린트 생성
+        RegisterIssueRequest issueRequest = RegisterIssueRequestFactory.createWithProjectId(project.getId());
+        IssueAcceptanceTask.registerIssueTask(issueRequest);
+        Issue issue = issueRepository.findAll().get(0);
+
+        //스프린트 수정
+        ModifyIssueRequest request = ModifyIssueRequestFactory.createRequest();
+
+        //when
+        ExtractableResponse response = IssueAcceptanceTask.modifyIssueTask(request, issue.getId());
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(issueRepository.findById(issue.getId()).get().getTitle()).isEqualTo("수정된 이슈 제목");
+    }
+
+    @Test
+    void 이슈_삭제(){
+
+        //프로젝트 생성
+        RegisterProjectRequest projectRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
+        ProjectAcceptanceTask.registerProjectTask(projectRequest);
+        Project project = projectRepository.findAll().get(0);
+
+        //이슈 생성
+        RegisterIssueRequest issueRequest = RegisterIssueRequestFactory.createWithProjectId(project.getId());
+        IssueAcceptanceTask.registerIssueTask(issueRequest);
+        Issue issue = issueRepository.findAll().get(0);
+
+        //댓글 생성
+        RegisterCommentRequest commentRequest = RegisterCommentRequestFactory.createWithIssueId(issue.getId());
+        CommentAcceptanceTask.registerCommentTask(commentRequest);
+
+        //이슈 삭제
+        //when
+        ExtractableResponse response = IssueAcceptanceTask.removeIssueTask(issue.getId());
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(issueRepository.findAll().size()).isEqualTo(0);
+        assertThat(commentRepository.findAll().size()).isEqualTo(0);
     }
 
     @Test
@@ -77,4 +131,28 @@ public class IssueAcceptanceTest extends AcceptanceTest {
         assertThat(result.getIssues().size()).isEqualTo(8);
     }
 
+    @Test
+    void 개별_이슈_조회(){
+
+        //프로젝트 생성
+        RegisterProjectRequest projectRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
+        ProjectAcceptanceTask.registerProjectTask(projectRequest);
+        Project project = projectRepository.findAll().get(0);
+
+        //이슈 생성
+        RegisterIssueRequest issueRequest = RegisterIssueRequestFactory.createWithProjectId(project.getId());
+        IssueAcceptanceTask.registerIssueTask(issueRequest);
+        Issue issue = issueRepository.findAll().get(0);
+
+        //댓글 생성
+        RegisterCommentRequest commentRequest = RegisterCommentRequestFactory.createWithIssueId(issue.getId());
+        CommentAcceptanceTask.registerCommentTask(commentRequest);
+
+        //이슈 조회
+        //when
+        ExtractableResponse response = IssueAcceptanceTask.findIssueWithId(issue.getId());
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(200);
+    }
 }

@@ -28,8 +28,4 @@ public class CommentController {
         commentService.registerComment(request.toServiceDto(userPrincipal.getId()));
         return new ResponseEntity(CommandSuccessResponse.from("댓글이 생성되었습니다."), CREATED);
     }
-//    TODO:
-//     1. 댓글 생성
-//     2. 댓글 삭제
-//     3. 댓글 전체 조회
 }

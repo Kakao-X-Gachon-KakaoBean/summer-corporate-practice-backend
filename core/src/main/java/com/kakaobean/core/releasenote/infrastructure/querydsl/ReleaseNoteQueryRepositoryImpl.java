@@ -1,4 +1,4 @@
-package com.kakaobean.core.releasenote.infrastructure;
+package com.kakaobean.core.releasenote.infrastructure.querydsl;
 
 
 import com.kakaobean.common.PagingUtils;
@@ -34,7 +34,8 @@ public class ReleaseNoteQueryRepositoryImpl implements ReleaseNoteQueryRepositor
                                 FindPagingReleaseNotesResponseDto.ReleaseNoteDto.class,
                                 releaseNote.id,
                                 releaseNote.title,
-                                releaseNote.version
+                                releaseNote.version,
+                                releaseNote.content
                         )
                 )
                 .from(releaseNote)

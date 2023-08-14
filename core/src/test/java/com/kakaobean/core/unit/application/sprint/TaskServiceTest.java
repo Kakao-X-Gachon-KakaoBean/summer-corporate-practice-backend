@@ -1,20 +1,15 @@
 package com.kakaobean.core.unit.application.sprint;
 
 import com.kakaobean.core.common.event.Events;
-import com.kakaobean.core.factory.project.ProjectMemberFactory;
 import com.kakaobean.core.factory.sprint.SprintFactory;
 import com.kakaobean.core.factory.sprint.TaskFactory;
 import com.kakaobean.core.factory.sprint.dto.ChangeWorkStatusRequestDtoFactory;
 import com.kakaobean.core.factory.sprint.dto.ModifyTaskRequestDtoFactory;
-import com.kakaobean.core.project.domain.Project;
-import com.kakaobean.core.project.domain.ProjectMember;
-import com.kakaobean.core.project.domain.event.RemovedProjectEvent;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
-import com.kakaobean.core.sprint.Exception.AssignmentNotAllowedException;
-import com.kakaobean.core.sprint.Exception.ChangeOperationNotAllowedException;
-import com.kakaobean.core.sprint.Exception.TaskAccessException;
+import com.kakaobean.core.sprint.exception.AssignmentNotAllowedException;
+import com.kakaobean.core.sprint.exception.ChangeOperationNotAllowedException;
+import com.kakaobean.core.sprint.exception.TaskAccessException;
 import com.kakaobean.core.sprint.application.TaskService;
-import com.kakaobean.core.sprint.domain.Sprint;
 import com.kakaobean.core.sprint.domain.Task;
 import com.kakaobean.core.sprint.domain.TaskValidator;
 import com.kakaobean.core.sprint.domain.WorkStatus;
@@ -32,11 +27,9 @@ import org.mockito.Mockito;
 
 import java.util.Optional;
 
-import static com.kakaobean.core.factory.project.ProjectFactory.createWithoutId;
 import static com.kakaobean.core.factory.project.ProjectMemberFactory.*;
 import static com.kakaobean.core.factory.sprint.SprintFactory.createWithId;
 import static com.kakaobean.core.factory.sprint.dto.RegisterTaskRequestDtoFactory.createWithId;
-import static com.kakaobean.core.project.domain.ProjectRole.MEMBER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.*;
@@ -196,7 +189,7 @@ public class TaskServiceTest extends UnitTest {
     }
 
     @Test
-    void Viewr는_테스크를_할당받을_수_없다() {
+    void Viewer는_테스크를_할당받을_수_없다() {
         // given
         Task task = TaskFactory.createWithId(1L, null);
         given(taskRepository.findById(Mockito.anyLong())).willReturn(Optional.of(task));

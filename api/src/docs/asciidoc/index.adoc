@@ -38,6 +38,7 @@
 
 * link:/docs/member/register_member.html[로컬 멤버 생성 API, window=_blank ]
 * link:/docs/member/find_member_info.html[멤버 정보 찾기 API, window=_blank ]
+* link:/docs/member/modify_member_info.html[멤버 이름 변경 API, window=_blank ]
 * link:/docs/member/modify_member_password.html[멤버 비밀번호 변경 API, window=_blank ]
 * link:/docs/member/upload_member_profile.html[멤버 프로필 이미지 업로드 API, window=_blank ]
 
@@ -74,7 +75,6 @@
 * link:/docs/release_note/find_release_notes_with_paging.html[페이징을 사용한 릴리즈 노트 조회 API, window=_blank ]
 * link:/docs/release_note/find_release_notes.html[릴리즈 노트 전체 조회 API, window=_blank ]
 
-
 == 릴리즈 노트 원고 API
 
 * link:/docs/release_note/register_manuscript.html[릴리즈 노트 원고 생성 API, window=_blank ]
@@ -84,6 +84,16 @@
 * link:/docs/release_note/has_right_to_modify_manuscript.html[릴리즈 노트 원고 수정 권한 획득 API, window=_blank ]
 * link:/docs/release_note/modify_manuscript.html[릴리즈 노트 원고 수정 API, window=_blank ]
 * link:/docs/release_note/delete_manuscript.html[릴리즈 노트 원고 삭제 API, window=_blank ]
+
+== 이슈 API
+
+* link:/docs/issue/register_issue.html[이슈 생성 API, window=_blank ]
+* link:/docs/issue/register_comment.html[댓글 생성 API, window=_blank ]
+* link:/docs/issue/modify_issue.html[이슈 수정 API, window=_blank ]
+* link:/docs/issue/find_issues_with_paging.html[이슈 페이징 적용 조회 API, window=_blank ]
+* link:/docs/issue/find_individual_issue.html[이슈 개별 조회 API, window=_blank ]
+* link:/docs/issue/remove_issue.html[이슈 삭제 API, window=_blank ]
+
 
 == 스프린트 API
 

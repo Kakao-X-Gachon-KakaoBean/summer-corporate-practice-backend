@@ -1,6 +1,6 @@
 package com.kakaobean.core.sprint.application;
 
-import com.kakaobean.core.sprint.Exception.NotExistsTaskException;
+import com.kakaobean.core.sprint.exception.NotExistsTaskException;
 import com.kakaobean.core.sprint.application.dto.ChangeWorkStatusRequestDto;
 import com.kakaobean.core.sprint.application.dto.ModifyTaskRequestDto;
 import com.kakaobean.core.sprint.application.dto.RegisterTaskRequestDto;
