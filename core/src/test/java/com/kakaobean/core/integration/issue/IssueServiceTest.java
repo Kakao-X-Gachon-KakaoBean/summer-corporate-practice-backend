@@ -17,6 +17,7 @@ import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
+import com.kakaobean.core.project.exception.NotExistsProjectMemberException;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -95,6 +96,21 @@ public class IssueServiceTest extends IntegrationTest {
 
         // then
         assertThat(issueRepository.findAll().size()).isEqualTo(1);
+    }
+
+    @Test
+    void 프로젝트에_소속되지_않은_사용자이기에_이슈_생성에_실패한다(){
+        // given
+        Project project = projectRepository.save(ProjectFactory.create());
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, 3L, VIEWER));
+
+        // when
+        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
+            issueService.registerIssue(createWithId(project.getId(), projectMember.getMemberId()));
+        });
+
+        // then
+        result.isInstanceOf(NotExistsProjectMemberException.class);
     }
 
     @Test
