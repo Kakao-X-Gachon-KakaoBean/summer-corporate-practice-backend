@@ -5,6 +5,7 @@ import com.kakaobean.core.issue.application.IssueService;
 import com.kakaobean.core.issue.domain.repository.query.FindIndividualIssueResponseDto;
 import com.kakaobean.core.issue.domain.repository.query.FindIssuesWithinPageResponseDto;
 import com.kakaobean.core.issue.domain.repository.query.IssueQueryRepository;
+import com.kakaobean.issue.dto.ModifyIssueRequest;
 import com.kakaobean.issue.dto.RegisterIssueRequest;
 import com.kakaobean.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
@@ -51,10 +52,12 @@ public class IssueController {
         return new ResponseEntity(CommandSuccessResponse.from("이슈가 삭제되었습니다."), OK);
     }
 
+    @PatchMapping("/issues/{issueId}")
+    public ResponseEntity modifyIssue(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                       @PathVariable Long issueId,
+                                       @Validated @RequestBody ModifyIssueRequest request) {
+        issueService.modifyIssue(request.toServiceDto(userPrincipal.getId(), issueId));
+        return new ResponseEntity(CommandSuccessResponse.from("이슈 정보가 수정되었습니다."), OK);
+    }
 
-//    TODO:
-//     1. 이슈 생성 ㄷ
-//     2. 이슈 삭제
-//     3. 이슈 전체 조회 ㄷ
-//     4. 개별 이슈 조회 + 코맨트 조회 ㄷ
 }

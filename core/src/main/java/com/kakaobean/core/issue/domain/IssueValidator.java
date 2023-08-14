@@ -1,7 +1,6 @@
 package com.kakaobean.core.issue.domain;
 
 import com.kakaobean.core.issue.exception.IssueAccessException;
-import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.exception.NotExistsProjectMemberException;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,7 @@ public class IssueValidator {
                 orElseThrow(NotExistsProjectMemberException::new);
     }
 
-    public void validateRemoveAccess(Issue issue, Long memberId) {
+    public void validateAccess(Issue issue, Long memberId) {
         projectMemberRepository.findByMemberIdAndProjectId(memberId, issue.getProjectId())
                 .orElseThrow(NotExistsProjectMemberException::new);
 

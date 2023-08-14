@@ -1,13 +1,12 @@
 package com.kakaobean.core.issue.application;
 
+import com.kakaobean.core.issue.application.dto.request.ModifyIssueRequestDto;
 import com.kakaobean.core.issue.application.dto.request.RegisterIssueRequestDto;
 import com.kakaobean.core.issue.domain.Issue;
 import com.kakaobean.core.issue.domain.IssueValidator;
 import com.kakaobean.core.issue.domain.repository.CommentRepository;
 import com.kakaobean.core.issue.domain.repository.IssueRepository;
 import com.kakaobean.core.issue.exception.NotExistsIssueException;
-import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
-import com.kakaobean.core.project.exception.NotExistsProjectMemberException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,9 +33,16 @@ public class IssueService {
     public void removeIssue(Long memberId, Long issueId){
         Issue issue = issueRepository.findById(issueId).orElseThrow(NotExistsIssueException::new);
 
-        issueValidator.validateRemoveAccess(issue, memberId);
+        issueValidator.validateAccess(issue, memberId);
 
         commentRepository.deleteByIssueId(issueId);
         issueRepository.delete(issue);
+    }
+
+    @Transactional
+    public void modifyIssue(ModifyIssueRequestDto dto) {
+        Issue issue = issueRepository.findById(dto.getIssueId()).orElseThrow(NotExistsIssueException::new);
+        issueValidator.validateAccess(issue, dto.getWriterId());
+        issue.modify(dto.getTitle(),dto.getContent());
     }
 }

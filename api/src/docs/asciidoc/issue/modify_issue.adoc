@@ -1,0 +1,16 @@
+= 이슈 수정
+
+== 요청
+
+include::{snippets}/modify_issue/http-request.adoc[]
+
+include::{snippets}/modify_issue/path-parameters.adoc[]
+
+include::{snippets}/modify_issue/request-fields.adoc[]
+
+
+== 응답
+
+include::{snippets}/modify_issue/http-response.adoc[]
+
+include::{snippets}/modify_issue/response-fields.adoc[]
