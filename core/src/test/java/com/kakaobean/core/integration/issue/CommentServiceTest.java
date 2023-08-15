@@ -1,12 +1,14 @@
 package com.kakaobean.core.integration.issue;
 
 import com.kakaobean.core.factory.issue.CommentFactory;
+import com.kakaobean.core.factory.issue.dto.ModifyCommentRequestDtoFactory;
 import com.kakaobean.core.factory.issue.dto.RegisterCommentRequestDtoFactory;
 import com.kakaobean.core.factory.project.ProjectFactory;
 import com.kakaobean.core.factory.sprint.dto.RegisterTaskRequestDtoFactory;
 import com.kakaobean.core.integration.IntegrationTest;
 import com.kakaobean.core.issue.application.CommentService;
 import com.kakaobean.core.issue.application.IssueService;
+import com.kakaobean.core.issue.application.dto.request.ModifyCommentRequestDto;
 import com.kakaobean.core.issue.domain.Comment;
 import com.kakaobean.core.issue.domain.Issue;
 import com.kakaobean.core.issue.domain.repository.CommentRepository;
@@ -69,6 +71,45 @@ public class CommentServiceTest extends IntegrationTest {
 
         // then
         assertThat(commentRepository.findAll().size()).isEqualTo(1);
+    }
+
+    @Test
+    void 댓글을_수정한다() {
+        // given
+        Project project = projectRepository.save(ProjectFactory.create());
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
+        Issue issue = issueRepository.save(createIssue(project.getId()));
+
+        Comment comment = commentRepository.save(CommentFactory.createCommentWithMemberIdAndIssueId(projectMember.getMemberId(), issue.getId()));
+
+        // when
+        ModifyCommentRequestDto requestDto = ModifyCommentRequestDtoFactory.createWithIdAndMemberId(comment.getId(), projectMember.getMemberId());
+        commentService.modifyComment(requestDto);
+
+        Comment result = commentRepository.findById(comment.getId()).get();
+
+        // then
+        assertThat(result.getContent()).isEqualTo("수정된 댓글 내용");
+    }
+
+    @Test
+    void 작성자가_아닌_유저는_댓글을_수정할_수_없다() {
+        // given
+        Project project = projectRepository.save(ProjectFactory.create());
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
+        Issue issue = issueRepository.save(createIssue(project.getId()));
+
+        Comment comment = commentRepository.save(CommentFactory.createCommentWithMemberIdAndIssueId(projectMember.getMemberId(), issue.getId()));
+
+        // when
+        ModifyCommentRequestDto requestDto = ModifyCommentRequestDtoFactory.createWithIdAndMemberId(comment.getId(), 5L);
+
+        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
+            commentService.modifyComment(requestDto);
+        });
+
+        // then
+        result.isInstanceOf(CommentAccessException.class);
     }
 
     @Test

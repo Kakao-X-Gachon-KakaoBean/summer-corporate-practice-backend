@@ -1,0 +1,16 @@
+= 댓글 수정
+
+== 요청
+
+include::{snippets}/modify_comment/http-request.adoc[]
+
+include::{snippets}/modify_comment/path-parameters.adoc[]
+
+include::{snippets}/modify_comment/request-fields.adoc[]
+
+
+== 응답
+
+include::{snippets}/modify_comment/http-response.adoc[]
+
+include::{snippets}/modify_comment/response-fields.adoc[]

@@ -4,7 +4,6 @@ import com.kakaobean.core.issue.application.dto.request.ModifyCommentRequestDto;
 import com.kakaobean.core.issue.application.dto.request.RegisterCommentRequestDto;
 import com.kakaobean.core.issue.domain.Comment;
 import com.kakaobean.core.issue.domain.CommentValidator;
-import com.kakaobean.core.issue.domain.Issue;
 import com.kakaobean.core.issue.domain.repository.CommentRepository;
 import com.kakaobean.core.issue.domain.repository.IssueRepository;
 import com.kakaobean.core.issue.exception.NotExistsIssueException;
@@ -40,10 +39,10 @@ public class CommentService {
         commentRepository.delete(comment);
     }
 
-//    @Transactional
-//    public void modifyComment(ModifyCommentRequestDto dto) {
-//        Comment comment = commentRepository.findById(dto.getCommentId()).orElseThrow(NotExistsCommentException::new);
-//        commentValidator.validateAccess(comment, dto.getWriterId());
-//        comment.modify(dto.getContent());
-//    }
+    @Transactional
+    public void modifyComment(ModifyCommentRequestDto dto) {
+        Comment comment = commentRepository.findById(dto.getCommentId()).orElseThrow(NotExistsCommentException::new);
+        commentValidator.validateAccess(comment, dto.getWriterId());
+        comment.modify(dto.getContent());
+    }
 }

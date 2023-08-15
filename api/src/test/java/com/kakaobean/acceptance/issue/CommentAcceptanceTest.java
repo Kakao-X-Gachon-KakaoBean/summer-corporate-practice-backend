@@ -8,6 +8,7 @@ import com.kakaobean.core.issue.domain.repository.CommentRepository;
 import com.kakaobean.core.issue.domain.repository.IssueRepository;
 import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
+import com.kakaobean.issue.dto.ModifyCommentRequest;
 import com.kakaobean.issue.dto.RegisterCommentRequest;
 import com.kakaobean.issue.dto.RegisterIssueRequest;
 import com.kakaobean.project.dto.request.RegisterProjectRequest;
@@ -79,5 +80,34 @@ public class CommentAcceptanceTest extends AcceptanceTest {
 
         //then
         assertThat(response.statusCode()).isEqualTo(200);
+    }
+
+    @Test
+    void 댓글_수정(){
+        //given
+        ////프로젝트 생성
+        RegisterProjectRequest projectRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
+        ProjectAcceptanceTask.registerProjectTask(projectRequest);
+        Project project = projectRepository.findAll().get(0);
+
+        ////이슈 생성
+        RegisterIssueRequest issueRequest = new RegisterIssueRequest("이슈 제목", "이슈 내용", project.getId());
+        IssueAcceptanceTask.registerIssueTask(issueRequest);
+        Issue issue = issueRepository.findAll().get(0);
+
+        ////코멘트 생성
+        RegisterCommentRequest commentRequest = new RegisterCommentRequest("댓글 내용", issue.getId());
+        CommentAcceptanceTask.registerCommentTask(commentRequest);
+        Comment comment = commentRepository.findAll().get(0);
+
+        ////댓글 수정
+        ModifyCommentRequest modifyCommentRequest = new ModifyCommentRequest("수정된 댓글 내용");
+
+        //when
+        ExtractableResponse response = CommentAcceptanceTask.modifyCommentTask(modifyCommentRequest, comment.getId());
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(commentRepository.findById(comment.getId()).get().getContent()).isEqualTo("수정된 댓글 내용");
     }
 }

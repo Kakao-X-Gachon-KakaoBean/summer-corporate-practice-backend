@@ -2,8 +2,11 @@ package com.kakaobean.core.unit.application.issue;
 
 import com.kakaobean.core.factory.issue.CommentFactory;
 import com.kakaobean.core.factory.issue.IssueFactory;
+import com.kakaobean.core.factory.issue.dto.ModifyCommentRequestDtoFactory;
+import com.kakaobean.core.factory.issue.dto.ModifyIssueRequestDtoFactory;
 import com.kakaobean.core.factory.project.ProjectMemberFactory;
 import com.kakaobean.core.issue.application.CommentService;
+import com.kakaobean.core.issue.application.dto.request.ModifyCommentRequestDto;
 import com.kakaobean.core.issue.application.dto.request.RegisterCommentRequestDto;
 import com.kakaobean.core.issue.domain.Comment;
 import com.kakaobean.core.issue.domain.CommentValidator;
@@ -24,6 +27,8 @@ import org.mockito.Mockito;
 import java.util.Optional;
 
 import static com.kakaobean.core.factory.issue.IssueFactory.createIssue;
+import static com.kakaobean.core.factory.project.ProjectMemberFactory.createMember;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -62,6 +67,34 @@ public class CommentServiceTest extends UnitTest {
 
         //then
         verify(commentRepository, times(1)).save(Mockito.any(Comment.class));
+    }
+
+    @Test
+    void 작성자가_댓글을_수정한다() {
+        // given
+        Comment comment = CommentFactory.createCommentWithMemberIdAndIssueId(3L, 1L);
+        given(commentRepository.findById(comment.getId())).willReturn(Optional.of(comment));
+
+        // when
+        commentService.modifyComment(ModifyCommentRequestDtoFactory.createWithIdAndMemberId(comment.getId(), 3L));
+
+        // then
+        assertThat(comment.getContent()).isEqualTo("수정된 댓글 내용");
+    }
+
+    @Test
+    void 작성자가_아닌_유저는_댓글을_수정할_수_없다(){
+        // given
+        Comment comment = CommentFactory.createCommentWithMemberIdAndIssueId(3L, 1L);
+        given(commentRepository.findById(comment.getId())).willReturn(Optional.of(comment));
+
+        // when
+        AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(()->{
+            commentService.modifyComment(ModifyCommentRequestDtoFactory.createWithIdAndMemberId(comment.getId(), 4L));
+        });
+
+        // then
+        result.isInstanceOf(CommentAccessException.class);
     }
 
     @Test
