@@ -1,7 +1,6 @@
 package com.kakaobean.acceptance.issue;
 
 import com.kakaobean.issue.dto.RegisterCommentRequest;
-import com.kakaobean.sprint.dto.request.RegisterTaskRequest;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 
@@ -22,6 +21,18 @@ public class CommentAcceptanceTask {
                 .body(request)
                 .when()
                 .post("/comments")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse deleteCommentTask(Long commentId) {
+        return RestAssured
+                .given()
+                .header(AUTHORIZATION, getAdminAuthorizationHeaderToken())
+                .accept(APPLICATION_JSON_VALUE)
+                .contentType(APPLICATION_JSON_VALUE)
+                .when()
+                .delete("/comments/{commentId}", commentId)
                 .then().log().all()
                 .extract();
     }

@@ -2,6 +2,7 @@ package com.kakaobean.acceptance.issue;
 
 import com.kakaobean.acceptance.AcceptanceTest;
 import com.kakaobean.acceptance.project.ProjectAcceptanceTask;
+import com.kakaobean.core.issue.domain.Comment;
 import com.kakaobean.core.issue.domain.Issue;
 import com.kakaobean.core.issue.domain.repository.CommentRepository;
 import com.kakaobean.core.issue.domain.repository.IssueRepository;
@@ -29,8 +30,7 @@ public class CommentAcceptanceTest extends AcceptanceTest {
     CommentRepository commentRepository;
 
     @Test
-    void 이슈_생성(){
-
+    void 댓글_생성(){
         //given
         ////프로젝트 생성
         RegisterProjectRequest projectRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
@@ -38,12 +38,13 @@ public class CommentAcceptanceTest extends AcceptanceTest {
         Project project = projectRepository.findAll().get(0);
 
         ////이슈 생성
-        RegisterIssueRequest issueRequest = RegisterIssueRequestFactory.create();
+        RegisterIssueRequest issueRequest = new RegisterIssueRequest("이슈 제목", "이슈 내용", project.getId());
         IssueAcceptanceTask.registerIssueTask(issueRequest);
+
         Issue issue = issueRepository.findAll().get(0);
 
         ////코멘트 생성
-        RegisterCommentRequest commentRequest = RegisterCommentRequestFactory.create();
+        RegisterCommentRequest commentRequest = new RegisterCommentRequest("댓글 내용", issue.getId());
 
         //when
         ExtractableResponse response = CommentAcceptanceTask.registerCommentTask(commentRequest);
@@ -51,5 +52,32 @@ public class CommentAcceptanceTest extends AcceptanceTest {
         //then
         assertThat(response.statusCode()).isEqualTo(201);
         assertThat(commentRepository.findAll().size()).isEqualTo(1);
+    }
+
+    @Test
+    void 댓글_삭제(){
+        //given
+        ////프로젝트 생성
+        RegisterProjectRequest projectRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
+        ProjectAcceptanceTask.registerProjectTask(projectRequest);
+        Project project = projectRepository.findAll().get(0);
+
+        ////이슈 생성
+        RegisterIssueRequest issueRequest = new RegisterIssueRequest("이슈 제목", "이슈 내용", project.getId());
+        IssueAcceptanceTask.registerIssueTask(issueRequest);
+
+        Issue issue = issueRepository.findAll().get(0);
+
+        ////코멘트 생성
+        RegisterCommentRequest commentRequest = new RegisterCommentRequest("댓글 내용", issue.getId());
+        CommentAcceptanceTask.registerCommentTask(commentRequest);
+
+        Comment comment = commentRepository.findAll().get(0);
+
+        //when
+        ExtractableResponse response = CommentAcceptanceTask.deleteCommentTask(comment.getId());
+
+        //then
+        assertThat(response.statusCode()).isEqualTo(200);
     }
 }

@@ -93,6 +93,8 @@
 * link:/docs/issue/find_issues_with_paging.html[이슈 페이징 적용 조회 API, window=_blank ]
 * link:/docs/issue/find_individual_issue.html[이슈 개별 조회 API, window=_blank ]
 * link:/docs/issue/remove_issue.html[이슈 삭제 API, window=_blank ]
+* link:/docs/issue/remove_comment.html[댓글 삭제 API, window=_blank ]
+
 
 
 == 스프린트 API
