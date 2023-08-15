@@ -37,11 +37,11 @@ public class CommentController {
         return new ResponseEntity(CommandSuccessResponse.from("댓글이 삭제되었습니다."), OK);
     }
 
-//    @PatchMapping("/comments/{commentId}")
-//    public ResponseEntity modifyComment(@AuthenticationPrincipal UserPrincipal userPrincipal,
-//                                      @PathVariable Long commentId,
-//                                      @Validated @RequestBody ModifyCommentRequest request) {
-//        commentService.modifyComment(request.toServiceDto(userPrincipal.getId(), commentId));
-//        return new ResponseEntity(CommandSuccessResponse.from("댓글 정보가 수정되었습니다."), OK);
-//    }
+    @PatchMapping("/comments/{commentId}")
+    public ResponseEntity modifyComment(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                      @PathVariable Long commentId,
+                                      @Validated @RequestBody ModifyCommentRequest request) {
+        commentService.modifyComment(request.toServiceDto(userPrincipal.getId(), commentId));
+        return new ResponseEntity(CommandSuccessResponse.from("댓글이 수정되었습니다."), OK);
+    }
 }
