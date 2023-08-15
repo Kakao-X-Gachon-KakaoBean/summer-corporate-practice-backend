@@ -99,7 +99,7 @@ public class CommentControllerTest extends ControllerTest {
         //then
         perform.andDo(print());
         perform.andExpect(status().is2xxSuccessful());
-        perform.andDo(document("delete_comment",
+        perform.andDo(document("remove_comment",
                 getDocumentRequest(),
                 getDocumentResponse(),
                 pathParameters(

@@ -1,0 +1,13 @@
+= 댓글 삭제
+
+== 요청
+
+include::{snippets}/remove_comment/http-request.adoc[]
+
+include::{snippets}/remove_comment/path-parameters.adoc[]
+
+== 응답
+
+include::{snippets}/remove_comment/http-response.adoc[]
+
+include::{snippets}/remove_comment/response-fields.adoc[]
