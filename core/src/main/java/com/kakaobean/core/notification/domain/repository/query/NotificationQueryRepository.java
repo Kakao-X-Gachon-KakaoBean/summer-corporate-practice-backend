@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface NotificationQueryRepository {
     List<FindNotificationResponseDto> findByMemberId(Long memberId);
-    FindPagingNotificationResponseDto findByMemberIdWithPaging(Long memberId, Integer page);
+    List<FindNotificationResponseDto> findByPaginationNoOffset(Long notificationId, Long memberId);
 }

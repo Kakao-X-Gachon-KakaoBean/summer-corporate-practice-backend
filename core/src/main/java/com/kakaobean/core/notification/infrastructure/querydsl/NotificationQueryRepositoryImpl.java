@@ -5,6 +5,7 @@ import com.kakaobean.core.notification.domain.repository.query.FindNotificationR
 import com.kakaobean.core.notification.domain.repository.query.FindPagingNotificationResponseDto;
 import com.kakaobean.core.notification.domain.repository.query.NotificationQueryRepository;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -21,17 +22,14 @@ import static com.kakaobean.core.notification.domain.QNotification.notification;
 public class NotificationQueryRepositoryImpl implements NotificationQueryRepository {
 
     private static final int PAGE_SIZE = 10;
-    private static final String PAGING_STANDARD = "createdAt";
 
     private final JPAQueryFactory queryFactory;
 
+    // 조회했던 마지막 notification id를 받는다
     @Override
-    public FindPagingNotificationResponseDto findByMemberIdWithPaging (Long memberId, Integer page) {
-        Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, PAGING_STANDARD));
-        List<FindNotificationResponseDto> result = queryFactory
-                .select(
-                        Projections.constructor(
-                                FindNotificationResponseDto.class,
+    public List<FindNotificationResponseDto> findByPaginationNoOffset(Long notificationId, Long memberId) {
+        return queryFactory
+                .select(Projections.constructor(FindNotificationResponseDto.class,
                                 notification.createdAt,
                                 notification.content,
                                 notification.url,
@@ -39,15 +37,21 @@ public class NotificationQueryRepositoryImpl implements NotificationQueryReposit
                         )
                 )
                 .from(notification)
-                .where(notification.memberId.eq(memberId))
-                .offset(pageable.getOffset())
-                .limit(PAGE_SIZE + 1) // 페이징을 위해 1을 더 가져온다.
+                .where(
+                        ltNotificationId(notificationId),
+                        notification.memberId.eq(memberId)
+                )
+                .orderBy(notification.id.desc())
+                .limit(PAGE_SIZE)
                 .fetch();
+    }
 
-        if(result.size() > PAGE_SIZE){
-            return new FindPagingNotificationResponseDto(false, PagingUtils.applyPaging(result));
+    private BooleanExpression ltNotificationId(Long notificationId) {
+        if (notificationId == null) {
+            return null; // BooleanExpression 자리에 null이 반환되면 조건문에서 자동으로 제거된다
         }
-        return new FindPagingNotificationResponseDto(true, result);
+
+        return notification.id.lt(notificationId);
     }
 
     @Override

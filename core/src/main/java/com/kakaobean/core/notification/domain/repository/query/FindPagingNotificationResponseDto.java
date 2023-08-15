@@ -8,11 +8,11 @@ import java.util.List;
 public class FindPagingNotificationResponseDto {
 
     private final boolean finalPage;
-    private final List<FindNotificationResponseDto> releaseNotes;
+    private final List<FindNotificationResponseDto> notifications;
 
-    public FindPagingNotificationResponseDto(boolean finalPage, List<FindNotificationResponseDto> releaseNotes) {
+    public FindPagingNotificationResponseDto(boolean finalPage, List<FindNotificationResponseDto> notifications) {
         this.finalPage = finalPage;
-        this.releaseNotes = releaseNotes;
+        this.notifications = notifications;
     }
 
 }

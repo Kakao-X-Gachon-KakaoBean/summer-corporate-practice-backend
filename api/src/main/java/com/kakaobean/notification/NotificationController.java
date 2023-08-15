@@ -1,7 +1,6 @@
 package com.kakaobean.notification;
 
 import com.kakaobean.core.notification.domain.repository.query.FindNotificationResponseDto;
-import com.kakaobean.core.notification.domain.repository.query.FindPagingNotificationResponseDto;
 import com.kakaobean.core.notification.domain.repository.query.NotificationQueryRepository;
 import com.kakaobean.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -30,9 +29,10 @@ public class NotificationController {
         return new ResponseEntity(response, OK);
     }
 
-    @GetMapping("/notifications/page")
-    public ResponseEntity findnotifications(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestParam Integer page){
-        FindPagingNotificationResponseDto response = notificationQueryRepository.findByMemberIdWithPaging(userPrincipal.getId(), page);
+    @GetMapping("/notifications/{lastNotificationId}")
+    public ResponseEntity findNextNotifications(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                                @PathVariable Long lastNotificationId){
+        List<FindNotificationResponseDto> response = notificationQueryRepository.findByPaginationNoOffset(lastNotificationId, userPrincipal.getId());
         return new ResponseEntity(response, HttpStatus.OK);
     }
 }
