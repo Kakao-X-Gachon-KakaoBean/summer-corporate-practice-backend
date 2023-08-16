@@ -21,4 +21,8 @@ public interface ManuscriptRepository extends JpaRepository<Manuscript, Long> {
     @Modifying
     @Query("update Manuscript ma set ma.status = 'INACTIVE' where ma.projectId = :projectId and ma.status = 'ACTIVE'")
     void deleteByProjectId(Long projectId);
+
+    @Modifying
+    @Query("update Manuscript ma set ma.status = 'INACTIVE' where ma.version = :version and ma.status = 'ACTIVE'")
+    void deleteByVersion(String version);
 }

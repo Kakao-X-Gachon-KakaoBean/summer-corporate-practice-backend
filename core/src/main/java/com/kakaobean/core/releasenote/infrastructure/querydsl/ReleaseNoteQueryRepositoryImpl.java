@@ -35,7 +35,8 @@ public class ReleaseNoteQueryRepositoryImpl implements ReleaseNoteQueryRepositor
                                 releaseNote.id,
                                 releaseNote.title,
                                 releaseNote.version,
-                                releaseNote.content
+                                releaseNote.content,
+                                releaseNote.createdAt
                         )
                 )
                 .from(releaseNote)

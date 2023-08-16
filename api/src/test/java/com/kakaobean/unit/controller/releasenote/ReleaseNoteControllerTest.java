@@ -69,17 +69,19 @@ public class ReleaseNoteControllerTest extends ControllerTest {
 
         given(releaseNoteQueryRepository.findByProjectId(Mockito.anyLong(), Mockito.anyInt()))
                 .willReturn(new FindPagingReleaseNotesResponseDto(
-                        true,
-                        List.of(new FindPagingReleaseNotesResponseDto.ReleaseNoteDto(
-                                    1L,
-                                "1.1V releaseNote title",
-                                "1.1V",
-                                        "Contents..."),
-                                new FindPagingReleaseNotesResponseDto.ReleaseNoteDto(
-                                        2L,
-                                        "1.2V releaseNote title",
-                                        "1.2V",
-                                        "Contents..")
+                                true,
+                                List.of(new FindPagingReleaseNotesResponseDto.ReleaseNoteDto(
+                                                1L,
+                                                "1.1V releaseNote title",
+                                                "1.1V",
+                                                "Contents...",
+                                                "23. 8. 16. 오전 3:07"),
+                                        new FindPagingReleaseNotesResponseDto.ReleaseNoteDto(
+                                                2L,
+                                                "1.2V releaseNote title",
+                                                "1.2V",
+                                                "Contents..",
+                                                "23. 8. 16. 오전 3:07")
                                 )
                         )
                 );
@@ -109,7 +111,8 @@ public class ReleaseNoteControllerTest extends ControllerTest {
                         fieldWithPath("releaseNotes[].id").type(NUMBER).description("릴리즈 노트 id"),
                         fieldWithPath("releaseNotes[].title").type(STRING).description("릴리즈 노트 제목"),
                         fieldWithPath("releaseNotes[].version").type(STRING).description("릴리즈 노트 버전"),
-                        fieldWithPath("releaseNotes[].content").type(STRING).description("릴리즈 노트 내용")
+                        fieldWithPath("releaseNotes[].content").type(STRING).description("릴리즈 노트 내용"),
+                        fieldWithPath("releaseNotes[].createdAt").type(STRING).description("릴리즈 노트 배포 날짜")
                 )
         ));
     }
@@ -121,11 +124,11 @@ public class ReleaseNoteControllerTest extends ControllerTest {
 
         given(releaseNoteQueryRepository.findById(Mockito.anyLong()))
                 .willReturn(Optional.of(new FindReleaseNoteResponseDto(
-                            1L,
-                        "1.2V title",
-                        "content..",
-                        "1.2V",
-                        "23. 7. 20. 오전 10:52"
+                                1L,
+                                "1.2V title",
+                                "content..",
+                                "1.2V",
+                                "23. 7. 20. 오전 10:52"
                         ))
                 );
 
@@ -195,7 +198,7 @@ public class ReleaseNoteControllerTest extends ControllerTest {
                         fieldWithPath("releaseNotes").type(ARRAY).description("릴리즈 노트 리스트"),
                         fieldWithPath("releaseNotes[].id").type(NUMBER).description("릴리즈 노트 id"),
                         fieldWithPath("releaseNotes[].title").type(STRING).description("릴리즈 노트 제목"),
-                        fieldWithPath("releaseNotes[].version").type(STRING).description("릴리즈 노트 버전")                )
+                        fieldWithPath("releaseNotes[].version").type(STRING).description("릴리즈 노트 버전"))
         ));
     }
 

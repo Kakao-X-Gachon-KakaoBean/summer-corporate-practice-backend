@@ -4,7 +4,7 @@ import com.kakaobean.acceptance.AcceptanceTest;
 import com.kakaobean.acceptance.member.MemberAcceptanceTask;
 import com.kakaobean.acceptance.project.ProjectAcceptanceTask;
 import com.kakaobean.core.notification.domain.Notification;
-import com.kakaobean.core.notification.domain.NotificationRepository;
+import com.kakaobean.core.notification.domain.repository.NotificationRepository;
 import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;

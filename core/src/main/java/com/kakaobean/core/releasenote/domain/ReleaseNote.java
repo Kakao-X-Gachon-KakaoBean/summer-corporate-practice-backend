@@ -70,6 +70,6 @@ public class ReleaseNote extends BaseEntity {
     }
 
     public void deployed() {
-        Events.raise(new ReleaseNoteDeployedEvent(id));
+        Events.raise(new ReleaseNoteDeployedEvent(id, version));
     }
 }

@@ -1,7 +1,7 @@
 package com.kakaobean.notification;
 
 import com.kakaobean.common.dto.CommandSuccessResponse;
-import com.kakaobean.core.notification.domain.NotificationRepository;
+import com.kakaobean.core.notification.domain.repository.NotificationRepository;
 import com.kakaobean.core.notification.domain.repository.query.FindNotificationResponseDto;
 import com.kakaobean.core.notification.domain.repository.query.NotificationQueryRepository;
 import com.kakaobean.security.UserPrincipal;
