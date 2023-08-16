@@ -59,4 +59,10 @@ public class Issue extends BaseEntity {
         this.content = content;
         this.writerId = writerId;
     }
+
+    public void modify(String title, String content){
+        this.title = title;
+        this.content = content;
+    }
+
 }

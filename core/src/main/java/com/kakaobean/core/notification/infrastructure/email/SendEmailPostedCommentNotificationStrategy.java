@@ -1,7 +1,6 @@
 package com.kakaobean.core.notification.infrastructure.email;
 
 import com.kakaobean.common.EmailHtmlUtils;
-import com.kakaobean.core.notification.domain.event.DeploymentReleaseNoteNotificationEvent;
 import com.kakaobean.core.notification.domain.event.NotificationSentEvent;
 import com.kakaobean.core.notification.domain.event.RegisterCommentNotificationEvent;
 import com.kakaobean.core.notification.domain.service.send.email.SendEmailNotificationStrategy;
