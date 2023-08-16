@@ -11,7 +11,7 @@ import com.kakaobean.core.issue.domain.repository.query.IssueQueryRepository;
 import com.kakaobean.core.member.application.MemberProvider;
 import com.kakaobean.core.member.domain.repository.MemberRepository;
 import com.kakaobean.core.member.application.MemberService;
-import com.kakaobean.core.notification.domain.NotificationRepository;
+import com.kakaobean.core.notification.domain.repository.NotificationRepository;
 import com.kakaobean.core.notification.domain.repository.query.NotificationQueryRepository;
 import com.kakaobean.core.project.application.ProjectMemberFacade;
 import com.kakaobean.core.project.application.ProjectMemberService;
@@ -41,7 +41,6 @@ import com.kakaobean.sprint.SprintController;
 import com.kakaobean.sprint.TaskController;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

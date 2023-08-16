@@ -1,7 +1,7 @@
 package com.kakaobean.core.notification.domain.service.register.strategy;
 
 import com.kakaobean.core.notification.domain.Notification;
-import com.kakaobean.core.notification.domain.NotificationRepository;
+import com.kakaobean.core.notification.domain.repository.NotificationRepository;
 import com.kakaobean.core.notification.domain.NotificationType;
 import com.kakaobean.core.notification.domain.event.NotificationSentEvent;
 import com.kakaobean.core.notification.domain.event.StartManuscriptModificationNotificationEvent;
