@@ -3,6 +3,7 @@ package com.kakaobean.core.integration.issue;
 import com.kakaobean.core.factory.issue.CommentFactory;
 import com.kakaobean.core.factory.issue.dto.ModifyCommentRequestDtoFactory;
 import com.kakaobean.core.factory.issue.dto.RegisterCommentRequestDtoFactory;
+import com.kakaobean.core.factory.member.MemberFactory;
 import com.kakaobean.core.factory.project.ProjectFactory;
 import com.kakaobean.core.factory.sprint.dto.RegisterTaskRequestDtoFactory;
 import com.kakaobean.core.integration.IntegrationTest;
@@ -14,6 +15,8 @@ import com.kakaobean.core.issue.domain.Issue;
 import com.kakaobean.core.issue.domain.repository.CommentRepository;
 import com.kakaobean.core.issue.domain.repository.IssueRepository;
 import com.kakaobean.core.issue.exception.CommentAccessException;
+import com.kakaobean.core.member.domain.Member;
+import com.kakaobean.core.member.domain.repository.MemberRepository;
 import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
@@ -28,6 +31,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static com.kakaobean.core.factory.issue.IssueFactory.createIssue;
+import static com.kakaobean.core.factory.issue.IssueFactory.createIssueWithMemberIdAndProjectId;
 import static com.kakaobean.core.factory.project.ProjectMemberFactory.createWithMemberIdAndProjectId;
 import static com.kakaobean.core.factory.sprint.SprintFactory.createWithId;
 import static com.kakaobean.core.project.domain.ProjectRole.ADMIN;
@@ -51,8 +55,12 @@ public class CommentServiceTest extends IntegrationTest {
     @Autowired
     ProjectMemberRepository projectMemberRepository;
 
+    @Autowired
+    MemberRepository memberRepository;
+
     @BeforeEach
     void beforeEach() {
+        memberRepository.deleteAll();
         issueRepository.deleteAll();
         commentRepository.deleteAll();
         projectRepository.deleteAll();
@@ -62,12 +70,21 @@ public class CommentServiceTest extends IntegrationTest {
     @Test
     void 댓글을_쟉성한다() {
         // given
+        Member issueWriter = memberRepository.save(MemberFactory.create());
+        Member commentWriter = memberRepository.save(MemberFactory.create());
+
         Project project = projectRepository.save(ProjectFactory.create());
-        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
-        Issue issue = issueRepository.save(createIssue(project.getId()));
+        ProjectMember projectMember1 = projectMemberRepository.save(createWithMemberIdAndProjectId(issueWriter.getId(), project.getId(), MEMBER));
+        ProjectMember projectMember2 = projectMemberRepository.save(createWithMemberIdAndProjectId(commentWriter.getId(), project.getId(), MEMBER));
+
+        Issue issue = issueRepository.save(createIssueWithMemberIdAndProjectId(projectMember1.getMemberId(), project.getId()));
+
+//        Project project = projectRepository.save(ProjectFactory.create());
+//        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
+//        Issue issue = issueRepository.save(createIssue(project.getId()));
 
         // when
-        commentService.registerComment(RegisterCommentRequestDtoFactory.createWithId(issue.getId(), projectMember.getMemberId()));
+        commentService.registerComment(RegisterCommentRequestDtoFactory.createWithId(issue.getId(), projectMember2.getMemberId()));
 
         // then
         assertThat(commentRepository.findAll().size()).isEqualTo(1);
