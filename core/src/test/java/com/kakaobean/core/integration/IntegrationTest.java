@@ -1,5 +1,6 @@
 package com.kakaobean.core.integration;
 
+import com.kakaobean.core.notification.config.EmailProperties;
 import com.kakaobean.independentlysystem.amqp.AmqpService;
 import com.kakaobean.independentlysystem.config.ses.AwsSesConfig;
 import com.kakaobean.independentlysystem.email.EmailSender;
@@ -15,7 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
         EmailSender.class,
         AwsSesConfig.class,
         ImageService.class,
-        AmqpService.class
+        AmqpService.class,
+        EmailProperties.class
 })
 
 @SpringBootTest

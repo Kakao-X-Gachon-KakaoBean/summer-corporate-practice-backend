@@ -1,6 +1,7 @@
 package com.kakaobean.core.notification.infrastructure.email;
 
 import com.kakaobean.common.EmailHtmlUtils;
+import com.kakaobean.core.notification.config.EmailProperties;
 import com.kakaobean.core.notification.domain.event.AssignmentTaskNotificationEvent;
 import com.kakaobean.core.notification.domain.event.ModifiedProjectMemberNotificationEvent;
 import com.kakaobean.core.notification.domain.event.NotificationSentEvent;
@@ -16,13 +17,14 @@ import java.util.List;
 public class SendEmailAssignmentTaskNotificationStrategy implements SendEmailNotificationStrategy {
 
     private final EmailSender emailSender;
+    private final EmailProperties emailProperties;
 
     @Override
     public void send(NotificationSentEvent event) {
 
         AssignmentTaskNotificationEvent notificationEvent = (AssignmentTaskNotificationEvent) event;
         String title = notificationEvent.getProjectTitle() + " 프로젝트 작업 할당 안내입니다.";
-        String url = "localhost:3000" + notificationEvent.getUrl();
+        String url = emailProperties.getHostName() + notificationEvent.getUrl();
         emailSender.sendEmail(
                 List.of(notificationEvent.getEmail()),
                 title,
