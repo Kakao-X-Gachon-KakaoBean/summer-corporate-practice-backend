@@ -1,6 +1,7 @@
 package com.kakaobean.core.issue.domain.event;
 
 import com.kakaobean.core.common.event.Event;
+import com.kakaobean.core.issue.domain.Issue;
 import lombok.Getter;
 
 @Getter

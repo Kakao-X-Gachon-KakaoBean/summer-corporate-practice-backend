@@ -22,7 +22,7 @@ import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.HttpStatus.OK;
 
 @Slf4j
-@Timed("api.project-member")
+@Timed("api.projectMember")
 @RestController
 public class ProjectMemberController {
 

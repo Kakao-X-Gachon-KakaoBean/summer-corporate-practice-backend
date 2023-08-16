@@ -60,7 +60,7 @@ public class ProjectController {
 
     @DeleteMapping("/projects/{projectId}")
     public ResponseEntity removeProject(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                        @PathVariable Long projectId){
+                                        @PathVariable Long projectId) {
         log.info("프로젝트 제거 api 시작");
         projectService.removeProject(userPrincipal.getId(), projectId);
         log.info("프로젝트 제거 api 종료");

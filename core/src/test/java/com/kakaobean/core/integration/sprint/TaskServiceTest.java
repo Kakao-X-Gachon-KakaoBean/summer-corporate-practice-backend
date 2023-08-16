@@ -1,10 +1,13 @@
 package com.kakaobean.core.integration.sprint;
 
+import com.kakaobean.core.factory.member.MemberFactory;
 import com.kakaobean.core.factory.project.ProjectFactory;
 import com.kakaobean.core.factory.sprint.TaskFactory;
 import com.kakaobean.core.factory.sprint.dto.ModifyTaskRequestDtoFactory;
 import com.kakaobean.core.factory.sprint.dto.RegisterTaskRequestDtoFactory;
 import com.kakaobean.core.integration.IntegrationTest;
+import com.kakaobean.core.member.domain.Member;
+import com.kakaobean.core.member.domain.repository.MemberRepository;
 import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
@@ -37,6 +40,9 @@ public class TaskServiceTest extends IntegrationTest {
     TaskService taskService;
 
     @Autowired
+    MemberRepository memberRepository;
+
+    @Autowired
     SprintRepository sprintRepository;
 
     @Autowired
@@ -50,6 +56,7 @@ public class TaskServiceTest extends IntegrationTest {
 
     @BeforeEach
     void beforeEach() {
+        memberRepository.deleteAll();
         sprintRepository.deleteAll();
         taskRepository.deleteAll();
         projectRepository.deleteAll();
@@ -153,9 +160,13 @@ public class TaskServiceTest extends IntegrationTest {
     @Test
     void 어드민이_멤버에게_테스크를_할당한다() {
         // given
+        Member member = memberRepository.save(MemberFactory.create());
+        Member invitedMember = memberRepository.save(MemberFactory.createWithoutId());
+
         Project project = projectRepository.save(createWithoutId());
-        ProjectMember projectAdmin = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
-        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(2L, project.getId(), MEMBER));
+        ProjectMember projectAdmin = projectMemberRepository.save(createWithMemberIdAndProjectId(member.getId(), project.getId(), ADMIN));
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(invitedMember.getId(), project.getId(), MEMBER));
+
         Sprint sprint = sprintRepository.save(createWithId(project.getId()));
         Task task = taskRepository.save(TaskFactory.createWithId(sprint.getId(), null));
 
@@ -185,7 +196,7 @@ public class TaskServiceTest extends IntegrationTest {
     }
 
     @Test
-    void Viewr는_테스크를_할당받을_수_없다() {
+    void Viewer는_테스크를_할당받을_수_없다() {
         // given
         Project project = projectRepository.save(createWithoutId());
         ProjectMember projectAdmin = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));

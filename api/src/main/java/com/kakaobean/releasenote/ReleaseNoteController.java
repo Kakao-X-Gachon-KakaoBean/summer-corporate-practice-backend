@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import static org.springframework.http.HttpStatus.*;
 
 @Slf4j
-@Timed("api.release-note")
+@Timed("api.releaseNote")
 @RestController
 @RequiredArgsConstructor
 public class ReleaseNoteController {
