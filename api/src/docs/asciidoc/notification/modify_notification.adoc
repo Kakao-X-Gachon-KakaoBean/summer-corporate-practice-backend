@@ -1,0 +1,13 @@
+= 알림 열람 상태 변경
+
+== 요청
+
+include::{snippets}/modify_notification/http-request.adoc[]
+
+include::{snippets}/modify_notification/path-parameters.adoc[]
+
+== 응답
+
+include::{snippets}/modify_notification/http-response.adoc[]
+
+include::{snippets}/modify_notification/response-fields.adoc[]

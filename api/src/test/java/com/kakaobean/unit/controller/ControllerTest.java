@@ -11,6 +11,8 @@ import com.kakaobean.core.issue.domain.repository.query.IssueQueryRepository;
 import com.kakaobean.core.member.application.MemberProvider;
 import com.kakaobean.core.member.domain.repository.MemberRepository;
 import com.kakaobean.core.member.application.MemberService;
+import com.kakaobean.core.notification.domain.repository.NotificationRepository;
+import com.kakaobean.core.notification.domain.repository.query.NotificationQueryRepository;
 import com.kakaobean.core.project.application.ProjectMemberFacade;
 import com.kakaobean.core.project.application.ProjectMemberService;
 import com.kakaobean.core.project.application.ProjectService;
@@ -27,6 +29,7 @@ import com.kakaobean.independentlysystem.image.ImageService;
 import com.kakaobean.issue.CommentController;
 import com.kakaobean.issue.IssueController;
 import com.kakaobean.member.MemberController;
+import com.kakaobean.notification.NotificationController;
 import com.kakaobean.project.ProjectController;
 import com.kakaobean.project.ProjectMemberController;
 import com.kakaobean.releasenote.ManuscriptController;
@@ -38,7 +41,6 @@ import com.kakaobean.sprint.SprintController;
 import com.kakaobean.sprint.TaskController;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -65,7 +67,8 @@ import org.springframework.test.web.servlet.MockMvc;
         IssueController.class,
         SprintController.class,
         TaskController.class,
-        CommentController.class
+        CommentController.class,
+        NotificationController.class
 })
 @AutoConfigureRestDocs
 @MockBean(JpaMetamodelMappingContext.class)
@@ -146,4 +149,10 @@ public abstract class ControllerTest {
 
     @MockBean
     protected IssueQueryRepository issueQueryRepository;
+
+    @MockBean
+    protected NotificationQueryRepository notificationQueryRepository;
+
+    @MockBean
+    protected NotificationRepository notificationRepository;
 }
