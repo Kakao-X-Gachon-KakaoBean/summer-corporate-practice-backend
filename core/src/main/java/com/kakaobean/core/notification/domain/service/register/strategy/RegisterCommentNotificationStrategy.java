@@ -8,9 +8,8 @@ import com.kakaobean.core.member.domain.Member;
 import com.kakaobean.core.member.domain.repository.MemberRepository;
 import com.kakaobean.core.member.exception.member.NotExistsMemberException;
 import com.kakaobean.core.notification.domain.Notification;
-import com.kakaobean.core.notification.domain.NotificationRepository;
+import com.kakaobean.core.notification.domain.repository.NotificationRepository;
 import com.kakaobean.core.notification.domain.NotificationType;
-import com.kakaobean.core.notification.domain.event.AssignmentTaskNotificationEvent;
 import com.kakaobean.core.notification.domain.event.NotificationSentEvent;
 import com.kakaobean.core.notification.domain.event.RegisterCommentNotificationEvent;
 import com.kakaobean.core.notification.utils.NotificationUtils;
@@ -28,7 +27,6 @@ import java.time.LocalDateTime;
 
 import static com.kakaobean.core.common.domain.BaseStatus.ACTIVE;
 import static com.kakaobean.core.notification.domain.NotificationType.POSTED_COMMENT;
-import static com.kakaobean.core.notification.domain.NotificationType.TASK;
 
 @Component
 @RequiredArgsConstructor

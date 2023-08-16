@@ -79,10 +79,6 @@ public class CommentServiceTest extends IntegrationTest {
 
         Issue issue = issueRepository.save(createIssueWithMemberIdAndProjectId(projectMember1.getMemberId(), project.getId()));
 
-//        Project project = projectRepository.save(ProjectFactory.create());
-//        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
-//        Issue issue = issueRepository.save(createIssue(project.getId()));
-
         // when
         commentService.registerComment(RegisterCommentRequestDtoFactory.createWithId(issue.getId(), projectMember2.getMemberId()));
 
