@@ -1,0 +1,11 @@
+= 알림 조회
+
+== 요청
+
+include::{snippets}/find_notification/http-request.adoc[]
+
+== 응답
+
+include::{snippets}/find_notification/http-response.adoc[]
+
+include::{snippets}/find_notification/response-fields.adoc[]

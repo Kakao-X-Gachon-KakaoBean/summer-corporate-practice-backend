@@ -88,12 +88,13 @@
 == 이슈 API
 
 * link:/docs/issue/register_issue.html[이슈 생성 API, window=_blank ]
-* link:/docs/issue/register_comment.html[댓글 생성 API, window=_blank ]
 * link:/docs/issue/modify_issue.html[이슈 수정 API, window=_blank ]
 * link:/docs/issue/find_issues_with_paging.html[이슈 페이징 적용 조회 API, window=_blank ]
 * link:/docs/issue/find_individual_issue.html[이슈 개별 조회 API, window=_blank ]
 * link:/docs/issue/remove_issue.html[이슈 삭제 API, window=_blank ]
-
+* link:/docs/issue/register_comment.html[댓글 생성 API, window=_blank ]
+* link:/docs/issue/remove_comment.html[댓글 삭제 API, window=_blank ]
+* link:/docs/issue/modify_comment.html[댓글 수정 API, window=_blank ]
 
 == 스프린트 API
 
@@ -108,3 +109,9 @@
 * link:/docs/sprint/assign_task.html[테스크 할당 API, window=_blank ]
 * link:/docs/sprint/change_work_status.html[테스크 작업 상태 변경 API, window=_blank ]
 * link:/docs/sprint/find_task.html[테스크 개별 조회 API, window=_blank ]
+
+== 알림 API
+
+* link:/docs/notification/find_notification.html[알림 조회 API, window=_blank ]
+* link:/docs/notification/find_notification_with_paging.html[페이징 적용 알림 조회 API, window=_blank ]
+* link:/docs/notification/modify_notification.html[알림 열람 상태 변경 API, window=_blank ]

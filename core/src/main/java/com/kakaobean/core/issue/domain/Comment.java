@@ -61,4 +61,8 @@ public class Comment extends BaseEntity {
     public void registered(Long commentId) {
         Events.raise(new RegisterCommentEvent(commentId));
     }
+
+    public void modify(String content){
+        this.content = content;
+    }
 }

@@ -3,6 +3,7 @@ package com.kakaobean.core.notification.domain;
 import com.kakaobean.core.common.domain.BaseEntity;
 import com.kakaobean.core.common.domain.BaseStatus;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -29,6 +30,7 @@ public class Notification extends BaseEntity {
 
     private String content;
 
+    @Builder // 잠시 테스트용
     public Notification(BaseStatus status,
                         Long memberId,
                         String url,
