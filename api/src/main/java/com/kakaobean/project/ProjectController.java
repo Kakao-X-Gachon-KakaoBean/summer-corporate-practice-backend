@@ -13,6 +13,7 @@ import com.kakaobean.security.UserPrincipal;
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -40,6 +41,7 @@ public class ProjectController {
         return new ResponseEntity(res, CREATED);
     }
 
+    @Cacheable(cacheNames = "participatedProjects", key = "#userPrincipal.id")
     @GetMapping("/projects")
     public ResponseEntity findParticipatedProjects(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.info("멤버 참여 프로젝트 조회 api 시작");

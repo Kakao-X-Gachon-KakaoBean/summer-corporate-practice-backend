@@ -11,6 +11,7 @@ import com.kakaobean.security.UserPrincipal;
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -37,6 +38,7 @@ public class IssueController {
         return new ResponseEntity(CommandSuccessResponse.from("이슈가 생성되었습니다."), CREATED);
     }
 
+//    @Cacheable(cacheNames = "pagedIssues", key = "{#projectId, #page}")
     @GetMapping("/issues/page")
     public ResponseEntity findAllIssues(@RequestParam Long projectId, @RequestParam Integer page) {
         log.info("이슈 페이징 조회 api 시작");
