@@ -1,16 +1,11 @@
 package com.kakaobean.core.notification.infrastructure.querydsl;
 
-import com.kakaobean.common.PagingUtils;
 import com.kakaobean.core.notification.domain.repository.query.FindNotificationResponseDto;
-import com.kakaobean.core.notification.domain.repository.query.FindPagingNotificationResponseDto;
 import com.kakaobean.core.notification.domain.repository.query.NotificationQueryRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,6 +25,7 @@ public class NotificationQueryRepositoryImpl implements NotificationQueryReposit
     public List<FindNotificationResponseDto> findByPaginationNoOffset(Long notificationId, Long memberId) {
         return queryFactory
                 .select(Projections.constructor(FindNotificationResponseDto.class,
+                                notification.id,
                                 notification.createdAt,
                                 notification.content,
                                 notification.url,
@@ -59,6 +55,7 @@ public class NotificationQueryRepositoryImpl implements NotificationQueryReposit
         return queryFactory.select(
                         Projections.constructor(
                                 FindNotificationResponseDto.class,
+                                notification.id,
                                 notification.createdAt,
                                 notification.content,
                                 notification.url,

@@ -1,5 +1,7 @@
 package com.kakaobean.notification;
 
+import com.kakaobean.common.dto.CommandSuccessResponse;
+import com.kakaobean.core.notification.domain.NotificationRepository;
 import com.kakaobean.core.notification.domain.repository.query.FindNotificationResponseDto;
 import com.kakaobean.core.notification.domain.repository.query.NotificationQueryRepository;
 import com.kakaobean.security.UserPrincipal;
@@ -7,20 +9,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
 
-// 읽음 처리 patch api
-// 만약에 테스크에 할당받아서 알람이 저장되었는데, 할당이 해제되었을 때 그 알람을 누르면?
 @RestController
 @RequiredArgsConstructor
 public class NotificationController {
 
+    private final NotificationRepository notificationRepository;
     private final NotificationQueryRepository notificationQueryRepository;
 
     @GetMapping("/notifications")
@@ -29,10 +28,17 @@ public class NotificationController {
         return new ResponseEntity(response, OK);
     }
 
-    @GetMapping("/notifications/{lastNotificationId}")
+    @GetMapping("/notifications/page")
     public ResponseEntity findNextNotifications(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                                @PathVariable Long lastNotificationId){
+                                              @RequestParam(required = false) Long lastNotificationId){
         List<FindNotificationResponseDto> response = notificationQueryRepository.findByPaginationNoOffset(lastNotificationId, userPrincipal.getId());
         return new ResponseEntity(response, HttpStatus.OK);
+    }
+
+    @PatchMapping("/notifications/{notificationId}")
+    public ResponseEntity modifyNotification(@AuthenticationPrincipal UserPrincipal userPrincipal,
+                                            @PathVariable Long notificationId){
+        notificationRepository.modifyReadStatus(notificationId);
+        return new ResponseEntity(CommandSuccessResponse.from("알람 읽기 상태 변경에 성공했습니다."), OK);
     }
 }
