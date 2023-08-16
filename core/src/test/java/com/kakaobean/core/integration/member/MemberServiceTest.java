@@ -4,38 +4,52 @@ import com.kakaobean.core.factory.member.MemberFactory;
 import com.kakaobean.core.member.application.MemberProvider;
 import com.kakaobean.core.member.application.dto.request.ModifyMemberPasswordRequestDto;
 import com.kakaobean.core.member.application.dto.request.ModifyMemberRequestDto;
-import com.kakaobean.core.member.application.dto.response.FindEmailResponseDto;
 import com.kakaobean.core.member.application.dto.response.FindMemberInfoResponseDto;
 import com.kakaobean.core.member.domain.*;
 import com.kakaobean.core.member.domain.Email;
 import com.kakaobean.core.member.domain.repository.EmailRepository;
 import com.kakaobean.core.member.domain.repository.MemberRepository;
+import com.kakaobean.core.member.domain.service.VerifiedEmailService;
 import com.kakaobean.core.member.exception.member.*;
 import com.kakaobean.core.factory.member.RegisterMemberServiceDtoFactory;
 import com.kakaobean.core.integration.IntegrationTest;
 import com.kakaobean.core.member.application.MemberService;
 import com.kakaobean.core.member.application.dto.request.RegisterMemberRequestDto;
-import com.kakaobean.independentlysystem.email.EmailSender;
+import com.kakaobean.core.member.infrastructure.ModifyMemberServiceImpl;
+import com.kakaobean.independentlysystem.image.ImageService;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
 
 public class MemberServiceTest extends IntegrationTest {
 
+    @Mock
+    private ImageService imageService;
+
     @Autowired
     MemberService memberService;
+
+    @Autowired
+    MemberService memberServiceForImageUpload;
+
+    @Autowired
+    VerifiedEmailService memberVerifiedEmailService;
 
     @Autowired
     MemberRepository memberRepository;
@@ -51,6 +65,14 @@ public class MemberServiceTest extends IntegrationTest {
 
     PasswordEncoder passwordEncoder;
 
+    @Mock
+    MultipartFile profileImg;
+
+    @Mock
+    MultipartFile thumbnailImg;
+
+
+
 
     @BeforeEach
     void beforeEach(){
@@ -60,6 +82,14 @@ public class MemberServiceTest extends IntegrationTest {
         });
         this.passwordEncoder = new BCryptPasswordEncoder(); //임시 처리
         memberRepository.deleteAll();
+
+        memberServiceForImageUpload = new MemberService(
+                memberRepository,
+                new MemberValidator(memberRepository),
+                memberVerifiedEmailService,
+                new ModifyMemberServiceImpl(),
+                imageService
+        );
     }
 
     @DisplayName("멤버를 등록한다.")
@@ -357,5 +387,35 @@ public class MemberServiceTest extends IntegrationTest {
 
         //then
         result.isInstanceOf(ChangingNameToSameNameException.class);
+    }
+
+    @DisplayName("유저가 프로필 사진을 업로드한다.")
+    @Test
+    void successProfileImagesUploadCase1() throws IOException{
+        // Given
+        Member member = memberRepository.save(MemberFactory.create());
+        String profileImgUrl = "https://wayc-deploy-bucket.s3.ap-northeast-2.amazonaws.com/images/profile.jpg";
+        String thumbnailImgUrl = "https://wayc-deploy-bucket.s3.ap-northeast-2.amazonaws.com/images/thumbnail.jpg";
+
+        Mockito.when(imageService.upload(Mockito.any(MultipartFile.class))).thenReturn(profileImgUrl, thumbnailImgUrl);
+
+        MultipartFile mockProfileImg = Mockito.mock(MultipartFile.class);
+        MultipartFile mockThumbnailImg = Mockito.mock(MultipartFile.class);
+
+        // Configure the input streams for the mock MultipartFile instances
+        InputStream profileInputStream = Mockito.mock(ByteArrayInputStream.class);
+        InputStream thumbnailInputStream = Mockito.mock(ByteArrayInputStream.class);
+
+        Mockito.when(mockProfileImg.getInputStream()).thenReturn(profileInputStream);
+        Mockito.when(mockThumbnailImg.getInputStream()).thenReturn(thumbnailInputStream);
+
+        // When
+        memberServiceForImageUpload.uploadProfileImages(member.getId(), mockProfileImg, mockThumbnailImg);
+
+        // Then
+        Member result = memberRepository.findById(member.getId()).orElse(null);
+        assertThat(result).isNotNull();
+        assertThat(result.getProfileImg()).isEqualTo(profileImgUrl);
+        assertThat(result.getThumbnailImg()).isEqualTo(thumbnailImgUrl);
     }
 }

@@ -24,19 +24,19 @@ public class RegisterNotificationWithDeploymentReleaseNoteEventHandler {
     /**
      * 릴리즈 노트가 배포되면 발생하는 메서드
      *
+     * 0. 해당 원고를 삭제한다.
      * 1. 릴리즈 노트 배포 알림을 저장한다.
      * 2. 이메일로 릴리즈 노트의 배포 알림을 발행한다.
      * 3. 메시지로 릴리즈 노트의 배포 알림을 발행한다.
-     * 4. 해당 원고를 삭제한다.
      */
     //@Async 비동기로 진행하면 테스트 진행이 불가능.
     @TransactionalEventListener(value = ReleaseNoteDeployedEvent.class)
     public void handle(ReleaseNoteDeployedEvent event){
         if(event != null){
+            manuscriptRepository.deleteByVersion(event.getVersion());
             NotificationSentEvent notificationEvent = registerNotificationService.register(event.getReleaseNoteId(), RELEASE_NOTE_DEPLOYMENT);
             sendEmailNotificationService.sendEmail(notificationEvent);
             sendMessageNotificationService.sendMessage(notificationEvent);
-            manuscriptRepository.deleteByVersion(event.getVersion());
         }
     }
 }
