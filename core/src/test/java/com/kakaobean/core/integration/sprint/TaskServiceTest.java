@@ -3,12 +3,13 @@ package com.kakaobean.core.integration.sprint;
 import com.kakaobean.core.factory.project.ProjectFactory;
 import com.kakaobean.core.factory.sprint.TaskFactory;
 import com.kakaobean.core.factory.sprint.dto.ModifyTaskRequestDtoFactory;
-import com.kakaobean.core.factory.sprint.dto.RegisterTaskRequestDtoFactory;
 import com.kakaobean.core.integration.IntegrationTest;
 import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
+import com.kakaobean.core.sprint.application.dto.RegisterTaskRequestDto;
+import com.kakaobean.core.sprint.domain.event.TaskAssignedEvent;
 import com.kakaobean.core.sprint.exception.AssignmentNotAllowedException;
 import com.kakaobean.core.sprint.exception.ChangeOperationNotAllowedException;
 import com.kakaobean.core.sprint.exception.TaskAccessException;
@@ -21,7 +22,10 @@ import com.kakaobean.core.sprint.domain.repository.TaskRepository;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.ApplicationEventPublisher;
 
 import static com.kakaobean.core.factory.project.ProjectFactory.createWithoutId;
 import static com.kakaobean.core.factory.project.ProjectMemberFactory.createWithMemberIdAndProjectId;
@@ -30,6 +34,7 @@ import static com.kakaobean.core.factory.sprint.dto.ChangeWorkStatusRequestDtoFa
 import static com.kakaobean.core.project.domain.ProjectRole.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.*;
 
 public class TaskServiceTest extends IntegrationTest {
 
@@ -48,6 +53,9 @@ public class TaskServiceTest extends IntegrationTest {
     @Autowired
     ProjectMemberRepository projectMemberRepository;
 
+//    @MockBean
+//    ApplicationEventPublisher eventPublisher;
+
     @BeforeEach
     void beforeEach() {
         sprintRepository.deleteAll();
@@ -62,9 +70,10 @@ public class TaskServiceTest extends IntegrationTest {
         Project project = projectRepository.save(ProjectFactory.create());
         ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
         Sprint sprint = sprintRepository.save(createWithId(project.getId()));
+        RegisterTaskRequestDto requestDto = new RegisterTaskRequestDto("title", "content", sprint.getId(), projectMember.getMemberId());
 
         // when
-        taskService.registerTask(RegisterTaskRequestDtoFactory.createWithId(sprint.getId(), projectMember.getMemberId()));
+        taskService.registerTask(requestDto);
 
         // then
         assertThat(taskRepository.findAll().size()).isEqualTo(1);
@@ -76,10 +85,12 @@ public class TaskServiceTest extends IntegrationTest {
         Project project = projectRepository.save(ProjectFactory.create());
         ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), MEMBER));
         Sprint sprint = sprintRepository.save(createWithId(project.getId()));
+        RegisterTaskRequestDto requestDto = new RegisterTaskRequestDto("title", "content", sprint.getId(), projectMember.getMemberId());
+
 
         // when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
-            taskService.registerTask(RegisterTaskRequestDtoFactory.createWithId(sprint.getId(), projectMember.getMemberId()));
+            taskService.registerTask(requestDto);
         });
 
         // then
@@ -164,6 +175,7 @@ public class TaskServiceTest extends IntegrationTest {
 
         // then
         assertThat(taskRepository.findById(task.getId()).get().getWorkerId()).isEqualTo(projectMember.getMemberId());
+//        verify(eventPublisher, times(1)).publishEvent(any(TaskAssignedEvent.class));
     }
 
     @Test
@@ -185,7 +197,7 @@ public class TaskServiceTest extends IntegrationTest {
     }
 
     @Test
-    void Viewr는_테스크를_할당받을_수_없다() {
+    void Viewer는_테스크를_할당받을_수_없다() {
         // given
         Project project = projectRepository.save(createWithoutId());
         ProjectMember projectAdmin = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));

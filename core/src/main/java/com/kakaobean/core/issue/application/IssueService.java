@@ -43,6 +43,6 @@ public class IssueService {
     public void modifyIssue(ModifyIssueRequestDto dto) {
         Issue issue = issueRepository.findById(dto.getIssueId()).orElseThrow(NotExistsIssueException::new);
         issueValidator.validateAccess(issue, dto.getWriterId());
-        issue.modify(dto.getTitle(),dto.getContent());
+//        issue.modify(dto.getTitle(),dto.getContent());
     }
 }
