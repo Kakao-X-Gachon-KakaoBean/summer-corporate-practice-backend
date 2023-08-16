@@ -1,28 +1,28 @@
 package com.kakaobean.core.notification.infrastructure.email;
 
 import com.kakaobean.common.EmailHtmlUtils;
+import com.kakaobean.core.notification.config.EmailProperties;
 import com.kakaobean.core.notification.domain.event.NotificationSentEvent;
 import com.kakaobean.core.notification.domain.event.RegisterCommentNotificationEvent;
 import com.kakaobean.core.notification.domain.service.send.email.SendEmailNotificationStrategy;
 import com.kakaobean.independentlysystem.email.EmailSender;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class SendEmailPostedCommentNotificationStrategy implements SendEmailNotificationStrategy {
 
     private final EmailSender emailSender;
-
-    public SendEmailPostedCommentNotificationStrategy(EmailSender emailSender) {
-        this.emailSender = emailSender;
-    }
+    private final EmailProperties emailProperties;
 
     @Override
     public void send(NotificationSentEvent event) {
         RegisterCommentNotificationEvent notificationEvent = (RegisterCommentNotificationEvent) event;
         String title = notificationEvent.getProjectTitle() + "작성하신 이슈에 댓글이 달렸습니다.";
-        String url = "localhost:3000" + notificationEvent.getUrl();
+        String url = emailProperties.getHostName() + notificationEvent.getUrl();
         emailSender.sendEmail(
                 List.of(notificationEvent.getEmail()),
                 title,
