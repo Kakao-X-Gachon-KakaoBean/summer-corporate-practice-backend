@@ -21,7 +21,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @Slf4j
-@Timed("api.task")
+@Timed("api.spring.task")
 @RestController
 @RequiredArgsConstructor
 public class TaskController {
