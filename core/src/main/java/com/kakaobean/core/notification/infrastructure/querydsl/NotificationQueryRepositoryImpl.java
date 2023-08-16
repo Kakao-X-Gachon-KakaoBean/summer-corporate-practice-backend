@@ -65,7 +65,7 @@ public class NotificationQueryRepositoryImpl implements NotificationQueryReposit
                 .where(
                         notification.memberId.eq(memberId)
                 )
-                .orderBy(notification.createdAt.desc())
+                .orderBy(notification.id.desc())
                 .limit(5) // 최근 알림 5개
                 .fetch();
     }

@@ -85,7 +85,7 @@ public class NotificationControllerTest extends ControllerTest {
 
     @Test
     @WithMockUser
-    void 알림_읽기_상태_변경() throws Exception {
+    void 알림_열람_상태_변경() throws Exception {
 
         // when
         ResultActions perform = mockMvc.perform(patch("/notifications/{notificationId}",1L)
@@ -100,10 +100,10 @@ public class NotificationControllerTest extends ControllerTest {
                 getDocumentRequest(),
                 getDocumentResponse(),
                 pathParameters(
-                        parameterWithName("notificationId").description("읽기 상태 변경할 알림 id")
+                        parameterWithName("notificationId").description("상태 변경할 알림 id")
                 ),
                 responseFields(
-                        fieldWithPath("message").type(STRING).description("읽기 상태 변경 성공 메시지")
+                        fieldWithPath("message").type(STRING).description("열람 상태 변경 성공 메시지")
                 )
         ));
     }
