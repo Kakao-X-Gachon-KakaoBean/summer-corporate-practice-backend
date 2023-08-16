@@ -196,7 +196,7 @@ public class TaskServiceTest extends IntegrationTest {
     }
 
     @Test
-    void Viewr는_테스크를_할당받을_수_없다() {
+    void Viewer는_테스크를_할당받을_수_없다() {
         // given
         Project project = projectRepository.save(createWithoutId());
         ProjectMember projectAdmin = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));

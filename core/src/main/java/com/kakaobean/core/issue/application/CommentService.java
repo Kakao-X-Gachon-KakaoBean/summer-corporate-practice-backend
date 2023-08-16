@@ -28,6 +28,7 @@ public class CommentService {
         Comment comment = dto.toEntity();
         issueRepository.findById(dto.getIssueId()).orElseThrow(NotExistsIssueException::new);
         commentRepository.save(comment);
+        comment.registered();
     }
 
     @Transactional
