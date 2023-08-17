@@ -6,7 +6,7 @@ import com.kakaobean.core.integration.IntegrationTest;
 import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
-import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
+import com.kakaobean.core.project.domain.repository.query.ProjectQueryRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.releasenote.application.ReleaseNoteService;
 import com.kakaobean.core.releasenote.domain.repository.ReleaseNoteRepository;

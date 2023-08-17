@@ -1,4 +1,4 @@
-package com.kakaobean.core.project.application.dto.response;
+package com.kakaobean.core.project.domain.repository.query;
 
 import lombok.Getter;
 

@@ -2,11 +2,8 @@ package com.kakaobean.project;
 
 import com.kakaobean.common.dto.CommandSuccessResponse;
 import com.kakaobean.core.project.application.ProjectService;
-import com.kakaobean.core.project.application.dto.response.FindProjectInfoResponseDto;
-import com.kakaobean.core.project.application.dto.response.FindProjectResponseDto;
-import com.kakaobean.core.project.application.dto.response.FindProjectTitleResponseDto;
+import com.kakaobean.core.project.domain.repository.query.*;
 import com.kakaobean.core.project.application.dto.response.RegisterProjectResponseDto;
-import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
 import com.kakaobean.project.dto.request.ModifyProjectRequest;
 import com.kakaobean.project.dto.request.RegisterProjectRequest;
 import com.kakaobean.security.UserPrincipal;
@@ -41,11 +38,10 @@ public class ProjectController {
         return new ResponseEntity(res, CREATED);
     }
 
-    @Cacheable(cacheNames = "participatedProjects", key = "#userPrincipal.id")
     @GetMapping("/projects")
     public ResponseEntity findParticipatedProjects(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.info("멤버 참여 프로젝트 조회 api 시작");
-        List<FindProjectResponseDto> response = projectQueryRepository.findProjects(userPrincipal.getId());
+        FindProjectsResponseDto response = projectQueryRepository.findProjects(userPrincipal.getId());
         log.info("멤버 참여 프로젝트 조회 api 종료");
         return new ResponseEntity(response, OK);
     }

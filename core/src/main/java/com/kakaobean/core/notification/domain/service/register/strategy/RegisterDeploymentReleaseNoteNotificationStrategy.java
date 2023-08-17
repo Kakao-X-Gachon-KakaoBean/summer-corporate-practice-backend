@@ -8,7 +8,7 @@ import com.kakaobean.core.notification.domain.event.DeploymentReleaseNoteNotific
 import com.kakaobean.core.notification.domain.event.NotificationSentEvent;
 import com.kakaobean.core.notification.utils.NotificationUtils;
 import com.kakaobean.core.project.domain.Project;
-import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
+import com.kakaobean.core.project.domain.repository.query.ProjectQueryRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.project.exception.NotExistsProjectException;
 import com.kakaobean.core.releasenote.domain.ReleaseNote;

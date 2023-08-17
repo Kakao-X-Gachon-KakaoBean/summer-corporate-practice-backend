@@ -41,9 +41,6 @@ subprojects {
 		implementation 'org.springframework.boot:spring-boot-starter-web'
 		implementation 'org.springframework.boot:spring-boot-starter-actuator'
 		implementation 'io.micrometer:micrometer-registry-prometheus' //추가
-//redis cache
-		implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-		implementation 'org.springframework.boot:spring-boot-starter-cache'
 	}
 
 	test{
