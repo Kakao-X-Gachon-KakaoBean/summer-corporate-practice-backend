@@ -17,6 +17,7 @@ import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.project.exception.NotExistsProjectException;
 import com.kakaobean.core.project.exception.NotExistsProjectMemberException;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +47,7 @@ public class ProjectMemberService {
         this.projectValidator = projectValidator;
     }
 
+    @CacheEvict(cacheNames = "projectCache", key = "#dto.memberId")
     public void registerProjectMember(RegisterProjectMemberRequestDto dto){
 
         //프로젝트를 가져옴.
