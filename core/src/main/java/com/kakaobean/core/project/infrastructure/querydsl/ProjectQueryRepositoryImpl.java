@@ -42,7 +42,7 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                 .fetch();
     }
 
-    @Cacheable(cacheNames = "projectCache", key = "#memberId")
+    //@Cacheable(cacheNames = "projectCache", key = "#memberId")
     @Override
     public FindProjectsResponseDto findProjects(Long memberId) {
         List<FindProjectResponseDto> result = queryFactory.select(
