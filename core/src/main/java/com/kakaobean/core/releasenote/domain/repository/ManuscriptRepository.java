@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.LockModeType;
 import java.util.Optional;
@@ -23,6 +25,7 @@ public interface ManuscriptRepository extends JpaRepository<Manuscript, Long> {
     void deleteByProjectId(Long projectId);
 
     @Modifying
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Query("update Manuscript ma set ma.status = 'INACTIVE' where ma.version = :version and ma.status = 'ACTIVE'")
     void deleteByVersion(String version);
 }
