@@ -30,7 +30,6 @@ public class ProjectController {
     private final ProjectService projectService;
     private final ProjectQueryRepository projectQueryRepository;
 
-    @CacheEvict
     @PostMapping("/projects")
     public ResponseEntity registerProject(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                           @Validated @RequestBody RegisterProjectRequest request) {
