@@ -13,6 +13,7 @@ import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.project.exception.NotExistsProjectException;
 import com.kakaobean.core.project.exception.NotExistsProjectMemberException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,7 @@ public class ProjectService {
     private final ProjectMemberRepository projectMemberRepository;
     private final ProjectValidator projectValidator;
 
+    @CacheEvict(cacheNames = "projectCache", key = "#dto.adminId")
     @Transactional(readOnly = false)
     public RegisterProjectResponseDto registerProject(RegisterProjectRequestDto dto) {
         Project project = dto.toEntity();
@@ -42,6 +44,7 @@ public class ProjectService {
         project.modify(dto.getNewTitle(),dto.getNewContent());
     }
 
+    @CacheEvict(cacheNames = "projectCache", key = "#adminId")
     @Transactional(readOnly = false)
     public void removeProject(Long adminId, Long projectId) {
         projectValidator.validAdmin(adminId, projectId);
