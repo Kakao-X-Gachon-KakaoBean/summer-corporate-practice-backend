@@ -1,6 +1,5 @@
-package com.kakaobean.core.project.application.dto.response;
+package com.kakaobean.core.project.domain.repository.query;
 
-import com.kakaobean.core.common.domain.BaseStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

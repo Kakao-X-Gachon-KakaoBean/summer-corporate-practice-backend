@@ -2,17 +2,15 @@ package com.kakaobean.project;
 
 import com.kakaobean.common.dto.CommandSuccessResponse;
 import com.kakaobean.core.project.application.ProjectService;
-import com.kakaobean.core.project.application.dto.response.FindProjectInfoResponseDto;
-import com.kakaobean.core.project.application.dto.response.FindProjectResponseDto;
-import com.kakaobean.core.project.application.dto.response.FindProjectTitleResponseDto;
+import com.kakaobean.core.project.domain.repository.query.*;
 import com.kakaobean.core.project.application.dto.response.RegisterProjectResponseDto;
-import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
 import com.kakaobean.project.dto.request.ModifyProjectRequest;
 import com.kakaobean.project.dto.request.RegisterProjectRequest;
 import com.kakaobean.security.UserPrincipal;
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -43,7 +41,7 @@ public class ProjectController {
     @GetMapping("/projects")
     public ResponseEntity findParticipatedProjects(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.info("멤버 참여 프로젝트 조회 api 시작");
-        List<FindProjectResponseDto> response = projectQueryRepository.findProjects(userPrincipal.getId());
+        FindProjectsResponseDto response = projectQueryRepository.findProjects(userPrincipal.getId());
         log.info("멤버 참여 프로젝트 조회 api 종료");
         return new ResponseEntity(response, OK);
     }
