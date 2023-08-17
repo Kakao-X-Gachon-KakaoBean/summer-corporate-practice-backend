@@ -1,12 +1,12 @@
 package com.kakaobean.unit.controller.project;
 
 import com.kakaobean.core.project.application.dto.request.RegisterProjectRequestDto;
-import com.kakaobean.core.project.application.dto.response.FindProjectTitleResponseDto;
+import com.kakaobean.core.project.domain.repository.query.FindProjectTitleResponseDto;
 import com.kakaobean.core.project.application.dto.response.RegisterProjectResponseDto;
+import com.kakaobean.core.project.domain.repository.query.FindProjectsResponseDto;
 import com.kakaobean.project.dto.request.ModifyProjectRequest;
 import com.kakaobean.project.dto.request.RegisterProjectRequest;
 import com.kakaobean.unit.controller.ControllerTest;
-import com.kakaobean.unit.controller.factory.project.FindProjectInfoResponseDtoFactory;
 import com.kakaobean.unit.controller.factory.project.FindProjectResponseDtoFactory;
 import com.kakaobean.unit.controller.security.WithMockUser;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ public class ProjectControllerTest extends ControllerTest {
 
         //given
         given(projectQueryRepository.findProjects(Mockito.anyLong()))
-                .willReturn(FindProjectResponseDtoFactory.createList());
+                .willReturn(new FindProjectsResponseDto(FindProjectResponseDtoFactory.createList()));
 
         //when
         ResultActions perform = mockMvc.perform(get("/projects")
@@ -49,9 +49,10 @@ public class ProjectControllerTest extends ControllerTest {
                 getDocumentRequest(),
                 getDocumentResponse(),
                 responseFields(
-                        fieldWithPath("[].projectId").type(NUMBER).description("프로젝트 id"),
-                        fieldWithPath("[].projectTitle").type(STRING).description("프로젝트 이름"),
-                        fieldWithPath("[].projectContent").type(STRING).description("프로젝트 설명")
+                        fieldWithPath("projects").type(ARRAY).description("프로젝트들"),
+                        fieldWithPath("projects[].projectId").type(NUMBER).description("프로젝트 id"),
+                        fieldWithPath("projects[].projectTitle").type(STRING).description("프로젝트 이름"),
+                        fieldWithPath("projects[].projectContent").type(STRING).description("프로젝트 설명")
                 )
         ));
     }

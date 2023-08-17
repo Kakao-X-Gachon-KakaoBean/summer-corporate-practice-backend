@@ -16,7 +16,7 @@ import com.kakaobean.core.notification.domain.repository.query.NotificationQuery
 import com.kakaobean.core.project.application.ProjectMemberFacade;
 import com.kakaobean.core.project.application.ProjectMemberService;
 import com.kakaobean.core.project.application.ProjectService;
-import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
+import com.kakaobean.core.project.domain.repository.query.ProjectQueryRepository;
 import com.kakaobean.core.releasenote.application.ManuscriptService;
 import com.kakaobean.core.releasenote.application.ReleaseNoteService;
 import com.kakaobean.core.releasenote.domain.repository.query.ManuscriptQueryRepository;

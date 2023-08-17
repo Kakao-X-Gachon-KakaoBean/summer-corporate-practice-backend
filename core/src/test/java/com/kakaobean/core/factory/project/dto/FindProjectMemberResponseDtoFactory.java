@@ -1,7 +1,6 @@
 package com.kakaobean.core.factory.project.dto;
 
-import com.kakaobean.core.project.application.dto.response.FindProjectMemberResponseDto;
-import com.kakaobean.core.project.domain.ProjectRole;
+import com.kakaobean.core.project.domain.repository.query.FindProjectMemberResponseDto;
 
 import java.util.List;
 

@@ -1,12 +1,9 @@
 package com.kakaobean.core.project.infrastructure.querydsl;
 
-import com.kakaobean.core.project.application.dto.response.FindProjectInfoResponseDto;
-import com.kakaobean.core.project.application.dto.response.FindProjectMemberResponseDto;
-import com.kakaobean.core.project.application.dto.response.FindProjectResponseDto;
-import com.kakaobean.core.project.application.dto.response.FindProjectTitleResponseDto;
-import com.kakaobean.core.project.domain.repository.ProjectQueryRepository;
+import com.kakaobean.core.project.domain.repository.query.*;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -45,23 +42,25 @@ public class ProjectQueryRepositoryImpl implements ProjectQueryRepository {
                 .fetch();
     }
 
+    @Cacheable(cacheNames = "projectCache", key = "#memberId")
     @Override
-    public List<FindProjectResponseDto> findProjects(Long memberId) {
-        return queryFactory.select(
+    public FindProjectsResponseDto findProjects(Long memberId) {
+        List<FindProjectResponseDto> result = queryFactory.select(
                         Projections.constructor(
                                 FindProjectResponseDto.class,
                                 project.id,
                                 project.title,
                                 project.content
                         ))
-                .from(member)
-                .join(project).on(project.id.eq(projectMember.projectId))
-                .join(projectMember).on(projectMember.memberId.eq(member.id))
+                .from(project)
+                .join(projectMember).on(projectMember.projectId.eq(project.id))
+                .join(member).on(member.id.eq(projectMember.memberId))
                 .where(
                         project.status.eq(ACTIVE),
                         projectMember.memberId.eq(memberId)
                 )
                 .fetch();
+        return new FindProjectsResponseDto(result);
     }
 
     @Override

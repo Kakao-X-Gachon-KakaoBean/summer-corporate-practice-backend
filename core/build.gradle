@@ -26,6 +26,9 @@ dependencies {
 
     implementation 'org.springframework.security:spring-security-crypto'
     testImplementation 'org.mockito:mockito-inline:3.6.0' //static 메서드를 mocking
+
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+
 }
 
 // Querydsl 설정부

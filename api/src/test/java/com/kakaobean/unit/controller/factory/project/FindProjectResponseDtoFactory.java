@@ -1,7 +1,6 @@
 package com.kakaobean.unit.controller.factory.project;
 
-import com.kakaobean.core.common.domain.BaseStatus;
-import com.kakaobean.core.project.application.dto.response.FindProjectResponseDto;
+import com.kakaobean.core.project.domain.repository.query.FindProjectResponseDto;
 
 import java.util.List;
 
