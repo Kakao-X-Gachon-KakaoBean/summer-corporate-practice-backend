@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.LockModeType;
+import java.util.List;
 import java.util.Optional;
 
 public interface ManuscriptRepository extends JpaRepository<Manuscript, Long> {
@@ -28,4 +29,6 @@ public interface ManuscriptRepository extends JpaRepository<Manuscript, Long> {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Query("update Manuscript ma set ma.status = 'INACTIVE' where ma.version = :version and ma.status = 'ACTIVE'")
     void deleteByVersion(String version);
+
+    List<Manuscript> findManuscriptByProjectId(Long projectId);
 }

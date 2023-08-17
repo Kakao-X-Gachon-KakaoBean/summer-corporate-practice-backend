@@ -1,15 +1,15 @@
 package com.kakaobean.core.releasenote.domain;
 
-import com.kakaobean.core.common.domain.BaseEntity;
-
 import com.kakaobean.core.project.domain.ProjectMember;
-import com.kakaobean.core.project.domain.ProjectRole;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.exception.NotExistsProjectMemberException;
 import com.kakaobean.core.releasenote.domain.repository.ManuscriptRepository;
 import com.kakaobean.core.releasenote.exception.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Objects;
 
 import static com.kakaobean.core.project.domain.ProjectRole.*;
 
@@ -26,13 +26,20 @@ public class ManuscriptValidator {
                 .findByMemberIdAndProjectId(manuscript.getLastEditedMemberId(), manuscript.getProjectId())
                 .orElseThrow(NotExistsProjectMemberException::new);
 
-        if(writer.getProjectRole() != ADMIN){
+        if(writer.getProjectRole() != ADMIN) {
             throw new ManuscriptWriterAccessException();
         }
 
-        if(manuscriptRepository.findManuscriptByVersion(manuscript.getVersion()).isPresent()){
-            throw new DuplicateManuscriptVersionException();
+        List<Manuscript> manuscripts = manuscriptRepository.findManuscriptByProjectId(manuscript.getProjectId());
+        for (Manuscript m : manuscripts) {
+            if(isSameVersion(manuscript, m)) {
+                throw new DuplicateManuscriptVersionException();
+            }
         }
+    }
+
+    private boolean isSameVersion(Manuscript manuscript, Manuscript m) {
+        return Objects.equals(manuscript.getVersion(), m.getVersion());
     }
 
     public void validRightToModify(Manuscript manuscript, Long memberId){
