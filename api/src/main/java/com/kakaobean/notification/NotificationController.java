@@ -36,7 +36,7 @@ public class NotificationController {
 
     @GetMapping("/notifications/page")
     public ResponseEntity findNextNotifications(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                              @RequestParam(required = false) Long lastNotificationId){
+                                                @RequestParam(required = false) Long lastNotificationId){
         log.info("알림 페이징 조회 api 시작");
         List<FindNotificationResponseDto> response = notificationQueryRepository.findByPaginationNoOffset(lastNotificationId, userPrincipal.getId());
         log.info("알림 페이징 조회 api 종료");

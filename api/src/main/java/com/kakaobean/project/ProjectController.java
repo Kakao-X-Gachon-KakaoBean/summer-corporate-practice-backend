@@ -10,6 +10,7 @@ import com.kakaobean.security.UserPrincipal;
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,6 +30,7 @@ public class ProjectController {
     private final ProjectService projectService;
     private final ProjectQueryRepository projectQueryRepository;
 
+    @CacheEvict
     @PostMapping("/projects")
     public ResponseEntity registerProject(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                           @Validated @RequestBody RegisterProjectRequest request) {
