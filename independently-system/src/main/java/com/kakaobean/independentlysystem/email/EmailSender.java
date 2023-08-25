@@ -24,10 +24,10 @@ public class EmailSender {
     private final AmazonSimpleEmailService amazonSimpleEmailService;
 
     public void sendEmail(List<String> receiver, String subject, EmailHTMLMaker maker) {
-        String html = maker.makeEmailHtml();
-        SesServiceRequest emailRequest = makeEmailRequest(receiver, subject, html);
-        SendEmailResult sendEmailResult = amazonSimpleEmailService.sendEmail(emailRequest.toSendRequestDto());
-        confirmSentEmail(sendEmailResult);
+//        String html = maker.makeEmailHtml();
+//        SesServiceRequest emailRequest = makeEmailRequest(receiver, subject, html);
+//        SendEmailResult sendEmailResult = amazonSimpleEmailService.sendEmail(emailRequest.toSendRequestDto());
+//        confirmSentEmail(sendEmailResult);
     }
 
     private SesServiceRequest makeEmailRequest(List<String> receiver, String subject, String html) {
