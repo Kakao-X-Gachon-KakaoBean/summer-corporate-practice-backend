@@ -1,6 +1,10 @@
 package com.kakaobean.common;
 
+import com.kakaobean.security.UserPrincipal;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -27,12 +31,27 @@ public class GlobalLogFilter implements Filter {
         } catch (Exception e) {
             throw e;
         } finally {
-            log.info("Client IP: {}, Http Method: {}, Request URI: {}, Http Status: {}",
-                    httpRequest.getRemoteAddr(),
-                    httpRequest.getMethod(),
-                    requestURI,
-                    httpResponse.getStatus()
-            );
+            Object object = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if(object.getClass() == UserPrincipal.class){
+                UserPrincipal userPrincipal = (UserPrincipal) object;
+                log.info("Client IP: {}, Http Method: {}, Request URI: {}, Http Status: {}, userId: {}",
+                        httpRequest.getRemoteAddr(),
+                        httpRequest.getMethod(),
+                        requestURI,
+                        httpResponse.getStatus(),
+                        userPrincipal.getId()
+                );
+
+            }
+
+            else{
+                log.info("Client IP: {}, Http Method: {}, Request URI: {}, Http Status: {}",
+                        httpRequest.getRemoteAddr(),
+                        httpRequest.getMethod(),
+                        requestURI,
+                        httpResponse.getStatus()
+                );
+            }
         }
     }
 
