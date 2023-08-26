@@ -21,15 +21,18 @@ public class GlobalLogFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String requestURI = httpRequest.getRequestURI();
-        String uuid = UUID.randomUUID().toString();
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         try {
-            log.info("Client IP: {}, Http Method: {}, Request URI: {} ", httpRequest.getRemoteAddr(), httpRequest.getMethod(), requestURI);
             chain.doFilter(request, response);
         } catch (Exception e) {
             throw e;
         } finally {
-            log.info("Http Status: {}", httpResponse.getStatus());
+            log.info("Client IP: {}, Http Method: {}, Request URI: {}, Http Status: {}",
+                    httpRequest.getRemoteAddr(),
+                    httpRequest.getMethod(),
+                    requestURI,
+                    httpResponse.getStatus()
+            );
         }
     }
 
