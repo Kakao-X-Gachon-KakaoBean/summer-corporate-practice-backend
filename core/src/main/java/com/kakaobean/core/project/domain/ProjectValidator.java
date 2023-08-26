@@ -17,7 +17,7 @@ public class ProjectValidator {
         ProjectMember projectMember = projectMemberRepository.findByMemberIdAndProjectId(projectMemberId, projectId)
                 .orElseThrow(NotExistsProjectMemberException::new);
         if(projectMember.getProjectRole() != ProjectRole.ADMIN){
-            throw new NotProjectAdminException();
+            throw new NotProjectAdminException(projectMember.getProjectRole().name());
         }
     }
 
