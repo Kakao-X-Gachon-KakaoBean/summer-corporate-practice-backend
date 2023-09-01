@@ -27,7 +27,7 @@ public class ManuscriptValidator {
                 .orElseThrow(NotExistsProjectMemberException::new);
 
         if(writer.getProjectRole() != ADMIN) {
-            throw new ManuscriptWriterAccessException();
+            throw new ManuscriptWriterAccessException(writer.getProjectRole().name());
         }
 
         List<Manuscript> manuscripts = manuscriptRepository.findManuscriptByProjectId(manuscript.getProjectId());
@@ -47,7 +47,7 @@ public class ManuscriptValidator {
                 .orElseThrow(NotExistsProjectMemberException::new);
 
         if(projectMember.getProjectRole() != ADMIN & projectMember.getProjectRole() != MEMBER){
-            throw new ManuscriptModificationAccessException();
+            throw new ManuscriptModificationAccessException(projectMember.getProjectRole().name());
         }
 
         if(manuscript.getManuscriptStatus() == ManuscriptStatus.Modifying) {
@@ -60,7 +60,7 @@ public class ManuscriptValidator {
                 .orElseThrow(NotExistsProjectMemberException::new);
 
         if(projectMember.getProjectRole() != ADMIN & projectMember.getProjectRole() != MEMBER){
-            throw new ManuscriptModificationAccessException();
+            throw new ManuscriptModificationAccessException(projectMember.getProjectRole().name());
         }
 
         if(manuscript.getManuscriptStatus() != ManuscriptStatus.Modifying) {
@@ -73,7 +73,7 @@ public class ManuscriptValidator {
                 .orElseThrow(NotExistsProjectMemberException::new);
 
         if(projectMember.getProjectRole() != ADMIN){
-            throw new CannotDeleteManuscriptException();
+            throw new CannotDeleteManuscriptException(projectMember.getProjectRole().name());
         }
     }
 }

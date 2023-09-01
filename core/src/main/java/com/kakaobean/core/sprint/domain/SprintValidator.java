@@ -23,7 +23,7 @@ public class SprintValidator {
                 .orElseThrow(NotExistsProjectMemberException::new);
 
         if(projectMember.getProjectRole() != ADMIN){
-            throw new SprintAccessException();
+            throw new SprintAccessException(projectMember.getProjectRole().name());
         }
 
         checkDateValidation(sprint.getStartDate(), sprint.getEndDate());
@@ -40,7 +40,7 @@ public class SprintValidator {
                 .orElseThrow(NotExistsProjectMemberException::new);
 
         if(projectMember.getProjectRole() != ADMIN){
-            throw new SprintAccessException();
+            throw new SprintAccessException(projectMember.getProjectRole().name());
         }
     }
 }

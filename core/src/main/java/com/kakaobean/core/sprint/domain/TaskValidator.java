@@ -26,7 +26,7 @@ public class TaskValidator {
         ProjectMember projectMember = projectMemberRepository.findByMemberIdAndProjectId(adminId, sprint.getProjectId())
                 .orElseThrow(NotExistsProjectMemberException::new);
         if (projectMember.getProjectRole() != ADMIN){
-            throw new TaskAccessException();
+            throw new TaskAccessException(projectMember.getProjectRole().name());
         }
     }
 
@@ -36,13 +36,13 @@ public class TaskValidator {
         ProjectMember projectAdmin = projectMemberRepository.findByMemberIdAndProjectId(adminId, sprint.getProjectId())
                 .orElseThrow(NotExistsProjectMemberException::new);
         if (projectAdmin.getProjectRole() != ADMIN){
-            throw new TaskAccessException();
+            throw new TaskAccessException(projectAdmin.getProjectRole().name());
         }
 
         ProjectMember projectMember = projectMemberRepository.findByMemberIdAndProjectId(workerId, sprint.getProjectId())
                 .orElseThrow(NotExistsProjectMemberException::new);
         if (projectMember.getProjectRole() == VIEWER){
-            throw new AssignmentNotAllowedException();
+            throw new AssignmentNotAllowedException(projectMember.getProjectRole().name());
         }
     }
 

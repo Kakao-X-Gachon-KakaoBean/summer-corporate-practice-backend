@@ -30,14 +30,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ApplicationException.class)
     public ResponseEntity<ApplicationExceptionResponse> handleApplicationException(ApplicationException e) {
-        log.info(LOG_FORMAT, e.getClass().getSimpleName(), BAD_REQUEST, e.getMessage());
+        log.warn(LOG_FORMAT, e.getClass().getSimpleName(), BAD_REQUEST, e.getMessage());
         ApplicationExceptionResponse exceptionResponse = new ApplicationExceptionResponse(e.getMessage(), e.getErrorCode(), e.getStatus());
         return ResponseEntity.status(HttpStatus.valueOf(exceptionResponse.getStatus())).body(exceptionResponse);
     }
 
     @ExceptionHandler(AuthException.class)
     public ResponseEntity<ApplicationExceptionResponse> handleAuthException(AuthException e) {
-        log.info(LOG_FORMAT, e.getClass().getSimpleName(), BAD_REQUEST, e.getMessage());
+        log.warn(LOG_FORMAT, e.getClass().getSimpleName(), BAD_REQUEST, e.getMessage());
         ApplicationExceptionResponse exceptionResponse = new ApplicationExceptionResponse(e.getMessage(), "A001", 401);
         return ResponseEntity.status(HttpStatus.valueOf(exceptionResponse.getStatus())).body(exceptionResponse);
     }
@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     protected ResponseEntity<ApplicationExceptionResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
         ApplicationExceptionResponse exceptionResponse = new ApplicationExceptionResponse(e.getValue().toString(), "G005", 400);
-        log.info(LOG_FORMAT, e.getClass().getSimpleName(), BAD_REQUEST, "@Valid");
+        log.warn(LOG_FORMAT, e.getClass().getSimpleName(), BAD_REQUEST, "@Valid");
         return ResponseEntity.status(BAD_REQUEST.value()).body(exceptionResponse);
     }
 
@@ -53,7 +53,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApplicationExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         String message = e.getFieldError().getDefaultMessage();
         ApplicationExceptionResponse exceptionResponse = new ApplicationExceptionResponse(message, "G004", 400);
-        log.info(LOG_FORMAT, e.getClass().getSimpleName(), BAD_REQUEST, "@Valid");
+        log.warn(LOG_FORMAT, e.getClass().getSimpleName(), BAD_REQUEST, "@Valid");
         return ResponseEntity.status(BAD_REQUEST.value()).body(exceptionResponse);
     }
 

@@ -23,7 +23,7 @@ public class ReleaseNoteValidator {
                 .orElseThrow(NotExistsProjectMemberException::new);
 
         if(writer.getProjectRole() != ADMIN){
-            throw new ReleaseNoteWriterAccessException();
+            throw new ReleaseNoteWriterAccessException(writer.getProjectRole().name());
         }
     }
 }

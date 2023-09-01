@@ -24,10 +24,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         try {
-            log.info("access token 검증 시작");
             String accessToken = tokenValidator.getAccessTokenFromRequest(request);
             tokenValidator.validToken(request, accessToken);
-            log.info("access token 검증 종료");
         }
         catch (Exception ex) {
             log.error("Could not set user authentication in security context", ex);
