@@ -42,7 +42,7 @@ jobs:
 
       - name: Make core test yml
         run: |
-          cd ./core/src/test/resources
+          cd ./core/src/test
           mkdir resources && cd resources
           touch ./application.yml
           echo "${{ secrets.CORE_TEST_APPLICATION_YML }}" >> ./application.yml
