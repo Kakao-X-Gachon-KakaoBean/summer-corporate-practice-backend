@@ -28,7 +28,7 @@ jobs:
         run: |
           cd ./api/src/main/resources
           touch ./application.yml
-          echo "${{ secrets.API_APPLICATION_YML }}" > ./application.yml
+          echo "${{ secrets.API_APPLICATION_YML }}" | base64 --decode > ./application.yml
         shell: bash
 
       # core 모듈 관련 yml 생성
