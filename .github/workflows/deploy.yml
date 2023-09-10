@@ -26,7 +26,7 @@ jobs:
       # api 모듈 관련 yml 생성
       - name: Make api main yml
         run: |
-          cd .api/src/main/resources
+          cd ./api/src/main/resources
           touch ./application.yml
           echo "${{ secrets.API_APPLICATION_YML }}" > ./application.yml
         shell: bash
@@ -34,14 +34,14 @@ jobs:
       # core 모듈 관련 yml 생성
       - name: Make core main yml
         run: |
-          cd .core/src/main/resources
+          cd ./core/src/main/resources
           touch ./application-core.yml
           echo "${{ secrets.CORE_MAIN_APPLICATION_YML }}" >> ./application-core.yml
         shell: bash
 
       - name: Make core test yml
         run: |
-          cd .core/src/test/resources
+          cd ./core/src/test/resources
           touch ./application.yml
           echo "${{ secrets.CORE_TEST_APPLICATION_YML }}" >> ./application.yml
         shell: bash
@@ -49,7 +49,7 @@ jobs:
       # independently-system 모듈 관련 yml 생성
       - name: Make indepenently-system main yml
         run: |
-          cd .independently-system/src/main/resources
+          cd ./independently-system/src/main/resources
           touch ./application-independently-system.yml
           echo "${{ secrets.INDEPENDENTLY_MAIN_APPLICATION_YML }}" >> ./application-independently-system.yml
         shell: bash
