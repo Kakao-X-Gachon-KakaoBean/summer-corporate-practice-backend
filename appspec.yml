@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 
 files:
-  - source: s3://coconote/deploy
+  - source: /
     destination: /home/ec2-user/code-deploy/
     overwrite: yes
 
