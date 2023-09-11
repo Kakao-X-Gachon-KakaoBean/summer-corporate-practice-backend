@@ -62,7 +62,7 @@ jobs:
         shell: bash
       
       - name: BootJar
-        run: ./gradlew bootjar
+        run: ./gradlew build --info
         shell: bash
         
       - name: Make zip file
