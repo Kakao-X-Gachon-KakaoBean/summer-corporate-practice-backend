@@ -3,8 +3,6 @@ BUILD_JAR=$(ls /home/ec2-user/code-deploy/api/build/libs/*.jar)
 JAR_NAME=$(basename $BUILD_JAR)
 echo "> build 파일명: $JAR_NAME" >> /home/ec2-user/code-deploy/deploy.log
 
-echo "> build 파일 복사" >> /home/ec2-user/code-deploy/deploy.log
-
 echo "> 현재 실행중인 애플리케이션 pid 확인" >> /home/ec2-user/code-deploy/deploy.log
 CURRENT_PID=$(pgrep -f $JAR_NAME)
 
@@ -16,6 +14,9 @@ else
   kill -15 $CURRENT_PID
   sleep 5
 fi
+
+echo "> 배포 위치로 이동" >> /home/ec2-user/code-deploy/deploy.log
+cd /home/ec2-user/code-deploy/
 
 DEPLOY_JAR=/home/ec2-user/code-deploy/api/build/libs/$JAR_NAME
 echo "> DEPLOY_JAR 배포"    >> /home/ec2-user/code-deploy/deploy.log

@@ -57,12 +57,6 @@ jobs:
           echo "${{ secrets.INDEPENDENTLY_MAIN_APPLICATION_YML }}" | base64 --decode > ./application-independently-system.yml
         shell: bash
 
-      - name: log 파일 생성
-        run: |
-          mkdir ./log && cd log
-          mkdir info error warn
-        shell: bash
-
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
         shell: bash
