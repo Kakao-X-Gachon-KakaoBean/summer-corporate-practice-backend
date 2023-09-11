@@ -1,6 +1,6 @@
 name: Deploy
 
-on:
+on: 
   push:
     branches: [ "main" ]
 
@@ -28,7 +28,7 @@ jobs:
         run: |
           cd ./api/src/main/resources
           touch ./application.yml
-          echo "${{ secrets.API_APPLICATION_YML }}" > ./application.yml
+          echo "${{ secrets.API_APPLICATION_YML }}" | base64 --decode > ./application.yml
         shell: bash
 
       # core 모듈 관련 yml 생성
@@ -37,7 +37,7 @@ jobs:
           cd ./core/src/main
           mkdir resources && cd resources
           touch ./application-core.yml
-          echo "${{ secrets.CORE_MAIN_APPLICATION_YML }}" >> ./application-core.yml
+          echo "${{ secrets.CORE_MAIN_APPLICATION_YML }}" | base64 --decode > ./application-core.yml
         shell: bash
 
       - name: Make core test yml
@@ -45,7 +45,7 @@ jobs:
           cd ./core/src/test
           mkdir resources && cd resources
           touch ./application.yml
-          echo "${{ secrets.CORE_TEST_APPLICATION_YML }}" >> ./application.yml
+          echo "${{ secrets.CORE_TEST_APPLICATION_YML }}" | base64 --decode > ./application.yml
         shell: bash
 
       # independently-system 모듈 관련 yml 생성
@@ -54,17 +54,17 @@ jobs:
           cd ./independently-system/src/main
           mkdir resources && cd resources
           touch ./application-independently-system.yml
-          echo "${{ secrets.INDEPENDENTLY_MAIN_APPLICATION_YML }}" >> ./application-independently-system.yml
+          echo "${{ secrets.INDEPENDENTLY_MAIN_APPLICATION_YML }}" | base64 --decode > ./application-independently-system.yml
         shell: bash
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
         shell: bash
-
+      
       - name: BootJar
         run: ./gradlew bootjar
         shell: bash
-
+        
       - name: Make zip file
         run: zip -r ./$GITHUB_SHA.zip .
         shell: bash
@@ -75,11 +75,11 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-
+      
       - name: Upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://${{ secrets.S3_BUCKET_NAME }}/$deploy/$GITHUB_SHA.zip
-
-      - name: Code-Deploy
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://${{ secrets.S3_BUCKET_NAME }}/deploy/$GITHUB_SHA.zip
+      
+      - name: Code-Deploy 
         run: |
           aws deploy create-deployment \
           --application-name coconote \
