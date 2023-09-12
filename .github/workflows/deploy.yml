@@ -3,6 +3,8 @@ name: Deploy
 on: 
   push:
     branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 env:
   S3_BUCKET_NAME: coconote
