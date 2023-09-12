@@ -20,4 +20,4 @@ cd /home/ec2-user/code-deploy/
 
 DEPLOY_JAR=/home/ec2-user/code-deploy/api/build/libs/$JAR_NAME
 echo "> DEPLOY_JAR 배포"    >> /home/ec2-user/code-deploy/deploy.log
-nohup java -jar $DEPLOY_JAR >> /home/ec2-user/deploy.log 2>/home/ec2-user/code-deploy/deploy_err.log &
+nohup java -jar $DEPLOY_JAR >> /home/ec2-user/deploy_std.log 2>/home/ec2-user/code-deploy/deploy_err.log &

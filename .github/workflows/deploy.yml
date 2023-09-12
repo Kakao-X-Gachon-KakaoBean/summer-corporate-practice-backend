@@ -64,6 +64,11 @@ jobs:
       - name: BootJar
         run: ./gradlew bootjar --info
         shell: bash
+
+      # static 폴더 생성을 위함
+      - name: BootJar with no test
+        run: ./gradlew bootjar -x test
+        shell: bash
         
       - name: Make zip file
         run: zip -r ./$GITHUB_SHA.zip .
