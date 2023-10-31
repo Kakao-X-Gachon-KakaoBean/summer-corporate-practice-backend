@@ -24,11 +24,12 @@ public class CommentService {
     private final CommentValidator commentValidator;
 
     @Transactional(readOnly = false)
-    public void registerComment(RegisterCommentRequestDto dto){
+    public Long registerComment(RegisterCommentRequestDto dto){
         Comment comment = dto.toEntity();
         issueRepository.findById(dto.getIssueId()).orElseThrow(NotExistsIssueException::new);
         commentRepository.save(comment);
         comment.registered();
+        return comment.getId();
     }
 
     @Transactional

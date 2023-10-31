@@ -5,9 +5,9 @@ import lombok.Getter;
 @Getter
 public class RegisterProjectResponseDto {
 
-    private final Long ProjectId;
+    private final Long projectId;
 
     public RegisterProjectResponseDto(Long projectId) {
-        ProjectId = projectId;
+        this.projectId = projectId;
     }
 }

@@ -19,10 +19,11 @@ public class ReleaseNoteService {
     private final ReleaseNoteRepository releaseNoteRepository;
     private final ReleaseNoteValidator releaseNoteValidator;
 
-    public void deployReleaseNote(DeployReleaseNoteRequestDto dto) {
+    public Long deployReleaseNote(DeployReleaseNoteRequestDto dto) {
         ReleaseNote releaseNote = dto.toEntity();
         releaseNoteValidator.validWriterAccess(releaseNote);
         releaseNoteRepository.save(releaseNote);
         releaseNote.deployed();
+        return releaseNote.getId();
     }
 }

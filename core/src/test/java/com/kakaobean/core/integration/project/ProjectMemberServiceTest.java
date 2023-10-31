@@ -45,19 +45,13 @@ public class ProjectMemberServiceTest extends IntegrationTest {
     @Autowired
     ProjectMemberRepository projectMemberRepository;
 
-    @BeforeEach
-    void beforeEach() {
-        memberRepository.deleteAll();
-        projectRepository.deleteAll();
-        projectMemberRepository.deleteAll();
-    }
 
     @Test
     void 관리자가_프로젝트_멤버_초대_이메일_전송_도메인_이벤트를_만든다(){
         //given
-        Member member = memberRepository.save(MemberFactory.create());
+        Member member = memberRepository.save(MemberFactory.createWithoutId());
         Member invitedMember = memberRepository.save(MemberFactory.createWithoutId());
-        Project project = projectRepository.save(ProjectFactory.create());
+        Project project = projectRepository.save(ProjectFactory.createWithoutId());
         projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), member.getId(), ADMIN));
 
         //when
@@ -73,8 +67,8 @@ public class ProjectMemberServiceTest extends IntegrationTest {
     void 일반_멤버가_프로젝트_멤버_초대_이메일_전송_도메인_이벤트를_만드는_것을_실패한다(){
         //given
         Member member = memberRepository.save(MemberFactory.create());
-        Member invitedMember = memberRepository.save(MemberFactory.create());
-        Project project = projectRepository.save(ProjectFactory.create());
+        Member invitedMember = memberRepository.save(MemberFactory.createWithoutId());
+        Project project = projectRepository.save(ProjectFactory.createWithoutId());
         projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), member.getId(), MEMBER));
 
         //when
@@ -89,22 +83,22 @@ public class ProjectMemberServiceTest extends IntegrationTest {
     @Test
     void 초대_받은_회원이_프로젝트에_참여한다(){
         //given
-        Member member = memberRepository.save(MemberFactory.create());
-        Project project = projectRepository.save(ProjectFactory.create());
+        Member member = memberRepository.save(MemberFactory.createWithoutId());
+        Project project = projectRepository.save(ProjectFactory.createWithoutId());
         projectMemberRepository.save(ProjectMemberFactory.createWithMemberIdAndProjectId(member.getId(), project.getId(), INVITED_PERSON));
 
         //when
         projectMemberService.registerProjectMember(new RegisterProjectMemberRequestDto(project.getSecretKey(), member.getId()));
 
         //then
-        assertThat(projectMemberRepository.findAll().size()).isEqualTo(1);
+        assertThat(projectMemberRepository.findByMemberIdAndProjectId(member.getId(), project.getId()).isPresent()).isTrue();
     }
 
     @Test
     void 초대_받은_신분의_회원만_프로젝트에_참가할_수_있다(){
         //given
-        Member member = memberRepository.save(MemberFactory.create());
-        Project project = projectRepository.save(ProjectFactory.create());
+        Member member = memberRepository.save(MemberFactory.createWithoutId());
+        Project project = projectRepository.save(ProjectFactory.createWithoutId());
         projectMemberRepository.save(ProjectMemberFactory.createWithMemberIdAndProjectId(member.getId(), project.getId(), MEMBER));
 
         //when
@@ -119,11 +113,11 @@ public class ProjectMemberServiceTest extends IntegrationTest {
     @Test
     void 관리자가_프로젝트_멤버들_권한을_변경한다(){
         //given
-        Project project = projectRepository.save(ProjectFactory.create());
+        Project project = projectRepository.save(ProjectFactory.createWithoutId());
 
-        ProjectMember admin = createWithMemberIdAndProjectId(1L, project.getId(), ADMIN);
-        ProjectMember member1 = createWithMemberIdAndProjectId(2L, project.getId(), MEMBER);
-        ProjectMember member2 = createWithMemberIdAndProjectId(3L, project.getId(), MEMBER);
+        ProjectMember admin = createWithProjectId(project.getId(), ADMIN);
+        ProjectMember member1 = createWithProjectId(project.getId(), MEMBER);
+        ProjectMember member2 = createWithProjectId(project.getId(), MEMBER);
 
         projectMemberRepository.save(admin);
         projectMemberRepository.save(member1);
@@ -144,17 +138,17 @@ public class ProjectMemberServiceTest extends IntegrationTest {
         //given
         Project project = projectRepository.save(ProjectFactory.create());
 
-        ProjectMember admin = createWithMemberIdAndProjectId(1L, project.getId(), MEMBER);
-        ProjectMember member1 = createWithMemberIdAndProjectId(2L, project.getId(), MEMBER);
-        ProjectMember member2 = createWithMemberIdAndProjectId(3L, project.getId(), MEMBER);
+        ProjectMember admin = createWithProjectId(project.getId(), MEMBER);
+        ProjectMember member1 = createWithProjectId(project.getId(), MEMBER);
+        ProjectMember member2 = createWithProjectId(project.getId(), MEMBER);
 
-        projectMemberRepository.save(admin);
-        projectMemberRepository.save(member1);
-        projectMemberRepository.save(member2);
+        ProjectMember savedAdmin = projectMemberRepository.save(admin);
+        ProjectMember savedMember1 = projectMemberRepository.save(member1);
+        ProjectMember savedMember2 = projectMemberRepository.save(member2);
 
         //when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
-            projectMemberService.modifyProjectMemberRole(create(admin.getMemberId(), project.getId(), member1.getMemberId(), member2.getMemberId()));
+            projectMemberService.modifyProjectMemberRole(create(savedAdmin.getMemberId(), project.getId(), savedMember1.getMemberId(), savedMember2.getMemberId()));
         });
 
         //then

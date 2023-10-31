@@ -40,7 +40,7 @@ public class AuthAcceptanceTask {
                         )
                 ))
                 .when().post("/local/login")
-                .then().log().all()
+                .then()
                 .extract();
     }
 
