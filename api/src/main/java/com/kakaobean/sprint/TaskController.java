@@ -3,7 +3,7 @@ package com.kakaobean.sprint;
 import com.kakaobean.common.dto.CommandSuccessResponse;
 import com.kakaobean.core.sprint.application.TaskService;
 import com.kakaobean.core.sprint.domain.repository.query.FindSprintResponseDto;
-import com.kakaobean.core.sprint.domain.repository.query.FindTaskResponseDto;
+import com.kakaobean.core.sprint.domain.repository.query. FindTaskResponseDto;
 import com.kakaobean.core.sprint.domain.repository.query.TaskQueryRepository;
 import com.kakaobean.security.UserPrincipal;
 import com.kakaobean.sprint.dto.request.ChangeWorkStatusRequest;
@@ -33,9 +33,9 @@ public class TaskController {
     public ResponseEntity registerTask(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                        @Validated @RequestBody RegisterTaskRequest request) {
         log.info("테스크 생성 api 시작");
-        taskService.registerTask(request.toServiceDto(userPrincipal.getId()));
+        Long taskId = taskService.registerTask(request.toServiceDto(userPrincipal.getId()));
         log.info("테스크 생성 api 종료");
-        return new ResponseEntity(CommandSuccessResponse.from("테스크가 생성되었습니다."), CREATED);
+        return new ResponseEntity(CommandSuccessResponse.from(taskId, "테스크가 생성되었습니다."), CREATED);
     }
 
     @PatchMapping("/tasks/{taskId}")

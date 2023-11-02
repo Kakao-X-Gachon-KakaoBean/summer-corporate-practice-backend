@@ -4,9 +4,9 @@ import com.kakaobean.sprint.dto.request.ChangeWorkStatusRequest;
 import com.kakaobean.sprint.dto.request.ModifyTaskRequest;
 import com.kakaobean.sprint.dto.request.RegisterTaskRequest;
 import com.kakaobean.unit.controller.ControllerTest;
-import com.kakaobean.unit.controller.factory.sprint.FindTaskResponseDtoFactory;
-import com.kakaobean.unit.controller.factory.sprint.ModifyTaskRequestFactory;
-import com.kakaobean.unit.controller.factory.sprint.RegisterTaskRequestFactory;
+import com.kakaobean.fixture.sprint.FindTaskResponseDtoFactory;
+import com.kakaobean.fixture.sprint.ModifyTaskRequestFactory;
+import com.kakaobean.fixture.sprint.RegisterTaskRequestFactory;
 import com.kakaobean.unit.controller.security.WithMockUser;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -15,12 +15,10 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentRequest;
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentResponse;
-import static com.kakaobean.unit.controller.factory.sprint.FindAllSprintResponseDtoFactory.create;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.JsonFieldType.*;
-import static org.springframework.restdocs.payload.JsonFieldType.ARRAY;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -54,6 +52,7 @@ public class TaskControllerTest extends ControllerTest {
                         fieldWithPath("sprintId").type(NUMBER).description("테스크의 스프린트 id")
                 ),
                 responseFields(
+                        fieldWithPath("id").type(NUMBER).description("생성한 태스크 id"),
                         fieldWithPath("message").type(STRING).description("테스크가 생성 되었습니다.")
                 )
         ));

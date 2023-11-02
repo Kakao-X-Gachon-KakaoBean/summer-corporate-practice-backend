@@ -64,6 +64,7 @@ public class ManuscriptControllerTest extends ControllerTest {
                         fieldWithPath("projectId").type(NUMBER).description("릴리즈 노트 원고를 포함한 프로젝트 id")
                 ),
                 responseFields(
+                        fieldWithPath("id").type(NUMBER).description("생성한 릴리즈 노트 원고 id"),
                         fieldWithPath("message").type(STRING).description("성공 메시지")
                 )
         ));

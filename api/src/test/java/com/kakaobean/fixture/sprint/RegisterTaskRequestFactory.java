@@ -1,4 +1,4 @@
-package com.kakaobean.unit.controller.factory.sprint;
+package com.kakaobean.fixture.sprint;
 
 import com.kakaobean.sprint.dto.request.RegisterTaskRequest;
 

@@ -2,10 +2,13 @@ package com.kakaobean.acceptance.releasenote;
 
 import com.kakaobean.acceptance.AcceptanceTest;
 import com.kakaobean.acceptance.member.MemberAcceptanceTask;
+import com.kakaobean.acceptance.notification.NotificationAcceptanceTask;
 import com.kakaobean.acceptance.project.ProjectAcceptanceTask;
+import com.kakaobean.common.dto.CommandSuccessResponse;
 import com.kakaobean.core.member.domain.repository.EmailRepository;
 import com.kakaobean.core.member.domain.repository.MemberRepository;
 import com.kakaobean.core.notification.domain.repository.NotificationRepository;
+import com.kakaobean.core.notification.domain.repository.query.FindNotificationsResponseDto;
 import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
@@ -18,7 +21,7 @@ import com.kakaobean.project.dto.request.InviteProjectMemberRequest;
 import com.kakaobean.project.dto.request.RegisterProjectMemberRequest;
 import com.kakaobean.project.dto.request.RegisterProjectRequest;
 import com.kakaobean.releasenote.dto.request.DeployReleaseNoteRequest;
-import com.kakaobean.unit.controller.factory.member.RegisterMemberRequestFactory;
+import com.kakaobean.fixture.member.RegisterMemberRequestFactory;
 import io.restassured.response.ExtractableResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.amqp.core.AmqpAdmin;
@@ -66,20 +69,23 @@ public class ReleaseNoteAcceptanceTest extends AcceptanceTest {
         memberRepository.deleteAll();
 
         //멤버 생성
-        RegisterMemberRequest request1 = RegisterMemberRequestFactory.createRequest();
-        RegisterMemberRequest request2 = RegisterMemberRequestFactory.createRequestV2();
+        RegisterMemberRequest request1 = RegisterMemberRequestFactory.createAdmin();
+        RegisterMemberRequest request2 = RegisterMemberRequestFactory.createMember();
 
         MemberAcceptanceTask.registerMemberTask(request1, emailRepository);
         MemberAcceptanceTask.registerMemberTask(request2, emailRepository);
 
         //프로젝트 생성
+        //프로젝트 생성
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
-        ProjectAcceptanceTask.registerProjectTask(givenRequest);
-        Project project = projectRepository.findAll().get(0);
+        CommandSuccessResponse.Created projectResponse = ProjectAcceptanceTask.registerProjectTask(givenRequest).as(CommandSuccessResponse.Created.class);
+
 
         //프로젝트 멤버 가입
         InviteProjectMemberRequest givenDto = new InviteProjectMemberRequest(List.of(MEMBER.getEmail()));
-        ProjectAcceptanceTask.inviteProjectMemberTask(givenDto, project.getId());
+        ProjectAcceptanceTask.inviteProjectMemberTask(givenDto, projectResponse.getId());
+
+        Project project = projectRepository.findById(projectResponse.getId()).get();
         ProjectAcceptanceTask.joinProjectMemberTask(new RegisterProjectMemberRequest(project.getSecretKey()));
 
         //릴리즈 노트 배포 요창
@@ -90,7 +96,9 @@ public class ReleaseNoteAcceptanceTest extends AcceptanceTest {
 
         //then
         assertThat(response.statusCode()).isEqualTo(201);
-        assertThat(notificationRepository.findAll().size()).isEqualTo(3);
+
+        FindNotificationsResponseDto result = NotificationAcceptanceTask.findNotificationsWithPagingTask(null).as(FindNotificationsResponseDto.class);
+        assertThat(result.getNotifications().size()).isEqualTo(2);
 
         Long adminId = memberRepository.findMemberByEmail(ADMIN.getEmail()).get().getId();
         QueueInformation queueInfo1 = amqpAdmin.getQueueInfo("user-" + adminId);
@@ -106,15 +114,15 @@ public class ReleaseNoteAcceptanceTest extends AcceptanceTest {
 
         //프로젝트 생성
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
-        ProjectAcceptanceTask.registerProjectTask(givenRequest);
-        Project project = projectRepository.findAll().get(0);
+        CommandSuccessResponse.Created projectResponse = ProjectAcceptanceTask.registerProjectTask(givenRequest).as(CommandSuccessResponse.Created.class);
+
 
         //릴리즈 노트 배포 요청
-        DeployReleaseNoteRequest request = new DeployReleaseNoteRequest("코코노트 초기 릴리즈 노트", ".. 배포 내용", "1.1", project.getId());
+        DeployReleaseNoteRequest request = new DeployReleaseNoteRequest("코코노트 초기 릴리즈 노트", ".. 배포 내용", "1.1", projectResponse.getId());
         ReleaseNoteAcceptanceTask.deployReleaseNoteTask(request);
 
         //when
-        ExtractableResponse response = ReleaseNoteAcceptanceTask.findReleaseNotesTaskWithPaging(project.getId(), 0);
+        ExtractableResponse response = ReleaseNoteAcceptanceTask.findReleaseNotesTaskWithPaging(projectResponse.getId(), 0);
 
         //then
         FindPagingReleaseNotesResponseDto result = response.as(FindPagingReleaseNotesResponseDto.class);
@@ -125,19 +133,18 @@ public class ReleaseNoteAcceptanceTest extends AcceptanceTest {
 
     @Test
     void 릴리즈_노트_10개_이상을_페이징을_사용해_조회한다(){
-
-        //프로젝트 생성
+//프로젝트 생성
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
-        ProjectAcceptanceTask.registerProjectTask(givenRequest);
-        Project project = projectRepository.findAll().get(0);
+        CommandSuccessResponse.Created projectResponse = ProjectAcceptanceTask.registerProjectTask(givenRequest).as(CommandSuccessResponse.Created.class);
+
 
         //릴리즈 노트 배포 요창
         for (int i = 1; i < 15; i++) {
-            releaseNoteRepository.save(new ReleaseNote(ACTIVE, "1." + i  + "V title", "content", "1." + i + "V", project.getId(), 1L));
+            releaseNoteRepository.save(new ReleaseNote(ACTIVE, "1." + i  + "V title", "content", "1." + i + "V", projectResponse.getId(), 1L));
         }
 
         //when
-        ExtractableResponse response = ReleaseNoteAcceptanceTask.findReleaseNotesTaskWithPaging(project.getId(), 0);
+        ExtractableResponse response = ReleaseNoteAcceptanceTask.findReleaseNotesTaskWithPaging(projectResponse.getId(), 0);
 
         //then
         FindPagingReleaseNotesResponseDto result = response.as(FindPagingReleaseNotesResponseDto.class);
@@ -151,17 +158,15 @@ public class ReleaseNoteAcceptanceTest extends AcceptanceTest {
 
         //프로젝트 생성
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
-        ProjectAcceptanceTask.registerProjectTask(givenRequest);
-        Project project = projectRepository.findAll().get(0);
+        CommandSuccessResponse.Created projectResponse = ProjectAcceptanceTask.registerProjectTask(givenRequest).as(CommandSuccessResponse.Created.class);
+
 
         //릴리즈 노트
-        DeployReleaseNoteRequest request = new DeployReleaseNoteRequest("코코노트 초기 릴리즈 노트", ".. 배포 내용", "1.1", project.getId());
-        ReleaseNoteAcceptanceTask.deployReleaseNoteTask(request);
-
-        Long releaseNoteId = releaseNoteRepository.findAll().get(0).getId();
+        DeployReleaseNoteRequest request = new DeployReleaseNoteRequest("코코노트 초기 릴리즈 노트", ".. 배포 내용", "1.1", projectResponse.getId());
+        CommandSuccessResponse.Created releaseNoteResponse = ReleaseNoteAcceptanceTask.deployReleaseNoteTask(request).as(CommandSuccessResponse.Created.class);
 
         //when
-        ExtractableResponse response = ReleaseNoteAcceptanceTask.findReleaseNoteTask(releaseNoteId);
+        ExtractableResponse response = ReleaseNoteAcceptanceTask.findReleaseNoteTask(releaseNoteResponse.getId());
 
         //then
         assertThat(response.statusCode()).isEqualTo(200);
@@ -173,16 +178,15 @@ public class ReleaseNoteAcceptanceTest extends AcceptanceTest {
 
         //프로젝트 생성
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
-        ProjectAcceptanceTask.registerProjectTask(givenRequest);
-        Project project = projectRepository.findAll().get(0);
+        CommandSuccessResponse.Created projectResponse = ProjectAcceptanceTask.registerProjectTask(givenRequest).as(CommandSuccessResponse.Created.class);
 
         //릴리즈 노트 배포 요창
         for (int i = 1; i < 15; i++) {
-            releaseNoteRepository.save(new ReleaseNote(ACTIVE, "1." + i  + "V title", "content", "1." + i + "V", project.getId(), 1L));
+            releaseNoteRepository.save(new ReleaseNote(ACTIVE, "1." + i  + "V title", "content", "1." + i + "V", projectResponse.getId(), 1L));
         }
 
         //when
-        ExtractableResponse response = ReleaseNoteAcceptanceTask.findReleaseNotesTask(project.getId());
+        ExtractableResponse response = ReleaseNoteAcceptanceTask.findReleaseNotesTask(projectResponse.getId());
 
         //then
         FindReleaseNotesResponseDto result = response.as(FindReleaseNotesResponseDto.class);

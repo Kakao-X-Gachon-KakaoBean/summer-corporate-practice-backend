@@ -32,9 +32,9 @@ public class SprintController {
     public ResponseEntity registerSprint(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                          @Validated @RequestBody RegisterSprintRequest request) {
         log.info("스프린트 등록 api 시작");
-        sprintService.registerSprint(request.toServiceDto(userPrincipal.getId()));
+        Long sprintId = sprintService.registerSprint(request.toServiceDto(userPrincipal.getId()));
         log.info("스프린트 등록 api 종료");
-        return new ResponseEntity(CommandSuccessResponse.from("스프린트가 생성되었습니다."), CREATED);
+        return new ResponseEntity(CommandSuccessResponse.from(sprintId, "스프린트가 생성되었습니다."), CREATED);
     }
 
     @PatchMapping("/sprints/{sprintId}")

@@ -1,4 +1,4 @@
-package com.kakaobean.unit.controller.factory.project;
+package com.kakaobean.fixture.project;
 
 import com.kakaobean.core.project.domain.repository.query.FindProjectInfoResponseDto;
 import com.kakaobean.core.project.domain.repository.query.FindProjectMemberResponseDto;

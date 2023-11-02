@@ -44,3 +44,5 @@ core/src/main/generated/**
 
 **/log/**
 backup
+
+.DS_Store

@@ -1,7 +1,6 @@
-package com.kakaobean.unit.controller.factory.issue;
+package com.kakaobean.fixture.issue;
 
 import com.kakaobean.core.issue.domain.repository.query.FindIndividualIssueResponseDto;
-import com.kakaobean.core.issue.domain.repository.query.FindIssuesWithinPageResponseDto;
 
 import java.util.List;
 

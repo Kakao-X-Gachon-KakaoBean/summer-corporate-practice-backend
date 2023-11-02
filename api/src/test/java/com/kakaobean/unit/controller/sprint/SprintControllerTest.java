@@ -1,25 +1,20 @@
 package com.kakaobean.unit.controller.sprint;
 
-import com.kakaobean.core.releasenote.domain.repository.query.FindManuscriptsResponseDto;
-import com.kakaobean.core.sprint.domain.repository.query.FindAllSprintResponseDto;
-import com.kakaobean.core.sprint.domain.repository.query.SprintsDto;
-import com.kakaobean.core.sprint.domain.repository.query.TasksDto;
+import com.kakaobean.fixture.sprint.FindSprintResponseDtoFactory;
+import com.kakaobean.fixture.sprint.ModifySprintRequestFactory;
+import com.kakaobean.fixture.sprint.RegisterSprintRequestFactory;
 import com.kakaobean.sprint.dto.request.ModifySprintRequest;
 import com.kakaobean.sprint.dto.request.RegisterSprintRequest;
 import com.kakaobean.unit.controller.ControllerTest;
-import com.kakaobean.unit.controller.factory.sprint.*;
 import com.kakaobean.unit.controller.security.WithMockUser;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.time.LocalDate;
-import java.util.List;
-
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentRequest;
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentResponse;
-import static com.kakaobean.unit.controller.factory.sprint.FindAllSprintResponseDtoFactory.*;
+import static com.kakaobean.fixture.sprint.FindAllSprintResponseDtoFactory.create;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
@@ -59,6 +54,7 @@ public class SprintControllerTest extends ControllerTest {
                         fieldWithPath("dueDate").type(STRING).description("스프린트 마감 날짜")
                 ),
                 responseFields(
+                        fieldWithPath("id").type(NUMBER).description("생성한 스프린트 id"),
                         fieldWithPath("message").type(STRING).description("스프린트가 생성 되었습니다.")
                 )
         ));

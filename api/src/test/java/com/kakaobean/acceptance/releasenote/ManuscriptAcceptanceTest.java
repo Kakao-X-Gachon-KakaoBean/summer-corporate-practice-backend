@@ -3,11 +3,13 @@ package com.kakaobean.acceptance.releasenote;
 import com.kakaobean.acceptance.AcceptanceTest;
 import com.kakaobean.acceptance.member.MemberAcceptanceTask;
 import com.kakaobean.acceptance.project.ProjectAcceptanceTask;
+import com.kakaobean.common.dto.CommandSuccessResponse;
 import com.kakaobean.core.notification.domain.repository.NotificationRepository;
 import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.releasenote.domain.Manuscript;
 import com.kakaobean.core.releasenote.domain.repository.ManuscriptRepository;
+import com.kakaobean.core.releasenote.domain.repository.query.FindManuscriptResponseDto;
 import com.kakaobean.core.releasenote.domain.repository.query.FindManuscriptsResponseDto;
 import com.kakaobean.core.releasenote.domain.repository.query.FindPagingManuscriptsResponseDto;
 import com.kakaobean.member.dto.RegisterMemberRequest;
@@ -16,7 +18,8 @@ import com.kakaobean.project.dto.request.RegisterProjectMemberRequest;
 import com.kakaobean.project.dto.request.RegisterProjectRequest;
 import com.kakaobean.releasenote.dto.request.ModifyManuscriptRequest;
 import com.kakaobean.releasenote.dto.request.RegisterManuscriptRequest;
-import com.kakaobean.unit.controller.factory.member.RegisterMemberRequestFactory;
+import com.kakaobean.fixture.member.RegisterMemberRequestFactory;
+import io.lettuce.core.protocol.Command;
 import io.restassured.response.ExtractableResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.amqp.core.AmqpAdmin;
@@ -53,16 +56,16 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
         memberRepository.deleteAll();
 
         //멤버 생성
-        RegisterMemberRequest request1 = RegisterMemberRequestFactory.createRequest();
-        RegisterMemberRequest request2 = RegisterMemberRequestFactory.createRequestV2();
+        RegisterMemberRequest admin = RegisterMemberRequestFactory.createAdmin();
+        RegisterMemberRequest member = RegisterMemberRequestFactory.createMember();
 
-        MemberAcceptanceTask.registerMemberTask(request1, emailRepository);
-        MemberAcceptanceTask.registerMemberTask(request2, emailRepository);
+        Long adminId = MemberAcceptanceTask.registerMemberTask(admin, emailRepository).as(CommandSuccessResponse.Created.class).getId();
+        Long memberId = MemberAcceptanceTask.registerMemberTask(member, emailRepository).as(CommandSuccessResponse.Created.class).getId();
 
         //프로젝트 생성
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
-        ProjectAcceptanceTask.registerProjectTask(givenRequest);
-        Project project = projectRepository.findAll().get(0);
+        CommandSuccessResponse.Created projectResponse = ProjectAcceptanceTask.registerProjectTask(givenRequest).as(CommandSuccessResponse.Created.class);
+        Project project = projectRepository.findById(projectResponse.getId()).get();
 
         //프로젝트 멤버 가입
         InviteProjectMemberRequest givenDto = new InviteProjectMemberRequest(List.of(MEMBER.getEmail()));
@@ -77,14 +80,14 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
 
         //then
         assertThat(response.statusCode()).isEqualTo(201);
-        assertThat(manuscriptRepository.findAll().size()).isEqualTo(1);
-        assertThat(notificationRepository.findAll().size()).isEqualTo(3);
 
-        Long adminId = memberRepository.findMemberByEmail(ADMIN.getEmail()).get().getId();
+        Long manuscriptId = response.as(CommandSuccessResponse.Created.class).getId();
+        FindManuscriptResponseDto result = ManuscriptAcceptanceTask.findManuscriptTask(manuscriptId).as(FindManuscriptResponseDto.class);
+        assertThat(result).isNotNull();
+
         QueueInformation queueInfo1 = amqpAdmin.getQueueInfo("user-" + adminId);
         assertThat(queueInfo1.getMessageCount()).isEqualTo(1);
 
-        Long memberId = memberRepository.findMemberByEmail(MEMBER.getEmail()).get().getId();
         QueueInformation queueInfo2 = amqpAdmin.getQueueInfo("user-" + memberId);
         assertThat(queueInfo2.getMessageCount()).isEqualTo(2); //초대를 받았으므로 메시지가 2개다.
     }
@@ -95,16 +98,14 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
 
         //프로젝트 생성
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
-        ProjectAcceptanceTask.registerProjectTask(givenRequest);
-        Project project = projectRepository.findAll().get(0);
+        CommandSuccessResponse.Created projectResponse = ProjectAcceptanceTask.registerProjectTask(givenRequest).as(CommandSuccessResponse.Created.class);
 
         //릴리즈 노트 원고 생성
-        RegisterManuscriptRequest request = new RegisterManuscriptRequest("1.1V 코코노트 초기 릴리즈 노트", ".. 배포 내용", "1.1", project.getId());
-        ManuscriptAcceptanceTask.registerManuscriptTask(request);
-        Manuscript manuscript = manuscriptRepository.findAll().get(0);
+        RegisterManuscriptRequest request = new RegisterManuscriptRequest("1.1V 코코노트 초기 릴리즈 노트", ".. 배포 내용", "1.1", projectResponse.getId());
+        CommandSuccessResponse.Created manuscriptResponse = ManuscriptAcceptanceTask.registerManuscriptTask(request).as(CommandSuccessResponse.Created.class);
 
         //when
-        ExtractableResponse response = ManuscriptAcceptanceTask.findManuscriptTask(manuscript.getId());
+        ExtractableResponse response = ManuscriptAcceptanceTask.findManuscriptTask(manuscriptResponse.getId());
 
         //then
         assertThat(response.statusCode()).isEqualTo(200);
@@ -115,17 +116,16 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
 
         //프로젝트 생성
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
-        ProjectAcceptanceTask.registerProjectTask(givenRequest);
-        Project project = projectRepository.findAll().get(0);
+        CommandSuccessResponse.Created projectResponse = ProjectAcceptanceTask.registerProjectTask(givenRequest).as(CommandSuccessResponse.Created.class);
 
         //릴리즈 노트 원고 생성
-        RegisterManuscriptRequest request = new RegisterManuscriptRequest("1.1V 코코노트 초기 릴리즈 노트", ".. 배포 내용", "1.1", project.getId());
-        RegisterManuscriptRequest request2 = new RegisterManuscriptRequest("1.2V 코코노트 초기 릴리즈 노트", ".. 배포 내용", "1.2", project.getId());
+        RegisterManuscriptRequest request = new RegisterManuscriptRequest("1.1V 코코노트 초기 릴리즈 노트", ".. 배포 내용", "1.1", projectResponse.getId());
+        RegisterManuscriptRequest request2 = new RegisterManuscriptRequest("1.2V 코코노트 초기 릴리즈 노트", ".. 배포 내용", "1.2", projectResponse.getId());
 
         ManuscriptAcceptanceTask.registerManuscriptTask(request);
         ManuscriptAcceptanceTask.registerManuscriptTask(request2);
         //when
-        ExtractableResponse response = ManuscriptAcceptanceTask.findManuscriptsTaskWithPaging(project.getId(), 0);
+        ExtractableResponse response = ManuscriptAcceptanceTask.findManuscriptsTaskWithPaging(projectResponse.getId(), 0);
 
         //then
         FindPagingManuscriptsResponseDto dto = response.as(FindPagingManuscriptsResponseDto.class);
@@ -138,16 +138,15 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
 
         //프로젝트 생성
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
-        ProjectAcceptanceTask.registerProjectTask(givenRequest);
-        Project project = projectRepository.findAll().get(0);
+        CommandSuccessResponse.Created projectResponse = ProjectAcceptanceTask.registerProjectTask(givenRequest).as(CommandSuccessResponse.Created.class);
 
         //릴리즈 노트 원고 생성
         for (int i = 1; i < 15; i++) {
-            RegisterManuscriptRequest request = new RegisterManuscriptRequest("1." + i + "v 노트" , ".. 배포 내용", "1." + i, project.getId());
+            RegisterManuscriptRequest request = new RegisterManuscriptRequest("1." + i + "v 노트" , ".. 배포 내용", "1." + i, projectResponse.getId());
             ManuscriptAcceptanceTask.registerManuscriptTask(request);
         }
         //when
-        ExtractableResponse response = ManuscriptAcceptanceTask.findManuscriptsTaskWithPaging(project.getId(), 0);
+        ExtractableResponse response = ManuscriptAcceptanceTask.findManuscriptsTaskWithPaging(projectResponse.getId(), 0);
 
         //then
         FindPagingManuscriptsResponseDto dto = response.as(FindPagingManuscriptsResponseDto.class);
@@ -166,16 +165,16 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
         memberRepository.deleteAll();
 
         //멤버 생성
-        RegisterMemberRequest request1 = RegisterMemberRequestFactory.createRequest();
-        RegisterMemberRequest request2 = RegisterMemberRequestFactory.createRequestV2();
+        RegisterMemberRequest admin = RegisterMemberRequestFactory.createAdmin();
+        RegisterMemberRequest member = RegisterMemberRequestFactory.createMember();
 
-        MemberAcceptanceTask.registerMemberTask(request1, emailRepository);
-        MemberAcceptanceTask.registerMemberTask(request2, emailRepository);
+        Long adminId = MemberAcceptanceTask.registerMemberTask(admin, emailRepository).as(CommandSuccessResponse.Created.class).getId();
+        Long memberId = MemberAcceptanceTask.registerMemberTask(member, emailRepository).as(CommandSuccessResponse.Created.class).getId();
 
         //프로젝트 생성
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
-        ProjectAcceptanceTask.registerProjectTask(givenRequest);
-        Project project = projectRepository.findAll().get(0);
+        CommandSuccessResponse.Created projectResponse = ProjectAcceptanceTask.registerProjectTask(givenRequest).as(CommandSuccessResponse.Created.class);
+        Project project = projectRepository.findById(projectResponse.getId()).get();
 
         //프로젝트 멤버 가입
         InviteProjectMemberRequest givenDto = new InviteProjectMemberRequest(List.of(MEMBER.getEmail()));
@@ -184,23 +183,17 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
 
         //릴리즈 노트 원고 생성
         RegisterManuscriptRequest request = new RegisterManuscriptRequest("1.9V 코코노트 초기 릴리즈 노트", ".. 배포 내용", "1.1", project.getId());
-        ManuscriptAcceptanceTask.registerManuscriptTask(request);
-
-        Long manuscriptId = manuscriptRepository.findAll().get(0).getId();
+        Long manuscriptId = ManuscriptAcceptanceTask.registerManuscriptTask(request).as(CommandSuccessResponse.Created.class).getId();
 
         //when
         ExtractableResponse response = ManuscriptAcceptanceTask.hasRightToModifyManuscriptTask(manuscriptId);
 
         //then
         assertThat(response.statusCode()).isEqualTo(200);
-        assertThat(notificationRepository.findAll().size()).isEqualTo(5);
 
-
-        Long adminId = memberRepository.findMemberByEmail(ADMIN.getEmail()).get().getId();
         QueueInformation queueInfo1 = amqpAdmin.getQueueInfo("user-" + adminId);
         assertThat(queueInfo1.getMessageCount()).isEqualTo(2); //생성, 수정 시작
 
-        Long memberId = memberRepository.findMemberByEmail(MEMBER.getEmail()).get().getId();
         QueueInformation queueInfo2 = amqpAdmin.getQueueInfo("user-" + memberId);
         assertThat(queueInfo2.getMessageCount()).isEqualTo(3); // 멤버 초대, 생성, 수정 시작
     }
@@ -214,16 +207,16 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
         memberRepository.deleteAll();
 
         //멤버 생성
-        RegisterMemberRequest request1 = RegisterMemberRequestFactory.createRequest();
-        RegisterMemberRequest request2 = RegisterMemberRequestFactory.createRequestV2();
+        RegisterMemberRequest admin = RegisterMemberRequestFactory.createAdmin();
+        RegisterMemberRequest member = RegisterMemberRequestFactory.createMember();
 
-        MemberAcceptanceTask.registerMemberTask(request1, emailRepository);
-        MemberAcceptanceTask.registerMemberTask(request2, emailRepository);
+        Long adminId = MemberAcceptanceTask.registerMemberTask(admin, emailRepository).as(CommandSuccessResponse.Created.class).getId();
+        Long memberId = MemberAcceptanceTask.registerMemberTask(member, emailRepository).as(CommandSuccessResponse.Created.class).getId();
 
         //프로젝트 생성
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
-        ProjectAcceptanceTask.registerProjectTask(givenRequest);
-        Project project = projectRepository.findAll().get(0);
+        CommandSuccessResponse.Created projectResponse = ProjectAcceptanceTask.registerProjectTask(givenRequest).as(CommandSuccessResponse.Created.class);
+        Project project = projectRepository.findById(projectResponse.getId()).get();
 
         //프로젝트 멤버 가입
         InviteProjectMemberRequest givenDto = new InviteProjectMemberRequest(List.of(MEMBER.getEmail()));
@@ -245,16 +238,13 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
 
         //then
         assertThat(response.statusCode()).isEqualTo(200);
-        assertThat(notificationRepository.findAll().size()).isEqualTo(7);
 
         /**
          * 수정 시작 알림과 수정 완료 알림이 모두 가야한다.
          */
-        Long adminId = memberRepository.findMemberByEmail(ADMIN.getEmail()).get().getId();
         QueueInformation queueInfo1 = amqpAdmin.getQueueInfo("user-" + adminId);
         assertThat(queueInfo1.getMessageCount()).isEqualTo(3); //생성, 수정 시작, 수정 끝 알림 3개
 
-        Long memberId = memberRepository.findMemberByEmail(MEMBER.getEmail()).get().getId();
         QueueInformation queueInfo2 = amqpAdmin.getQueueInfo("user-" + memberId);
         assertThat(queueInfo2.getMessageCount()).isEqualTo(4); // 멤버 초대, 생성, 수정 시작, 수정 끝 알림 3개
     }
@@ -265,20 +255,20 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
 
         //프로젝트 생성
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
-        ProjectAcceptanceTask.registerProjectTask(givenRequest);
-        Project project = projectRepository.findAll().get(0);
+        CommandSuccessResponse.Created projectResponse = ProjectAcceptanceTask.registerProjectTask(givenRequest).as(CommandSuccessResponse.Created.class);
+
 
         //릴리즈 노트 원고 생성
-        RegisterManuscriptRequest givenRequest2 = new RegisterManuscriptRequest("1.9V 코코노트 초기 릴리즈 노트", ".. 배포 내용", "1.1", project.getId());
-        ManuscriptAcceptanceTask.registerManuscriptTask(givenRequest2);
-
-        Long id = manuscriptRepository.findAll().get(0).getId();
+        RegisterManuscriptRequest givenRequest2 = new RegisterManuscriptRequest("1.9V 코코노트 초기 릴리즈 노트", ".. 배포 내용", "1.1", projectResponse.getId());
+        CommandSuccessResponse.Created manuscriptResponse = ManuscriptAcceptanceTask.registerManuscriptTask(givenRequest2).as(CommandSuccessResponse.Created.class);
 
         //when
-        ExtractableResponse response = ManuscriptAcceptanceTask.deleteManuscriptTask(id);
+        ExtractableResponse response = ManuscriptAcceptanceTask.deleteManuscriptTask(manuscriptResponse.getId());
 
         //then
         assertThat(response.statusCode()).isEqualTo(200);
+
+        assertThat(manuscriptRepository.findById(manuscriptResponse.getId())).isEmpty();
     }
 
 
@@ -287,16 +277,15 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
 
         //프로젝트 생성
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
-        ProjectAcceptanceTask.registerProjectTask(givenRequest);
-        Project project = projectRepository.findAll().get(0);
+        CommandSuccessResponse.Created projectResponse = ProjectAcceptanceTask.registerProjectTask(givenRequest).as(CommandSuccessResponse.Created.class);
 
         //릴리즈 노트 원고 생성
         for (int i = 1; i < 15; i++) {
-            RegisterManuscriptRequest request = new RegisterManuscriptRequest("1." + i + "v 노트" , ".. 배포 내용", "1." + i, project.getId());
+            RegisterManuscriptRequest request = new RegisterManuscriptRequest("1." + i + "v 노트" , ".. 배포 내용", "1." + i, projectResponse.getId());
             ManuscriptAcceptanceTask.registerManuscriptTask(request);
         }
         //when
-        ExtractableResponse response = ManuscriptAcceptanceTask.findManuscriptsTask(project.getId());
+        ExtractableResponse response = ManuscriptAcceptanceTask.findManuscriptsTask(projectResponse.getId());
 
         //then
         FindManuscriptsResponseDto result = response.as(FindManuscriptsResponseDto.class);

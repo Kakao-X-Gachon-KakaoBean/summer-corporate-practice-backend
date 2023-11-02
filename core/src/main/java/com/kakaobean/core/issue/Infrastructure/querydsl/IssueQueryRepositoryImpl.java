@@ -64,6 +64,7 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
      */
     @Override
     public FindIndividualIssueResponseDto findByIssueId(Long issueId){
+
         FindIndividualIssueResponseDto.IssueDto result = queryFactory
                 .select(
                         Projections.constructor(
@@ -74,14 +75,13 @@ public class IssueQueryRepositoryImpl implements IssueQueryRepository {
                                 issue.updatedAt,
                                 member.name,
                                 member.thumbnailImg
-                                )
+                        )
                 )
                 .from(issue)
                 .leftJoin(member)
                 .on(issue.writerId.eq(member.id))
                 .where(issue.id.eq(issueId))
                 .fetchFirst();
-
         FindIndividualIssueResponseDto finalResponse = new FindIndividualIssueResponseDto(result, findCommentByIssueId(issueId));
 
         return finalResponse;

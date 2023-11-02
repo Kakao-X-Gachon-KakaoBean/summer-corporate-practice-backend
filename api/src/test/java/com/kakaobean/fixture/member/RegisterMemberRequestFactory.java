@@ -1,7 +1,9 @@
-package com.kakaobean.unit.controller.factory.member;
+package com.kakaobean.fixture.member;
 
-import com.kakaobean.core.member.application.dto.response.RegisterMemberResponseDto;
+import com.kakaobean.core.member.domain.Member;
 import com.kakaobean.member.dto.RegisterMemberRequest;
+
+import java.util.concurrent.atomic.AtomicLong;
 
 import static com.kakaobean.acceptance.TestMember.*;
 
@@ -9,7 +11,9 @@ public class RegisterMemberRequestFactory {
 
     private RegisterMemberRequestFactory(){}
 
-    public static RegisterMemberRequest createRequest(){
+    private static AtomicLong aLong = new AtomicLong(0);
+
+    public static RegisterMemberRequest createAdmin(){
         return RegisterMemberRequest.builder()
                 .name("kakoBean")
                 .email(ADMIN.getEmail())
@@ -18,7 +22,7 @@ public class RegisterMemberRequestFactory {
                 .emailAuthKey("113336")
                 .build();
     }
-    public static RegisterMemberRequest createRequestV2(){
+    public static RegisterMemberRequest createMember(){
         return RegisterMemberRequest.builder()
                 .name("receiver")
                 .email(MEMBER.getEmail())
@@ -27,20 +31,14 @@ public class RegisterMemberRequestFactory {
                 .emailAuthKey("113335")
                 .build();
     }
-
-    public static RegisterMemberRequest createRequestV3(){
+    public static RegisterMemberRequest createMember(Member member){
+        long l = aLong.getAndIncrement();
         return RegisterMemberRequest.builder()
-                .name("kakoBean2")
-                .email(TESTER.getEmail())
-                .password(TESTER.getPassword())
-                .checkPassword(TESTER.getPassword())
+                .name(member.getName())
+                .email(member.getAuth().getEmail())
+                .password(member.getAuth().getPassword())
+                .checkPassword(member.getAuth().getPassword())
                 .emailAuthKey("113339")
                 .build();
-    }
-
-
-
-    public static RegisterMemberResponseDto createResponseDto(){
-        return new RegisterMemberResponseDto(1L);
     }
 }

@@ -3,10 +3,10 @@ package com.kakaobean.unit.controller.issue;
 import com.kakaobean.issue.dto.ModifyIssueRequest;
 import com.kakaobean.issue.dto.RegisterIssueRequest;
 import com.kakaobean.unit.controller.ControllerTest;
-import com.kakaobean.unit.controller.factory.issue.FindIndividualIssueResponseDtoFactory;
-import com.kakaobean.unit.controller.factory.issue.FindIssuesWithinPageResponseDtoFactory;
-import com.kakaobean.unit.controller.factory.issue.ModifyIssueRequestFactory;
-import com.kakaobean.unit.controller.factory.issue.RegisterIssueRequestFactory;
+import com.kakaobean.fixture.issue.FindIndividualIssueResponseDtoFactory;
+import com.kakaobean.fixture.issue.FindIssuesWithinPageResponseDtoFactory;
+import com.kakaobean.fixture.issue.ModifyIssueRequestFactory;
+import com.kakaobean.fixture.issue.RegisterIssueRequestFactory;
 import com.kakaobean.unit.controller.security.WithMockUser;
 import org.junit.jupiter.api.Test;
 
@@ -55,6 +55,7 @@ public class IssueControllerTest extends ControllerTest {
                         fieldWithPath("projectId").type(NUMBER).description("프로젝트 id")
                 ),
                 responseFields(
+                        fieldWithPath("id").type(NUMBER).description("생성한 이슈 id"),
                         fieldWithPath("message").type(STRING).description("이슈가 생성되었습니다.")
                 )
         ));

@@ -5,18 +5,15 @@ import com.kakaobean.member.dto.ModifyMemberPasswordRequest;
 import com.kakaobean.member.dto.ModifyMemberRequest;
 import com.kakaobean.member.dto.SendVerifiedEmailRequest;
 import com.kakaobean.unit.controller.ControllerTest;
-import com.kakaobean.unit.controller.factory.member.RegisterMemberRequestFactory;
-import com.kakaobean.core.member.application.dto.request.RegisterMemberRequestDto;
+import com.kakaobean.fixture.member.RegisterMemberRequestFactory;
 import com.kakaobean.member.dto.RegisterMemberRequest;
 import com.kakaobean.unit.controller.security.WithMockUser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.web.multipart.MultipartFile;
 
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentRequest;
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentResponse;
@@ -41,7 +38,7 @@ public class MemberControllerTest extends ControllerTest {
     void registerMemberTest() throws Exception {
 
         //given
-        RegisterMemberRequest request = RegisterMemberRequestFactory.createRequest();
+        RegisterMemberRequest request = RegisterMemberRequestFactory.createAdmin();
         String requestBody = objectMapper.writeValueAsString(request);
 
         //when
@@ -65,6 +62,7 @@ public class MemberControllerTest extends ControllerTest {
                         fieldWithPath("checkPassword").type(STRING).description("비밀번호 확인")
                 ),
                 responseFields(
+                        fieldWithPath("id").type(NUMBER).description("생성된 멤버 id"),
                         fieldWithPath("message").type(STRING).description("성공 메시지")
                 )
         ));

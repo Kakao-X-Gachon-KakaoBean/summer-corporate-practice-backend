@@ -1,8 +1,8 @@
-package com.kakaobean.unit.controller.factory.notification;
+package com.kakaobean.fixture.notification;
 
 import com.kakaobean.core.notification.domain.repository.query.FindNotificationResponseDto;
+import com.kakaobean.core.notification.domain.repository.query.FindNotificationsResponseDto;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public class FindNotificationResponseDtoFactory {
@@ -10,8 +10,8 @@ public class FindNotificationResponseDtoFactory {
     private FindNotificationResponseDtoFactory() {
     }
 
-    public static List<FindNotificationResponseDto> create() {
-        return List.of(
+    public static FindNotificationsResponseDto create() {
+        List<FindNotificationResponseDto> result = List.of(
                 new FindNotificationResponseDto(
                         10L,
                         "23. 8. 16. 오전 3:07",
@@ -25,7 +25,8 @@ public class FindNotificationResponseDtoFactory {
                         "[ 코코아 ] 코코아 작업이 할당되었습니다.",
                         "/projects/1/sprints/1/1",
                         false
-                        )
+                )
         );
+        return new FindNotificationsResponseDto(result);
     }
 }
