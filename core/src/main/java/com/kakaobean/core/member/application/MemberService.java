@@ -30,12 +30,13 @@ public class MemberService {
     private final ImageService imageService;
 
     @Transactional(readOnly = false)
-    public void registerMember(RegisterMemberRequestDto dto){
+    public Long registerMember(RegisterMemberRequestDto dto){
         Member member = dto.toEntity();
         member.validate(memberValidator);
         member.verifyEmail(memberVerifiedEmailService, dto.getEmailAuthKey());
         memberRepository.save(member);
         member.registered();
+        return member.getId();
     }
 
     public void sendVerificationEmail(String email, String authKey) {

@@ -54,33 +54,24 @@ public class TaskServiceTest extends IntegrationTest {
     @Autowired
     ProjectMemberRepository projectMemberRepository;
 
-    @BeforeEach
-    void beforeEach() {
-        memberRepository.deleteAll();
-        sprintRepository.deleteAll();
-        taskRepository.deleteAll();
-        projectRepository.deleteAll();
-        projectMemberRepository.deleteAll();
-    }
-
     @Test
     void 테스크를_생성한다() {
         // given
-        Project project = projectRepository.save(ProjectFactory.create());
+        Project project = projectRepository.save(ProjectFactory.createWithoutId());
         ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
         Sprint sprint = sprintRepository.save(createWithId(project.getId()));
 
         // when
-        taskService.registerTask(RegisterTaskRequestDtoFactory.createWithId(sprint.getId(), projectMember.getMemberId()));
+        Long taskId = taskService.registerTask(RegisterTaskRequestDtoFactory.createWithId(sprint.getId(), projectMember.getMemberId()));
 
         // then
-        assertThat(taskRepository.findAll().size()).isEqualTo(1);
+        assertThat(taskRepository.findById(taskId).isPresent()).isTrue();
     }
 
     @Test
     void 일반멤버는_테스크를_생성하지_못한다() {
         // given
-        Project project = projectRepository.save(ProjectFactory.create());
+        Project project = projectRepository.save(ProjectFactory.createWithoutId());
         ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), MEMBER));
         Sprint sprint = sprintRepository.save(createWithId(project.getId()));
 
@@ -96,7 +87,7 @@ public class TaskServiceTest extends IntegrationTest {
     @Test
     void 테스크를_수정한다() {
         // given
-        Project project = projectRepository.save(ProjectFactory.create());
+        Project project = projectRepository.save(ProjectFactory.createWithoutId());
         ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
         Sprint sprint = sprintRepository.save(createWithId(project.getId()));
         Task task = taskRepository.save(TaskFactory.createWithId(sprint.getId(), 1L));
@@ -105,13 +96,13 @@ public class TaskServiceTest extends IntegrationTest {
         taskService.modifyTask(ModifyTaskRequestDtoFactory.createWithId(task.getId(), sprint.getId(), projectMember.getMemberId()));
 
         // then
-        assertThat(taskRepository.findAll().get(0).getTitle()).isEqualTo("새로운 테스크 제목");
+        assertThat(taskRepository.findById(task.getId()).get().getTitle()).isEqualTo("새로운 테스크 제목");
     }
 
     @Test
     void 일반멤버는_테스크를_수정하지_못한다() {
         // given
-        Project project = projectRepository.save(ProjectFactory.create());
+        Project project = projectRepository.save(ProjectFactory.createWithoutId());
         ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), MEMBER));
         Sprint sprint = sprintRepository.save(createWithId(project.getId()));
         Task task = taskRepository.save(TaskFactory.createWithId(sprint.getId(), 1L));
@@ -128,25 +119,32 @@ public class TaskServiceTest extends IntegrationTest {
     @Test
     void 테스크를_삭제한다() {
         // given
-        Project project = projectRepository.save(ProjectFactory.create());
-        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
+        Long memberId = MemberFactory.getMemberId();
+        Project project = projectRepository.save(ProjectFactory.createWithoutId());
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(memberId, project.getId(), ADMIN));
         Sprint sprint = sprintRepository.save(createWithId(project.getId()));
-        Task task = taskRepository.save(TaskFactory.createWithId(sprint.getId(), 1L));
+        Task task = taskRepository.save(TaskFactory.createWithId(sprint.getId(), memberId));
 
         // when
         taskService.removeTask(projectMember.getMemberId(), task.getId());
 
         // then
-        assertThat(taskRepository.findAll().size()).isEqualTo(0);
+        assertThat(taskRepository.findById(task.getId()).isEmpty()).isTrue();
     }
 
     @Test
     void 일반멤버는_테스크를_삭제하지_못한다() {
         // given
-        Project project = projectRepository.save(ProjectFactory.create());
-        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), MEMBER));
-        Sprint sprint = sprintRepository.save(createWithId(project.getId()));
-        Task task = taskRepository.save(TaskFactory.createWithId(sprint.getId(), 1L));
+
+        Long memberId = MemberFactory.getMemberId();
+        Project project = projectRepository
+                .save(ProjectFactory.createWithoutId());
+        ProjectMember projectMember = projectMemberRepository
+                .save(createWithMemberIdAndProjectId(memberId, project.getId(), MEMBER));
+        Sprint sprint = sprintRepository
+                .save(createWithId(project.getId()));
+        Task task = taskRepository
+                .save(TaskFactory.createWithId(sprint.getId(), memberId));
 
         // when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
@@ -160,7 +158,7 @@ public class TaskServiceTest extends IntegrationTest {
     @Test
     void 어드민이_멤버에게_테스크를_할당한다() {
         // given
-        Member member = memberRepository.save(MemberFactory.create());
+        Member member = memberRepository.save(MemberFactory.createWithoutId());
         Member invitedMember = memberRepository.save(MemberFactory.createWithoutId());
 
         Project project = projectRepository.save(createWithoutId());

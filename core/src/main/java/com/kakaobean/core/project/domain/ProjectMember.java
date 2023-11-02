@@ -11,7 +11,6 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
-@Getter
 @Where(clause = "status = 'ACTIVE'")
 @SQLDelete(sql = "UPDATE project_member SET status = 'INACTIVE' WHERE id = ?")
 @Entity
@@ -50,5 +49,17 @@ public class ProjectMember extends BaseEntity {
 
     public void registered() {
         Events.raise(new ProjectMemberRegisteredEvent(projectId, memberId));
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public Long getMemberId() {
+        return memberId;
+    }
+
+    public ProjectRole getProjectRole() {
+        return projectRole;
     }
 }

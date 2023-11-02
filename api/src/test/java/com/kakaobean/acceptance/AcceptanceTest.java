@@ -53,6 +53,8 @@ public abstract class AcceptanceTest {
 
         createMember("ADMIN", ADMIN);
         createMember("MEMBER", MEMBER);
+
+        System.out.println(Thread.currentThread().getName());
     }
 
     private void createMember(String name, TestMember member) {

@@ -19,10 +19,11 @@ public class TaskService {
     private final TaskValidator taskValidator;
 
     @Transactional
-    public void registerTask(RegisterTaskRequestDto dto) {
+    public Long registerTask(RegisterTaskRequestDto dto) {
         taskValidator.validate(dto.getAdminId(), dto.getSprintId());
         Task task = dto.toEntity();
         taskRepository.save(task);
+        return task.getId();
     }
 
     @Transactional

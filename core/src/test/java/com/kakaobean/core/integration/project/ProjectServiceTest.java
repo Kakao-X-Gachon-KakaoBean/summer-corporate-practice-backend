@@ -18,12 +18,14 @@ import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
+import com.kakaobean.core.project.domain.repository.query.ProjectQueryRepository;
 import com.kakaobean.core.project.exception.NotProjectAdminException;
 import com.kakaobean.core.releasenote.domain.repository.ManuscriptRepository;
 import com.kakaobean.core.releasenote.domain.repository.ReleaseNoteRepository;
 import com.kakaobean.core.sprint.domain.Sprint;
 import com.kakaobean.core.sprint.domain.repository.SprintRepository;
 import com.kakaobean.core.sprint.domain.repository.TaskRepository;
+import com.kakaobean.core.sprint.domain.repository.query.TaskQueryRepository;
 import org.assertj.core.api.AbstractThrowableAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -62,16 +64,6 @@ public class ProjectServiceTest extends IntegrationTest {
     @Autowired
     TaskRepository taskRepository;
 
-    @BeforeEach
-    void beforeEach() {
-        memberRepository.deleteAll();
-        projectRepository.deleteAll();;
-        projectMemberRepository.deleteAll();
-        manuscriptRepository.deleteAll();
-        releaseNoteRepository.deleteAll();
-        sprintRepository.deleteAll();
-        taskRepository.deleteAll();
-    }
 
     @Test
     void 로그인한_유저가_프로젝트_생성에_성공한다() {
@@ -92,8 +84,8 @@ public class ProjectServiceTest extends IntegrationTest {
     @Test
     void 어드민이_프로젝트_정보를_수정에_성공한다() {
         // given
-        Member member = memberRepository.save(MemberFactory.create());
-        Project project = projectRepository.save(ProjectFactory.create());
+        Member member = memberRepository.save(MemberFactory.createWithoutId());
+        Project project = projectRepository.save(ProjectFactory.createWithoutId());
         projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), member.getId(), ADMIN));
         ModifyProjectInfoRequestDto responseDto = new ModifyProjectInfoRequestDto(member.getId(), project.getId(), "새로운 제목", "새로운 설명");
 
@@ -127,7 +119,7 @@ public class ProjectServiceTest extends IntegrationTest {
         //given
         Member admin = memberRepository.save(MemberFactory.createWithoutId());
         Member member = memberRepository.save(MemberFactory.createWithoutId());
-        Project project = projectRepository.save(ProjectFactory.create());
+        Project project = projectRepository.save(ProjectFactory.createWithoutId());
 
         projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), admin.getId(), ADMIN));
         projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), member.getId(), MEMBER));
@@ -143,27 +135,23 @@ public class ProjectServiceTest extends IntegrationTest {
         projectService.removeProject(admin.getId(), project.getId());
 
         //then
-        assertThat(projectRepository.findAll().size()).isEqualTo(0);
-        assertThat(projectMemberRepository.findAll().size()).isEqualTo(0);
-        assertThat(manuscriptRepository.findAll().size()).isEqualTo(0);
-        assertThat(releaseNoteRepository.findAll().size()).isEqualTo(0);
-        assertThat(sprintRepository.findAll().size()).isEqualTo(0);
-        assertThat(taskRepository.findAll().size()).isEqualTo(0);
+        assertThat(projectRepository.findById(project.getId()).isEmpty()).isTrue();
     }
 
     @Test
     void 일반유저는_프로젝트_정보를_삭제에_실패한다() throws InterruptedException {
+
         //given
-        Member member = memberRepository.save(MemberFactory.create());
-        Project project = projectRepository.save(ProjectFactory.create());
-        ProjectMember projectMember = projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), member.getId(), MEMBER));
+        Member member = memberRepository.save(MemberFactory.createWithoutId());
+        Project project = projectRepository.save(ProjectFactory.createWithoutId());
+        projectMemberRepository.save(new ProjectMember(ACTIVE, project.getId(), member.getId(), MEMBER));
+
         //when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(()->{
            projectService.removeProject(member.getId(), project.getId());
         });
+
         //then
         result.isInstanceOf(NotProjectAdminException.class);
     }
-
-
 }

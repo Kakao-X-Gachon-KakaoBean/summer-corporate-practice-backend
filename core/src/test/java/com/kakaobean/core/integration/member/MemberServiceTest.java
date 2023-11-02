@@ -29,6 +29,7 @@ import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
@@ -65,14 +66,6 @@ public class MemberServiceTest extends IntegrationTest {
 
     PasswordEncoder passwordEncoder;
 
-    @Mock
-    MultipartFile profileImg;
-
-    @Mock
-    MultipartFile thumbnailImg;
-
-
-
 
     @BeforeEach
     void beforeEach(){
@@ -80,6 +73,7 @@ public class MemberServiceTest extends IntegrationTest {
             connection.flushDb();
             return null;
         });
+
         this.passwordEncoder = new BCryptPasswordEncoder(); //임시 처리
         memberRepository.deleteAll();
 
@@ -100,10 +94,10 @@ public class MemberServiceTest extends IntegrationTest {
         emailRepository.save(new Email(dto.getEmail(), dto.getEmailAuthKey()));
 
         //when
-        memberService.registerMember(dto);
+        Long memberId = memberService.registerMember(dto);
 
         //then
-        assertThat(memberRepository.findAll().size()).isEqualTo(1);
+        assertThat(memberRepository.findById(memberId).isPresent()).isTrue();
     }
 
     @DisplayName("이미 등록된 이메일이면 멤버를 등록할 수 없다.")
@@ -377,13 +371,21 @@ public class MemberServiceTest extends IntegrationTest {
 
         //given
         String newName = "kakoBean";
+        Member member = Member.builder()
+                .id(1L)
+                .name("kakoBean")
+                .auth(new Auth("example@gmail.com", "1q2w3e4r!"))
+                .role(Role.ROLE_USER)
+                .authProvider(AuthProvider.local)
+                .build();
 
-        Member member = memberRepository.save(MemberFactory.create());
+        Member savedMember = memberRepository.save(member);
 
         //when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
-            memberService.modifyMember(new ModifyMemberRequestDto(member.getId(), newName));
+            memberService.modifyMember(new ModifyMemberRequestDto(savedMember.getId(), newName));
         });
+
 
         //then
         result.isInstanceOf(ChangingNameToSameNameException.class);

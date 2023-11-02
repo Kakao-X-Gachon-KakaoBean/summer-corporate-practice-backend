@@ -1,5 +1,6 @@
 package com.kakaobean.core.integration.releasenote;
 
+import com.kakaobean.core.factory.member.MemberFactory;
 import com.kakaobean.core.factory.project.ProjectFactory;
 import com.kakaobean.core.factory.project.ProjectMemberFactory;
 import com.kakaobean.core.factory.releasenote.ManuscriptFactory;
@@ -46,29 +47,22 @@ public class ManuscriptServiceTest extends IntegrationTest {
     @Autowired
     ManuscriptRepository manuscriptRepository;
 
-    @BeforeEach
-    void beforeEach() {
-        projectRepository.deleteAll();
-        projectMemberRepository.deleteAll();
-        manuscriptRepository.deleteAll();
-    }
-
     @Test
     void 릴리즈_노트_첫_원고를_등록한다() {
 
         //given
         Project project = projectRepository
-                .save(ProjectFactory.create());
+                .save(ProjectFactory.createWithoutId());
         ProjectMember admin = projectMemberRepository
-                .save(ProjectMemberFactory.createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
+                .save(ProjectMemberFactory.createWithMemberIdAndProjectId(MemberFactory.getMemberId(), project.getId(), ADMIN));
         RegisterManuscriptRequestDto dto =
                 new RegisterManuscriptRequestDto("3.1 코코노트 배포", "내용..", "3.1", admin.getMemberId(), project.getId());
 
         //when
-        manuscriptService.registerManuscript(dto);
+        Long manuscriptId = manuscriptService.registerManuscript(dto);
 
         //then
-        assertThat(manuscriptRepository.findAll().size()).isEqualTo(1);
+        assertThat(manuscriptRepository.findById(manuscriptId).isPresent()).isTrue();
     }
 
     @Test
@@ -77,9 +71,9 @@ public class ManuscriptServiceTest extends IntegrationTest {
         Project project = projectRepository
                 .save(ProjectFactory.create());
         ProjectMember admin = projectMemberRepository
-                .save(ProjectMemberFactory.createWithMemberIdAndProjectId(1L, project.getId(), MEMBER));
+                .save(ProjectMemberFactory.createWithMemberIdAndProjectId(MemberFactory.getMemberId(), project.getId(), MEMBER));
         RegisterManuscriptRequestDto dto =
-                new RegisterManuscriptRequestDto("3.1 코코노트 배포", "내용..", "3.1", admin.getMemberId(), project.getId());
+                new RegisterManuscriptRequestDto("3.2 코코노트 배포", "내용..", "3.2", admin.getMemberId(), project.getId());
 
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
             manuscriptService.registerManuscript(dto);
@@ -90,14 +84,20 @@ public class ManuscriptServiceTest extends IntegrationTest {
 
     @Test
     void 중복되는_릴리즈_노트_원고_버전이_존재한다() {
+
+        //given
         Project project = projectRepository
                 .save(ProjectFactory.create());
         ProjectMember admin = projectMemberRepository
-                .save(ProjectMemberFactory.createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
-        RegisterManuscriptRequestDto dto =
-                new RegisterManuscriptRequestDto("3.1 코코노트 배포", "내용..", "3.1", admin.getMemberId(), project.getId());
-        manuscriptRepository.save(ManuscriptFactory.createWithId(admin.getMemberId(), project.getId()));
+                .save(ProjectMemberFactory.createWithMemberIdAndProjectId(MemberFactory.getMemberId(), project.getId(), ADMIN));
 
+        Manuscript manuscript = ManuscriptFactory
+                .createWithId(admin.getMemberId(), project.getId());
+        RegisterManuscriptRequestDto dto =
+                new RegisterManuscriptRequestDto("3.3 코코노트 배포", "내용..", manuscript.getVersion(), admin.getMemberId(), project.getId());
+        manuscriptRepository.save(manuscript);
+
+        //when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
             manuscriptService.registerManuscript(dto);
         });
@@ -108,22 +108,25 @@ public class ManuscriptServiceTest extends IntegrationTest {
     @Test
     void 릴리즈_노트_원고의_수정_권한을_얻는다() {
 
+        //given
         Project project = projectRepository.save(ProjectFactory.createWithoutId());
-        Manuscript manuscript = ManuscriptFactory.createWithId(1L, project.getId(), Modifiable);
-        ProjectMember projectMember = ProjectMemberFactory.createWithMemberIdAndProjectId(1L, project.getId(), ADMIN);
+        Manuscript manuscript = ManuscriptFactory.createWithId(MemberFactory.getMemberId(), project.getId(), Modifiable);
+        ProjectMember projectMember = ProjectMemberFactory.createWithMemberIdAndProjectId(manuscript.getLastEditedMemberId(), project.getId(), ADMIN);
         manuscriptRepository.save(manuscript);
         projectMemberRepository.save(projectMember);
 
+        //when
         manuscriptService.hasRightToModifyManuscript(projectMember.getMemberId(), manuscript.getId());
 
+        //then
         assertThat(manuscriptRepository.findById(manuscript.getId()).get().getManuscriptStatus()).isSameAs(Modifying);
     }
 
     @Test
     void 뷰어는_릴리즈_노트_원고를_수정_권한을_얻을_수_없다() {
 
-        Manuscript manuscript = ManuscriptFactory.createWithId(1L, 2L, Modifiable);
-        ProjectMember projectMember = ProjectMemberFactory.createWithMemberIdAndProjectId(1L, 2L, VIEWER);
+        ProjectMember projectMember = ProjectMemberFactory.createWithMemberIdAndProjectId(MemberFactory.getMemberId(), ProjectFactory.getProjectId(), VIEWER);
+        Manuscript manuscript = ManuscriptFactory.createWithId(projectMember.getMemberId(), projectMember.getProjectId(), Modifiable);
         manuscriptRepository.save(manuscript);
         projectMemberRepository.save(projectMember);
 
@@ -136,8 +139,8 @@ public class ManuscriptServiceTest extends IntegrationTest {
 
     @Test
     void 다른_멤버가_릴리즈_노트_원고를_수정_중이면_원고를_수정할_권한을_얻을_수_없다() {
-        Manuscript manuscript = ManuscriptFactory.createWithId(1L, 2L, Modifying);
-        ProjectMember projectMember = ProjectMemberFactory.createWithMemberIdAndProjectId(1L, 2L, MEMBER);
+        ProjectMember projectMember = ProjectMemberFactory.createWithMemberIdAndProjectId(MemberFactory.getMemberId(), ProjectFactory.getProjectId(), MEMBER);
+        Manuscript manuscript = ManuscriptFactory.createWithId(projectMember.getMemberId(), projectMember.getProjectId(), Modifying);
         manuscriptRepository.save(manuscript);
         projectMemberRepository.save(projectMember);
 
@@ -153,9 +156,10 @@ public class ManuscriptServiceTest extends IntegrationTest {
 
         //given
         Project project = projectRepository.save(ProjectFactory.createWithoutId());
-        ProjectMember projectMember = ProjectMemberFactory.createWithMemberIdAndProjectId(1L, project.getId(), ADMIN);
-        Manuscript manuscript = manuscriptRepository.save(ManuscriptFactory.createWithId(1L, project.getId(), Modifying));
+        ProjectMember projectMember = ProjectMemberFactory.createWithMemberIdAndProjectId(MemberFactory.getMemberId(), project.getId(), ADMIN);
+        Manuscript manuscript = manuscriptRepository.save(ManuscriptFactory.createWithId(projectMember.getMemberId(), project.getId(), Modifying));
         projectMemberRepository.save(projectMember);
+
         ModifyManuscriptRequestDto dto = ManuscriptFactory.createServiceDto(projectMember.getMemberId(), manuscript.getId());
 
         //when
@@ -167,32 +171,38 @@ public class ManuscriptServiceTest extends IntegrationTest {
         assertThat(result.getTitle()).isEqualTo(dto.getTitle());
         assertThat(result.getContent()).isEqualTo(dto.getContent());
         assertThat(result.getVersion()).isEqualTo(dto.getVersion());
-        assertThat(result.getLastEditedMemberId()).isSameAs(dto.getEditingMemberId());
+        assertThat(result.getLastEditedMemberId()).isEqualTo(dto.getEditingMemberId());
     }
 
     @Test
     void 뷰어는_릴리즈_노트_원고를_수정할_수_없다() {
 
-        Manuscript manuscript = ManuscriptFactory.createWithId(1L, 2L, Modifiable);
-        ProjectMember projectMember = ProjectMemberFactory.createWithMemberIdAndProjectId(1L, 2L, VIEWER);
-        manuscriptRepository.save(manuscript);
+        //given
+        ProjectMember projectMember = ProjectMemberFactory.createWithMemberIdAndProjectId(MemberFactory.getMemberId(), ProjectFactory.getProjectId(), VIEWER);
+        Manuscript manuscript = ManuscriptFactory.createWithId(projectMember.getMemberId(), projectMember.getProjectId(), Modifiable);
+        Manuscript savedManuscript = manuscriptRepository.save(manuscript);
         projectMemberRepository.save(projectMember);
-        ModifyManuscriptRequestDto dto = ManuscriptFactory.createServiceDto(projectMember.getMemberId(), manuscript.getId());
 
+        ModifyManuscriptRequestDto dto = ManuscriptFactory.createServiceDto(projectMember.getMemberId(), savedManuscript.getId());
 
+        //when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
             manuscriptService.modifyManuscript(dto);
         });
 
+        //then
         result.isInstanceOf(ManuscriptModificationAccessException.class);
     }
 
     @Test
     void 릴리즈_노트_원고_상태가_수정중이_아니면_수정할_수_없다() {
-        Manuscript manuscript = ManuscriptFactory.createWithId(1L, 2L, Modifiable);
-        ProjectMember projectMember = ProjectMemberFactory.createWithMemberIdAndProjectId(1L, 2L, MEMBER);
+
+        //given
+        ProjectMember projectMember = ProjectMemberFactory.createWithMemberIdAndProjectId(MemberFactory.getMemberId(), ProjectFactory.getProjectId(), MEMBER);
+        Manuscript manuscript = ManuscriptFactory.createWithId(projectMember.getMemberId(), projectMember.getProjectId(), Modifiable);
         manuscriptRepository.save(manuscript);
         projectMemberRepository.save(projectMember);
+
         ModifyManuscriptRequestDto dto = ManuscriptFactory.createServiceDto(projectMember.getMemberId(), manuscript.getId());
 
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
@@ -204,20 +214,23 @@ public class ManuscriptServiceTest extends IntegrationTest {
 
     @Test
     void 릴리즈_노트_원고를_삭제한다() {
-        Manuscript manuscript = ManuscriptFactory.createWithId(1L, 2L, Modifiable);
-        ProjectMember projectMember = ProjectMemberFactory.createWithMemberIdAndProjectId(1L, 2L, ADMIN);
-        manuscriptRepository.save(manuscript);
+        ProjectMember projectMember = ProjectMemberFactory.createWithMemberIdAndProjectId(MemberFactory.getMemberId(), ProjectFactory.getProjectId(), ADMIN);
+        Manuscript manuscript = ManuscriptFactory.createWithId(projectMember.getMemberId(), projectMember.getProjectId(), Modifiable);
+        Manuscript saveManuscript = manuscriptRepository.save(manuscript);
         projectMemberRepository.save(projectMember);
 
+        //when
         manuscriptService.deleteManuscript(projectMember.getMemberId(), manuscript.getId());
 
-        assertThat(manuscriptRepository.findAll().size()).isEqualTo(0);
+        //given
+        assertThat(manuscriptRepository.findById(saveManuscript.getId()).isEmpty()).isTrue();
     }
 
     @Test
     void 릴리즈_노트는_관리자가_아니라면_삭제할_수_없다() {
-        Manuscript manuscript = ManuscriptFactory.createWithId(1L, 2L, Modifiable);
-        ProjectMember projectMember = ProjectMemberFactory.createWithMemberIdAndProjectId(1L, 2L, MEMBER);
+        Long memberId = MemberFactory.getMemberId();
+        ProjectMember projectMember = ProjectMemberFactory.createWithMemberIdAndProjectId(memberId, ProjectFactory.getProjectId(), MEMBER);
+        Manuscript manuscript = ManuscriptFactory.createWithId(memberId, projectMember.getProjectId(), Modifiable);
         manuscriptRepository.save(manuscript);
         projectMemberRepository.save(projectMember);
 

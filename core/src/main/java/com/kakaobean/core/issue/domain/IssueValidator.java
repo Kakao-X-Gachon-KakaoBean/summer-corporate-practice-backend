@@ -6,6 +6,8 @@ import com.kakaobean.core.project.exception.NotExistsProjectMemberException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 @RequiredArgsConstructor
 public class IssueValidator {
@@ -21,7 +23,7 @@ public class IssueValidator {
         projectMemberRepository.findByMemberIdAndProjectId(memberId, issue.getProjectId())
                 .orElseThrow(NotExistsProjectMemberException::new);
 
-        if(memberId != issue.getWriterId()){
+        if(!Objects.equals(memberId, issue.getWriterId())){
             throw new IssueAccessException();
         }
     }

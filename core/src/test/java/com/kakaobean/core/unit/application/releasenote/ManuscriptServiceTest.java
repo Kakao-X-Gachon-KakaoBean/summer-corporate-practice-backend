@@ -77,11 +77,13 @@ public class ManuscriptServiceTest extends UnitTest {
 
     @Test
     void 중복되는_릴리즈_노트_원고_버전이_존재한다() {
-        RegisterManuscriptRequestDto dto = new RegisterManuscriptRequestDto("3.1 코코노트 배포", "내용..", "3.1", 1L, 2L);
+
+        Manuscript manuscript = ManuscriptFactory.create();
+        RegisterManuscriptRequestDto dto = new RegisterManuscriptRequestDto("3.1 코코노트 배포", "내용..", manuscript.getVersion(), 1L, 2L);
         given(projectMemberRepository.findByMemberIdAndProjectId(anyLong(), anyLong()))
                 .willReturn(Optional.of(ProjectMemberFactory.createAdmin()));
         given(manuscriptRepository.findManuscriptByProjectId(anyLong()))
-                .willReturn(List.of(ManuscriptFactory.create()));
+                .willReturn(List.of(manuscript));
 
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
             manuscriptService.registerManuscript(dto);
