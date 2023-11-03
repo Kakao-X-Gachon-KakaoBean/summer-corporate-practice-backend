@@ -9,6 +9,8 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.specification.RequestSpecification;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentRequest;
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentResponse;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -58,16 +60,29 @@ public class AuthAcceptanceTask {
     }
 
     public static String getAdminAuthorizationHeaderToken(){
+        if(AcceptanceTest.adminTokenContext.get() != null){
+            String token = AcceptanceTest.adminTokenContext.get();
+            return "Bearer " + token;
+        }
+
         Member admin = AcceptanceTest.memberContext.get().getAdmin();
         ExtractableResponse response = requestLogin(new LocalLoginRequest(admin.getAuth().getEmail(), admin.getAuth().getPassword()));
         String accessToken = response.as(LocalLoginResponse.class).getAccessToken();
+        AcceptanceTest.adminTokenContext.set(accessToken);
         return "Bearer " + accessToken;
     }
 
     public static String getMemberAuthorizationHeaderToken(){
+
+        if(AcceptanceTest.memberTokenContext.get() != null){
+            String token = AcceptanceTest.memberTokenContext.get();
+            return "Bearer " + token;
+        }
+
         Member member = AcceptanceTest.memberContext.get().getMember();
         ExtractableResponse response = requestLogin(new LocalLoginRequest(member.getAuth().getEmail(), member.getAuth().getPassword()));
         String accessToken = response.as(LocalLoginResponse.class).getAccessToken();
+        AcceptanceTest.memberTokenContext.set(accessToken);
         return "Bearer " + accessToken;
     }
 

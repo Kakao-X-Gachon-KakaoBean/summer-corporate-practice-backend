@@ -97,6 +97,10 @@ public abstract class AcceptanceTest {
 
     public static ThreadLocal<MemberContext> memberContext = new ThreadLocal<>();
 
+    public static ThreadLocal<String> adminTokenContext = new ThreadLocal<>();
+    public static ThreadLocal<String> memberTokenContext = new ThreadLocal<>();
+
+
     @BeforeEach
     void beforeEach(){
         RestAssured.port = port;
@@ -117,6 +121,8 @@ public abstract class AcceptanceTest {
     @AfterEach
     void afterEach() {
         memberContext.remove();
+        adminTokenContext.remove();
+        memberTokenContext.remove();
     }
 
     protected Member createMember(Member member) {
@@ -158,7 +164,9 @@ public abstract class AcceptanceTest {
         memberRepository.deleteById(context.getMember().getId());
         memberRepository.deleteById(context.getAdmin().getId());
 
-        AcceptanceTest.memberContext.remove();
+        memberContext.remove();
+        adminTokenContext.remove();
+        memberTokenContext.remove();
         return context;
     }
 }
