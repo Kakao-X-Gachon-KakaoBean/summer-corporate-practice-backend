@@ -5,7 +5,6 @@ import com.kakaobean.member.dto.RegisterMemberRequest;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import static com.kakaobean.acceptance.TestMember.*;
 
 public class RegisterMemberRequestFactory {
 
@@ -13,26 +12,21 @@ public class RegisterMemberRequestFactory {
 
     private static AtomicLong aLong = new AtomicLong(0);
 
+    /**
+     * 단위테스트에서만 사용
+     */
     public static RegisterMemberRequest createAdmin(){
         return RegisterMemberRequest.builder()
                 .name("kakoBean")
-                .email(ADMIN.getEmail())
-                .password(ADMIN.getPassword())
-                .checkPassword(ADMIN.getPassword())
+                .email("asb1651@naver.com")
+                .password("1q2w3e4r!")
+                .checkPassword("1q2w3e4r!")
                 .emailAuthKey("113336")
                 .build();
     }
-    public static RegisterMemberRequest createMember(){
-        return RegisterMemberRequest.builder()
-                .name("receiver")
-                .email(MEMBER.getEmail())
-                .password(MEMBER.getPassword())
-                .checkPassword(MEMBER.getPassword())
-                .emailAuthKey("113335")
-                .build();
-    }
+
+
     public static RegisterMemberRequest createMember(Member member){
-        long l = aLong.getAndIncrement();
         return RegisterMemberRequest.builder()
                 .name(member.getName())
                 .email(member.getAuth().getEmail())

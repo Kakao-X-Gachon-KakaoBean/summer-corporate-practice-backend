@@ -41,6 +41,8 @@ import com.kakaobean.sprint.SprintController;
 import com.kakaobean.sprint.TaskController;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -70,6 +72,7 @@ import org.springframework.test.web.servlet.MockMvc;
         CommentController.class,
         NotificationController.class
 })
+@Execution(ExecutionMode.SAME_THREAD)
 @AutoConfigureRestDocs
 @MockBean(JpaMetamodelMappingContext.class)
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})

@@ -4,11 +4,11 @@ import com.kakaobean.acceptance.AcceptanceTest;
 import com.kakaobean.acceptance.member.MemberAcceptanceTask;
 import com.kakaobean.acceptance.project.ProjectAcceptanceTask;
 import com.kakaobean.common.dto.CommandSuccessResponse;
+import com.kakaobean.core.member.domain.Member;
 import com.kakaobean.core.project.domain.Project;
-import com.kakaobean.core.sprint.domain.Sprint;
-import com.kakaobean.core.sprint.domain.Task;
 import com.kakaobean.core.sprint.domain.WorkStatus;
 import com.kakaobean.core.sprint.domain.repository.query.FindTaskResponseDto;
+import com.kakaobean.fixture.member.MemberFactory;
 import com.kakaobean.member.dto.RegisterMemberRequest;
 import com.kakaobean.project.dto.request.InviteProjectMemberRequest;
 import com.kakaobean.project.dto.request.RegisterProjectMemberRequest;
@@ -27,15 +27,13 @@ import org.springframework.amqp.core.QueueInformation;
 
 import java.util.List;
 
-import static com.kakaobean.acceptance.TestMember.ADMIN;
-import static com.kakaobean.acceptance.TestMember.MEMBER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TaskAcceptanceTest extends AcceptanceTest {
 
 
     @Test
-    void 테크스_생성(){
+    void 테스크_생성(){
 
         //프로젝트 생성
         RegisterProjectRequest projectRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
@@ -114,15 +112,19 @@ public class TaskAcceptanceTest extends AcceptanceTest {
     @Test
     void 테스크_할당(){
 
-        //직접 생성하기 위해 사전에 저장한 내용을 삭제
-        memberRepository.deleteAll();
+        //픽스쳐 멤버 삭제 및 재생성
+        MemberContext removedContext = super.deleteMemberContext();
 
-        //멤버 생성
-        RegisterMemberRequest admin = RegisterMemberRequestFactory.createAdmin();
-        RegisterMemberRequest member = RegisterMemberRequestFactory.createMember();
+        RegisterMemberRequest admin = RegisterMemberRequestFactory.createMember(removedContext.getAdmin());
+        RegisterMemberRequest member = RegisterMemberRequestFactory.createMember(removedContext.getMember());
 
         Long adminId = MemberAcceptanceTask.registerMemberTask(admin, emailRepository).as(CommandSuccessResponse.Created.class).getId();
         Long memberId = MemberAcceptanceTask.registerMemberTask(member, emailRepository).as(CommandSuccessResponse.Created.class).getId();
+
+        Member newAdmin = MemberFactory.createWithId(adminId, removedContext.getAdmin());
+        Member newMember = MemberFactory.createWithId(memberId, removedContext.getMember());
+
+        super.setMemberContext(new MemberContext(newAdmin, newMember));
 
         //프로젝트 생성
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
@@ -130,7 +132,7 @@ public class TaskAcceptanceTest extends AcceptanceTest {
         Project project = projectRepository.findById(projectResponse.getId()).get();
 
         //프로젝트 멤버 가입
-        InviteProjectMemberRequest givenDto = new InviteProjectMemberRequest(List.of(MEMBER.getEmail()));
+        InviteProjectMemberRequest givenDto = new InviteProjectMemberRequest(List.of(newMember.getAuth().getEmail()));
         ProjectAcceptanceTask.inviteProjectMemberTask(givenDto, project.getId());
         ProjectAcceptanceTask.joinProjectMemberTask(new RegisterProjectMemberRequest(project.getSecretKey()));
 
@@ -159,15 +161,12 @@ public class TaskAcceptanceTest extends AcceptanceTest {
     @Test
     void 테스크_작업상태_수정(){
 
-        //직접 생성하기 위해 사전에 저장한 내용을 삭제
-        memberRepository.deleteAll();
-
         //멤버 생성
-        RegisterMemberRequest admin = RegisterMemberRequestFactory.createAdmin();
-        RegisterMemberRequest member = RegisterMemberRequestFactory.createMember();
-
-        Long adminId = MemberAcceptanceTask.registerMemberTask(admin, emailRepository).as(CommandSuccessResponse.Created.class).getId();
-        Long memberId = MemberAcceptanceTask.registerMemberTask(member, emailRepository).as(CommandSuccessResponse.Created.class).getId();
+//        RegisterMemberRequest admin = RegisterMemberRequestFactory.createAdmin();
+//        RegisterMemberRequest member = RegisterMemberRequestFactory.createMember();
+//
+//        Long adminId = MemberAcceptanceTask.registerMemberTask(admin, emailRepository).as(CommandSuccessResponse.Created.class).getId();
+//        Long memberId = MemberAcceptanceTask.registerMemberTask(member, emailRepository).as(CommandSuccessResponse.Created.class).getId();
 
         //프로젝트 생성
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
@@ -175,7 +174,8 @@ public class TaskAcceptanceTest extends AcceptanceTest {
         Project project = projectRepository.findById(projectResponse.getId()).get();
 
         //프로젝트 멤버 가입
-        InviteProjectMemberRequest givenDto = new InviteProjectMemberRequest(List.of(MEMBER.getEmail()));
+        Member member = AcceptanceTest.memberContext.get().getMember();
+        InviteProjectMemberRequest givenDto = new InviteProjectMemberRequest(List.of(member.getAuth().getEmail()));
         ProjectAcceptanceTask.inviteProjectMemberTask(givenDto, project.getId());
         ProjectAcceptanceTask.joinProjectMemberTask(new RegisterProjectMemberRequest(project.getSecretKey()));
 
@@ -188,7 +188,8 @@ public class TaskAcceptanceTest extends AcceptanceTest {
         CommandSuccessResponse.Created taskResponse = TaskAcceptanceTask.registerTaskTask(taskRequest).as(CommandSuccessResponse.Created.class);
 
         //테스크 할당
-        TaskAcceptanceTask.assignTaskTask(taskResponse.getId(), adminId);
+        Member admin = AcceptanceTest.memberContext.get().getAdmin();
+        TaskAcceptanceTask.assignTaskTask(taskResponse.getId(), admin.getId());
 
         //when
         //테스크 작업 상태 변경
@@ -211,7 +212,8 @@ public class TaskAcceptanceTest extends AcceptanceTest {
         Project project = projectRepository.findById(projectResponse.getId()).get();
 
         //프로젝트 멤버 가입
-        InviteProjectMemberRequest givenDto = new InviteProjectMemberRequest(List.of(MEMBER.getEmail()));
+        Member member = AcceptanceTest.memberContext.get().getMember();
+        InviteProjectMemberRequest givenDto = new InviteProjectMemberRequest(List.of(member.getAuth().getEmail()));
         ProjectAcceptanceTask.inviteProjectMemberTask(givenDto, project.getId());
         ProjectAcceptanceTask.joinProjectMemberTask(new RegisterProjectMemberRequest(project.getSecretKey()));
 

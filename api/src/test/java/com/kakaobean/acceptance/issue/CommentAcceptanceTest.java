@@ -30,12 +30,6 @@ public class CommentAcceptanceTest extends AcceptanceTest {
     @Test
     void 댓글_생성(){
 
-        //given
-//        Member member = MemberFactory.createWithTempEmail();
-//        RegisterMemberRequest request = RegisterMemberRequestFactory.createMember(member);
-//        ExtractableResponse response = MemberAcceptanceTask.registerMemberTask(request, emailRepository);
-//        CommandSuccessResponse.Created createdMember = response.as(CommandSuccessResponse.Created.class);
-
         ////프로젝트 생성
         RegisterProjectRequest projectRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
         CommandSuccessResponse.Created projectResponse = ProjectAcceptanceTask.registerProjectTask(projectRequest).as(CommandSuccessResponse.Created.class);
@@ -55,8 +49,6 @@ public class CommentAcceptanceTest extends AcceptanceTest {
         
         FindIndividualIssueResponseDto result = IssueAcceptanceTask.findIssueWithId(issueResponse.getId()).as(FindIndividualIssueResponseDto.class);
         assertThat(result.getComments().size()).isEqualTo(1);
-
-
     }
 
     @Test
@@ -66,6 +58,7 @@ public class CommentAcceptanceTest extends AcceptanceTest {
         RegisterProjectRequest projectRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
         CommandSuccessResponse.Created projectResponse = ProjectAcceptanceTask.registerProjectTask(projectRequest).as(CommandSuccessResponse.Created.class);
 
+        System.out.println("memberContext.get().getAdmin().getId() = " + memberContext.get().getAdmin().getId());
         ////이슈 생성
         RegisterIssueRequest issueRequest = new RegisterIssueRequest("이슈 제목", "이슈 내용", projectResponse.getId());
         CommandSuccessResponse.Created issueResponse = IssueAcceptanceTask.registerIssueTask(issueRequest).as(CommandSuccessResponse.Created.class);

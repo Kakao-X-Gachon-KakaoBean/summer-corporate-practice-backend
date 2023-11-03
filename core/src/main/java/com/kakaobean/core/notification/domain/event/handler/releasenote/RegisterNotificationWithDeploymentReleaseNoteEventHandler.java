@@ -4,8 +4,11 @@ import com.kakaobean.core.notification.domain.event.NotificationSentEvent;
 import com.kakaobean.core.notification.domain.service.register.RegisterNotificationService;
 import com.kakaobean.core.notification.domain.service.send.email.SendEmailNotificationService;
 import com.kakaobean.core.notification.domain.service.send.message.SendMessageNotificationService;
+import com.kakaobean.core.releasenote.domain.ReleaseNote;
 import com.kakaobean.core.releasenote.domain.event.ReleaseNoteDeployedEvent;
 import com.kakaobean.core.releasenote.domain.repository.ManuscriptRepository;
+import com.kakaobean.core.releasenote.domain.repository.ReleaseNoteRepository;
+import com.kakaobean.core.releasenote.exception.NotExistsReleaseNoteException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -16,10 +19,12 @@ import static com.kakaobean.core.notification.domain.NotificationType.*;
 @RequiredArgsConstructor
 public class RegisterNotificationWithDeploymentReleaseNoteEventHandler {
 
+    private final ReleaseNoteRepository releaseNoteRepository;
     private final ManuscriptRepository manuscriptRepository;
     private final RegisterNotificationService registerNotificationService;
     private final SendEmailNotificationService sendEmailNotificationService;
     private final SendMessageNotificationService sendMessageNotificationService;
+
 
     /**
      * 릴리즈 노트가 배포되면 발생하는 메서드
@@ -33,7 +38,8 @@ public class RegisterNotificationWithDeploymentReleaseNoteEventHandler {
     @TransactionalEventListener(value = ReleaseNoteDeployedEvent.class)
     public void handle(ReleaseNoteDeployedEvent event){
         if(event != null){
-            manuscriptRepository.deleteByVersion(event.getVersion());
+            ReleaseNote releasenote = releaseNoteRepository.findById(event.getReleaseNoteId()).orElseThrow(NotExistsReleaseNoteException::new);
+            manuscriptRepository.deleteByVersionAndProjectId(event.getVersion(), releasenote.getProjectId());
             NotificationSentEvent notificationEvent = registerNotificationService.register(event.getReleaseNoteId(), RELEASE_NOTE_DEPLOYMENT);
             sendEmailNotificationService.sendEmail(notificationEvent);
             sendMessageNotificationService.sendMessage(notificationEvent);

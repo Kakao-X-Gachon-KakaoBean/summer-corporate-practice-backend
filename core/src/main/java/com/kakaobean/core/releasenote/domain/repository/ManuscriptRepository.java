@@ -27,8 +27,8 @@ public interface ManuscriptRepository extends JpaRepository<Manuscript, Long> {
 
     @Modifying
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    @Query("update Manuscript ma set ma.status = 'INACTIVE' where ma.version = :version and ma.status = 'ACTIVE'")
-    void deleteByVersion(String version);
+    @Query("update Manuscript ma set ma.status = 'INACTIVE' where ma.version = :version and ma.projectId = :projectId and ma.status = 'ACTIVE'")
+    void deleteByVersionAndProjectId(String version, Long projectId);
 
     List<Manuscript> findManuscriptByProjectId(Long projectId);
 }

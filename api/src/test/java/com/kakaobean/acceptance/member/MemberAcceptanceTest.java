@@ -1,7 +1,7 @@
 package com.kakaobean.acceptance.member;
 
 import com.kakaobean.acceptance.AcceptanceTest;
-import com.kakaobean.acceptance.TestMember;
+import com.kakaobean.acceptance.member.MemberAcceptanceTask;
 import com.kakaobean.common.dto.CommandSuccessResponse;
 import com.kakaobean.core.member.domain.Member;
 import com.kakaobean.fixture.member.MemberFactory;
@@ -10,9 +10,7 @@ import com.kakaobean.fixture.member.RegisterMemberRequestFactory;
 
 import io.restassured.response.ExtractableResponse;
 import org.junit.jupiter.api.Test;
-import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.QueueInformation;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -22,7 +20,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     void registerMember(){
 
         //given
-        Member member = MemberFactory.createWithTempEmail();
+        Member member = MemberFactory.createAdminWithTempEmail();
         RegisterMemberRequest request = RegisterMemberRequestFactory.createMember(member);
 
         //when

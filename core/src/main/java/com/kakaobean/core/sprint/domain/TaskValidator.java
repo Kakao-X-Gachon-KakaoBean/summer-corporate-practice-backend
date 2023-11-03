@@ -11,6 +11,8 @@ import com.kakaobean.core.sprint.domain.repository.SprintRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 import static com.kakaobean.core.project.domain.ProjectRole.*;
 
 @Component
@@ -51,7 +53,7 @@ public class TaskValidator {
                 .orElseThrow(NotExistsSprintException::new);
         ProjectMember projectMember = projectMemberRepository.findByMemberIdAndProjectId(workerId, sprint.getProjectId())
                 .orElseThrow(NotExistsProjectMemberException::new);
-        if (projectMember.getProjectRole() == VIEWER || workerId != task.getWorkerId()){
+        if (projectMember.getProjectRole() == VIEWER || !Objects.equals(workerId, task.getWorkerId())){
             throw new ChangeOperationNotAllowedException();
         }
     }

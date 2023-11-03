@@ -3,34 +3,25 @@ package com.kakaobean.acceptance.project;
 import com.kakaobean.acceptance.AcceptanceTest;
 import com.kakaobean.acceptance.releasenote.ReleaseNoteAcceptanceTask;
 import com.kakaobean.common.dto.CommandSuccessResponse;
+import com.kakaobean.core.member.domain.Member;
 import com.kakaobean.core.project.domain.Project;
-import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
-import com.kakaobean.core.project.domain.repository.ProjectRepository;
 import com.kakaobean.core.project.domain.repository.query.FindProjectInfoResponseDto;
-import com.kakaobean.core.releasenote.domain.ReleaseNote;
-import com.kakaobean.core.releasenote.domain.repository.ReleaseNoteRepository;
 import com.kakaobean.project.dto.request.InviteProjectMemberRequest;
 import com.kakaobean.project.dto.request.ModifyProjectRequest;
 import com.kakaobean.project.dto.request.RegisterProjectMemberRequest;
 import com.kakaobean.project.dto.request.RegisterProjectRequest;
 import com.kakaobean.releasenote.dto.request.DeployReleaseNoteRequest;
-import io.lettuce.core.protocol.Command;
 import io.restassured.response.ExtractableResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.springframework.amqp.core.AmqpAdmin;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
 
-import static com.kakaobean.acceptance.TestMember.MEMBER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 public class ProjectAcceptanceTest extends AcceptanceTest {
-
-
 
     @Test
     void 프로젝트를_만든다(){
@@ -54,7 +45,9 @@ public class ProjectAcceptanceTest extends AcceptanceTest {
         //given
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
         CommandSuccessResponse.Created projectResponse = ProjectAcceptanceTask.registerProjectTask(givenRequest).as(CommandSuccessResponse.Created.class);
-        InviteProjectMemberRequest request = new InviteProjectMemberRequest(List.of(MEMBER.getEmail()));
+
+        Member member = AcceptanceTest.memberContext.get().getMember();
+        InviteProjectMemberRequest request = new InviteProjectMemberRequest(List.of(member.getAuth().getEmail()));
 
         //when
         ExtractableResponse response = ProjectAcceptanceTask.inviteProjectMemberTask(request, projectResponse.getId());
@@ -70,9 +63,10 @@ public class ProjectAcceptanceTest extends AcceptanceTest {
         //프로젝트 생성
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
         CommandSuccessResponse.Created projectResponse = ProjectAcceptanceTask.registerProjectTask(givenRequest).as(CommandSuccessResponse.Created.class);
+        Member member = AcceptanceTest.memberContext.get().getMember();
 
         //프로젝트 초대
-        InviteProjectMemberRequest givenDto = new InviteProjectMemberRequest(List.of(MEMBER.getEmail()));
+        InviteProjectMemberRequest givenDto = new InviteProjectMemberRequest(List.of(member.getAuth().getEmail()));
         ProjectAcceptanceTask.inviteProjectMemberTask(givenDto, projectResponse.getId());
 
         //프로젝트 가입
@@ -136,7 +130,8 @@ public class ProjectAcceptanceTest extends AcceptanceTest {
         CommandSuccessResponse.Created projectResponse = ProjectAcceptanceTask.registerProjectTask(givenRequest).as(CommandSuccessResponse.Created.class);
 
         //프로젝트 초대
-        InviteProjectMemberRequest givenDto = new InviteProjectMemberRequest(List.of(MEMBER.getEmail()));
+        Member member = AcceptanceTest.memberContext.get().getMember();
+        InviteProjectMemberRequest givenDto = new InviteProjectMemberRequest(List.of(member.getAuth().getEmail()));
         ProjectAcceptanceTask.inviteProjectMemberTask(givenDto, projectResponse.getId());
 
         //프로젝트 가입

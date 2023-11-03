@@ -1,13 +1,14 @@
 package com.kakaobean.acceptance.auth;
 
+import com.kakaobean.acceptance.AcceptanceTest;
 import com.kakaobean.auth.dto.GetAccessTokenRequest;
+import com.kakaobean.core.member.domain.Member;
 import com.kakaobean.security.local.LocalLoginRequest;
 import com.kakaobean.security.local.LocalLoginResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.specification.RequestSpecification;
 
-import static com.kakaobean.acceptance.TestMember.*;
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentRequest;
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentResponse;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -57,13 +58,15 @@ public class AuthAcceptanceTask {
     }
 
     public static String getAdminAuthorizationHeaderToken(){
-        ExtractableResponse response = requestLogin(new LocalLoginRequest(ADMIN.getEmail(), ADMIN.getPassword()));
+        Member admin = AcceptanceTest.memberContext.get().getAdmin();
+        ExtractableResponse response = requestLogin(new LocalLoginRequest(admin.getAuth().getEmail(), admin.getAuth().getPassword()));
         String accessToken = response.as(LocalLoginResponse.class).getAccessToken();
         return "Bearer " + accessToken;
     }
 
     public static String getMemberAuthorizationHeaderToken(){
-        ExtractableResponse response = requestLogin(new LocalLoginRequest(MEMBER.getEmail(), MEMBER.getPassword()));
+        Member member = AcceptanceTest.memberContext.get().getMember();
+        ExtractableResponse response = requestLogin(new LocalLoginRequest(member.getAuth().getEmail(), member.getAuth().getPassword()));
         String accessToken = response.as(LocalLoginResponse.class).getAccessToken();
         return "Bearer " + accessToken;
     }
