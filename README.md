@@ -54,3 +54,10 @@
 
 ![core](https://github.com/Kakao-X-Gachon-KakaoBean/KakaoBean-Backend/assets/76802855/7b5f9ceb-dba6-4a15-b11a-bd8b79f75b34)
 
+<br>
+
+## 아키텍쳐 
+
+![스크린샷 2023-11-09 오후 10 05 05](https://github.com/Kakao-X-Gachon-KakaoBean/summer-corporate-practice-backend/assets/76802855/e48172a4-7b3b-4c36-a20c-55d33f1d22aa)
+
+
