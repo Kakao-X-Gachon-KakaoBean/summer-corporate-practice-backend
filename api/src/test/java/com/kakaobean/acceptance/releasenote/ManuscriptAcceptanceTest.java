@@ -175,7 +175,7 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
      * 실시간 메시지가 큐로 보내진다.
      */
     @Test
-    void 릴리즈_노트_원고_수정_권한을_획득한다(){
+    void 릴리즈_노트_원고_수정_권한을_획득한다() throws InterruptedException {
 
         //멤버 생성
         //픽스쳐 멤버 삭제 및 재생성
@@ -212,6 +212,8 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
         //then
         assertThat(response.statusCode()).isEqualTo(200);
 
+        Thread.sleep(200);
+
         QueueInformation queueInfo1 = amqpAdmin.getQueueInfo("user-" + adminId);
         assertThat(queueInfo1.getMessageCount()).isEqualTo(2); //생성, 수정 시작
 
@@ -223,7 +225,7 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
      * 실시간 메시지가 큐로 보내진다.
      */
     @Test
-    void 릴리즈_노트_원고를_수정한다(){
+    void 릴리즈_노트_원고를_수정한다() throws InterruptedException {
 
         //멤버 생성
 
@@ -268,7 +270,11 @@ public class ManuscriptAcceptanceTest extends AcceptanceTest {
 
         /**
          * 수정 시작 알림과 수정 완료 알림이 모두 가야한다.
+         * 병렬로 실행하면 큐에 들어가기전에 verify를 하는 경우가 종종 발생했다. 따라서 Thread.sleep()을 사용
          */
+
+        Thread.sleep(200);
+
         QueueInformation queueInfo1 = amqpAdmin.getQueueInfo("user-" + adminId);
         assertThat(queueInfo1.getMessageCount()).isEqualTo(3); //생성, 수정 시작, 수정 끝 알림 3개
 

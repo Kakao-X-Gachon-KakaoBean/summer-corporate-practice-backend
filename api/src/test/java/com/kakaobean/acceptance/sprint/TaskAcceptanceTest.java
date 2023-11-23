@@ -110,7 +110,7 @@ public class TaskAcceptanceTest extends AcceptanceTest {
     }
 
     @Test
-    void 테스크_할당(){
+    void 테스크_할당() throws InterruptedException {
 
         //픽스쳐 멤버 삭제 및 재생성
         MemberContext removedContext = super.deleteMemberContext();
@@ -150,6 +150,8 @@ public class TaskAcceptanceTest extends AcceptanceTest {
 
         //then
         assertThat(response.statusCode()).isEqualTo(200);
+
+        Thread.sleep(200);
 
         QueueInformation queueInfo1 = amqpAdmin.getQueueInfo("user-" + adminId);
         assertThat(queueInfo1.getMessageCount()).isEqualTo(1); //작업 할당 메시지 1개
