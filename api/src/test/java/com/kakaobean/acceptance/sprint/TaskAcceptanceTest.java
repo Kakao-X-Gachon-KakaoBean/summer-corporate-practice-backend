@@ -151,7 +151,7 @@ public class TaskAcceptanceTest extends AcceptanceTest {
         //then
         assertThat(response.statusCode()).isEqualTo(200);
 
-        Thread.sleep(200);
+        Thread.sleep(100);
 
         QueueInformation queueInfo1 = amqpAdmin.getQueueInfo("user-" + adminId);
         assertThat(queueInfo1.getMessageCount()).isEqualTo(1); //작업 할당 메시지 1개
