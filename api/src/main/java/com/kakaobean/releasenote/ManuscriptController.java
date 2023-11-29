@@ -34,9 +34,9 @@ public class ManuscriptController {
     public ResponseEntity registerManuscript(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                              @RequestBody @Validated RegisterManuscriptRequest request) {
         log.info("릴리즈 노트 원고 등록 api 시작");
-        manuscriptService.registerManuscript(request.toServiceDto(userPrincipal.getId()));
+        Long manuscriptId = manuscriptService.registerManuscript(request.toServiceDto(userPrincipal.getId()));
         log.info("릴리즈 노트 원고 등록 api 종료");
-        return new ResponseEntity(CommandSuccessResponse.from("릴리즈 노트 원고 등록에 성공했습니다."), HttpStatus.CREATED);
+        return new ResponseEntity(CommandSuccessResponse.from(manuscriptId, "릴리즈 노트 원고 등록에 성공했습니다."), HttpStatus.CREATED);
     }
 
     @GetMapping("/manuscripts/{manuscriptId}")

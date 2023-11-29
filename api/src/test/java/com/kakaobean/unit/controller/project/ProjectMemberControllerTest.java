@@ -17,7 +17,7 @@ import java.util.List;
 
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentRequest;
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentResponse;
-import static com.kakaobean.unit.controller.factory.project.FindProjectMemberResponseDtoFactory.*;
+import static com.kakaobean.fixture.project.FindProjectMemberResponseDtoFactory.createList;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;

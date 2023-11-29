@@ -1,4 +1,4 @@
-package com.kakaobean.unit.controller.factory.releasenote;
+package com.kakaobean.fixture.releasenote;
 
 
 import com.kakaobean.releasenote.dto.request.DeployReleaseNoteRequest;

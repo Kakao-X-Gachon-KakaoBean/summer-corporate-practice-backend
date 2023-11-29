@@ -51,6 +51,7 @@ test {
     outputs.dir snippetsDir
 }
 
+
 asciidoctor {
     inputs.dir snippetsDir
     configurations 'asciidoctorExt'

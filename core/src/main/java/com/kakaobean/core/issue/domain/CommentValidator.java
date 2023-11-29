@@ -5,6 +5,8 @@ import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 @RequiredArgsConstructor
 public class CommentValidator {
@@ -12,7 +14,7 @@ public class CommentValidator {
     private final ProjectMemberRepository projectMemberRepository;
 
     public void validateAccess(Comment comment, Long memberId) {
-        if(memberId != comment.getWriterId()){
+        if(!Objects.equals(memberId, comment.getWriterId())){
             throw new CommentAccessException();
         }
     }

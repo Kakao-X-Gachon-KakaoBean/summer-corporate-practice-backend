@@ -3,8 +3,8 @@ package com.kakaobean.unit.controller.issue;
 import com.kakaobean.issue.dto.ModifyCommentRequest;
 import com.kakaobean.issue.dto.RegisterCommentRequest;
 import com.kakaobean.unit.controller.ControllerTest;
-import com.kakaobean.unit.controller.factory.issue.ModifyCommentRequestFactory;
-import com.kakaobean.unit.controller.factory.issue.RegisterCommentRequestFactory;
+import com.kakaobean.fixture.issue.ModifyCommentRequestFactory;
+import com.kakaobean.fixture.issue.RegisterCommentRequestFactory;
 import com.kakaobean.unit.controller.security.WithMockUser;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -51,6 +51,7 @@ public class CommentControllerTest extends ControllerTest {
                         fieldWithPath("issueId").type(NUMBER).description("이슈 id")
                 ),
                 responseFields(
+                        fieldWithPath("id").type(NUMBER).description("생성한 댓글 id"),
                         fieldWithPath("message").type(STRING).description("댓글이 생성되었습니다.")
                 )
         ));

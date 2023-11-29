@@ -1,7 +1,6 @@
-package com.kakaobean.unit.controller.factory.issue;
+package com.kakaobean.fixture.issue;
 
 import com.kakaobean.issue.dto.RegisterIssueRequest;
-import com.kakaobean.sprint.dto.request.RegisterTaskRequest;
 
 public class RegisterIssueRequestFactory {
     private RegisterIssueRequestFactory() {}

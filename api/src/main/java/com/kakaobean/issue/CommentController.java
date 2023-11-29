@@ -27,16 +27,16 @@ public class CommentController {
 
     @PostMapping("/comments")
     public ResponseEntity registerComment(@Validated @RequestBody RegisterCommentRequest request,
-                                         @AuthenticationPrincipal UserPrincipal userPrincipal){
+                                          @AuthenticationPrincipal UserPrincipal userPrincipal){
         log.info("이슈 댓글 생성 요청 api 시작");
-        commentService.registerComment(request.toServiceDto(userPrincipal.getId()));
+        Long commentId = commentService.registerComment(request.toServiceDto(userPrincipal.getId()));
         log.info("이슈 댓글 생성 요청 api 종료");
-        return new ResponseEntity(CommandSuccessResponse.from("댓글이 생성되었습니다."), CREATED);
+        return new ResponseEntity(CommandSuccessResponse.from(commentId, "댓글이 생성되었습니다."), CREATED);
     }
 
     @DeleteMapping("/comments/{commentId}")
     public ResponseEntity removeComment(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                      @PathVariable Long commentId) {
+                                        @PathVariable Long commentId) {
         log.info("이슈 댓글 삭제 요청 api 시작");
         commentService.removeComment(userPrincipal.getId(), commentId);
         log.info("이슈 댓글 삭제 요청 api 종료");
@@ -45,8 +45,8 @@ public class CommentController {
 
     @PatchMapping("/comments/{commentId}")
     public ResponseEntity modifyComment(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                      @PathVariable Long commentId,
-                                      @Validated @RequestBody ModifyCommentRequest request) {
+                                        @PathVariable Long commentId,
+                                        @Validated @RequestBody ModifyCommentRequest request) {
         log.info("이슈 댓글 수정 요청 api 시작");
         commentService.modifyComment(request.toServiceDto(userPrincipal.getId(), commentId));
         log.info("이슈 댓글 수정 요청 api 종료");

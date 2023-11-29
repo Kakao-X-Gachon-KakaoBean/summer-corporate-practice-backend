@@ -7,7 +7,7 @@ import com.kakaobean.core.project.domain.repository.query.FindProjectsResponseDt
 import com.kakaobean.project.dto.request.ModifyProjectRequest;
 import com.kakaobean.project.dto.request.RegisterProjectRequest;
 import com.kakaobean.unit.controller.ControllerTest;
-import com.kakaobean.unit.controller.factory.project.FindProjectResponseDtoFactory;
+import com.kakaobean.fixture.project.FindProjectResponseDtoFactory;
 import com.kakaobean.unit.controller.security.WithMockUser;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentRequest;
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentResponse;
-import static com.kakaobean.unit.controller.factory.project.FindProjectInfoResponseDtoFactory.create;
+import static com.kakaobean.fixture.project.FindProjectInfoResponseDtoFactory.create;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
@@ -84,7 +84,8 @@ public class ProjectControllerTest extends ControllerTest {
                         fieldWithPath("content").type(STRING).description("프로젝트 설명")
                 ),
                 responseFields(
-                        fieldWithPath("projectId").type(NUMBER).description("생성된 프로젝트 id")
+                        fieldWithPath("id").type(NUMBER).description("생성된 프로젝트 id"),
+                        fieldWithPath("message").type(STRING).description("성공 메시지")
                 )
         ));
 

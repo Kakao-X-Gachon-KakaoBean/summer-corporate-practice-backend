@@ -33,9 +33,9 @@ public class IssueController {
     public ResponseEntity registerIssue(@Validated @RequestBody RegisterIssueRequest request,
                                         @AuthenticationPrincipal UserPrincipal userPrincipal) {
         log.info("이슈 생성 요청 api 시작");
-        issueService.registerIssue(request.toServiceDto(userPrincipal.getId()));
+        Long issueId = issueService.registerIssue(request.toServiceDto(userPrincipal.getId()));
         log.info("이슈 생성 요청 api 종료");
-        return new ResponseEntity(CommandSuccessResponse.from("이슈가 생성되었습니다."), CREATED);
+        return new ResponseEntity(CommandSuccessResponse.from(issueId, "이슈가 생성되었습니다."), CREATED);
     }
 
 //    @Cacheable(cacheNames = "pagedIssues", key = "{#projectId, #page}")
