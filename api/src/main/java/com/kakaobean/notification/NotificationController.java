@@ -3,6 +3,7 @@ package com.kakaobean.notification;
 import com.kakaobean.common.dto.CommandSuccessResponse;
 import com.kakaobean.core.notification.domain.repository.NotificationRepository;
 import com.kakaobean.core.notification.domain.repository.query.FindNotificationResponseDto;
+import com.kakaobean.core.notification.domain.repository.query.FindNotificationsResponseDto;
 import com.kakaobean.core.notification.domain.repository.query.NotificationQueryRepository;
 import com.kakaobean.security.UserPrincipal;
 import io.micrometer.core.annotation.Timed;
@@ -29,7 +30,7 @@ public class NotificationController {
     @GetMapping("/notifications")
     public ResponseEntity findNotification(@AuthenticationPrincipal UserPrincipal userPrincipal){
         log.info("최근 알림 조회 api 시작");
-        List<FindNotificationResponseDto> response = notificationQueryRepository.findByMemberId(userPrincipal.getId());
+        FindNotificationsResponseDto response = notificationQueryRepository.findByMemberId(userPrincipal.getId());
         log.info("최근 알림 조회 api 종료");
         return new ResponseEntity(response, OK);
     }
@@ -38,7 +39,7 @@ public class NotificationController {
     public ResponseEntity findNextNotifications(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                                 @RequestParam(required = false) Long lastNotificationId){
         log.info("알림 페이징 조회 api 시작");
-        List<FindNotificationResponseDto> response = notificationQueryRepository.findByPaginationNoOffset(lastNotificationId, userPrincipal.getId());
+        FindNotificationsResponseDto response = notificationQueryRepository.findByPaginationNoOffset(lastNotificationId, userPrincipal.getId());
         log.info("알림 페이징 조회 api 종료");
         return new ResponseEntity(response, HttpStatus.OK);
     }

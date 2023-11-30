@@ -1,5 +1,6 @@
 package com.kakaobean.core.integration.sprint;
 
+import com.kakaobean.core.factory.member.MemberFactory;
 import com.kakaobean.core.factory.project.ProjectFactory;
 import com.kakaobean.core.factory.sprint.SprintFactory;
 import com.kakaobean.core.factory.sprint.TaskFactory;
@@ -9,6 +10,7 @@ import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
 import com.kakaobean.core.project.domain.repository.ProjectRepository;
+import com.kakaobean.core.sprint.domain.Task;
 import com.kakaobean.core.sprint.exception.InvalidSprintDateException;
 import com.kakaobean.core.sprint.exception.SprintAccessException;
 import com.kakaobean.core.sprint.application.SprintService;
@@ -45,32 +47,26 @@ public class SprintServiceTest extends IntegrationTest {
     @Autowired
     ProjectMemberRepository projectMemberRepository;
 
-    @BeforeEach
-    void beforeEach() {
-        sprintRepository.deleteAll();
-        taskRepository.deleteAll();
-        projectRepository.deleteAll();
-        projectMemberRepository.deleteAll();
-    }
-
     @Test
     void 관리자가_스프린트를_등록한다() {
+
+
         // given
         Project project = projectRepository.save(ProjectFactory.create());
-        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(MemberFactory.getMemberId(), project.getId(), ADMIN));
 
         // when
-        sprintService.registerSprint(createDto(projectMember.getMemberId(), project.getId()));
+        Long springId = sprintService.registerSprint(createDto(projectMember.getMemberId(), project.getId()));
 
         // then
-        assertThat(sprintRepository.findAll().size()).isEqualTo(1);
+        assertThat(sprintRepository.findById(springId).isPresent()).isTrue();
     }
 
     @Test
     void 일반멤버는_스프린트를_등록할_수_없다() {
         // given
         Project project = projectRepository.save(ProjectFactory.create());
-        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), MEMBER));
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(MemberFactory.getMemberId(), project.getId(), MEMBER));
 
         // when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
@@ -85,7 +81,7 @@ public class SprintServiceTest extends IntegrationTest {
     void 시작날짜보다_빠른_마감날짜로는_스프린트를_생성하지_못한다() {
         // given
         Project project = projectRepository.save(ProjectFactory.create());
-        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(MemberFactory.getMemberId(), project.getId(), ADMIN));
 
         // when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
@@ -100,7 +96,7 @@ public class SprintServiceTest extends IntegrationTest {
     void 관리자가_스프린트를_수정한다() {
         // given
         Project project = projectRepository.save(ProjectFactory.createWithoutId());
-        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(MemberFactory.getMemberId(), project.getId(), ADMIN));
         Sprint sprint = sprintRepository.save(SprintFactory.createWithId(project.getId()));
 
         // when
@@ -114,7 +110,7 @@ public class SprintServiceTest extends IntegrationTest {
     void 일반멤버는_스프린트를_수정할_수_없다() {
         // given
         Project project = projectRepository.save(ProjectFactory.createWithoutId());
-        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), MEMBER));
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(MemberFactory.getMemberId(), project.getId(), MEMBER));
         Sprint sprint = sprintRepository.save(SprintFactory.createWithId(project.getId()));
 
         // when
@@ -130,7 +126,7 @@ public class SprintServiceTest extends IntegrationTest {
     void 시작날짜보다_빠른_마감날짜로_수정할_수_없다() {
         // given
         Project project = projectRepository.save(ProjectFactory.createWithoutId());
-        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(MemberFactory.getMemberId(), project.getId(), ADMIN));
         Sprint sprint = sprintRepository.save(SprintFactory.createWithId(project.getId()));
 
         // when
@@ -144,29 +140,34 @@ public class SprintServiceTest extends IntegrationTest {
 
     @Test
     void 관리자가_스프린트를_삭제한다() {
+
         // given
         Project project = projectRepository.save(ProjectFactory.createWithoutId());
-        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(MemberFactory.getMemberId(), project.getId(), ADMIN));
         Sprint sprint = sprintRepository.save(SprintFactory.createWithId(project.getId()));
-        taskRepository.save(TaskFactory.createWithId(sprint.getId(), 1L));
-        taskRepository.save(TaskFactory.createWithId(sprint.getId(), 2L));
+        Task task1 = taskRepository.save(TaskFactory.createWithId(sprint.getId(), MemberFactory.getMemberId()));
+        Task task2 = taskRepository.save(TaskFactory.createWithId(sprint.getId(), MemberFactory.getMemberId()));
 
         // when
         sprintService.removeSprint(projectMember.getMemberId(), sprint.getId());
 
         // then
-        assertThat(sprintRepository.findAll().size()).isEqualTo(0);
-        assertThat(taskRepository.findAll().size()).isEqualTo(0);
+        assertThat(sprintRepository.findById(sprint.getId()).isEmpty()).isTrue();
+        assertThat(taskRepository.findById(task1.getId()).isEmpty()).isTrue();
+        assertThat(taskRepository.findById(task2.getId()).isEmpty()).isTrue();
+
     }
 
     @Test
     void 일반멤버는_스프린트를_삭제할_수_없다() {
+
         // given
         Project project = projectRepository.save(ProjectFactory.createWithoutId());
-        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), MEMBER));
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(MemberFactory.getMemberId(), project.getId(), MEMBER));
         Sprint sprint = sprintRepository.save(SprintFactory.createWithId(project.getId()));
-        taskRepository.save(TaskFactory.createWithId(sprint.getId(), 1L));
-        taskRepository.save(TaskFactory.createWithId(sprint.getId(), 2L));
+
+        taskRepository.save(TaskFactory.createWithId(sprint.getId(), MemberFactory.getMemberId()));
+        taskRepository.save(TaskFactory.createWithId(sprint.getId(), MemberFactory.getMemberId()));
 
         // when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {

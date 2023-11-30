@@ -20,10 +20,11 @@ public class SprintService {
     private final SprintValidator sprintValidator;
 
     @Transactional
-    public void registerSprint(RegisterSprintRequestDto dto) {
+    public Long registerSprint(RegisterSprintRequestDto dto) {
         Sprint sprint = dto.toEntity();
         sprintValidator.validate(sprint, dto.getMemberId());
         sprintRepository.save(sprint);
+        return sprint.getId();
     }
 
     @Transactional

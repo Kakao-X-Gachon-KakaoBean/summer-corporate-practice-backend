@@ -28,13 +28,13 @@ public class DatabaseCleaner implements InitializingBean {
     @Transactional
     public void execute() {
         entityManager.flush();
-        entityManager.createNativeQuery("SET foreign_key_checks = 0").executeUpdate();
+        //entityManager.createNativeQuery("SET foreign_key_checks = 0").executeUpdate();
 
         for (String table : tables) {
             entityManager.createNativeQuery("TRUNCATE TABLE " + table).executeUpdate();
-            entityManager.createNativeQuery("ALTER TABLE " + table + " AUTO_INCREMENT = 1").executeUpdate();
+            //entityManager.createNativeQuery("ALTER TABLE " + table + " AUTO_INCREMENT = 1").executeUpdate();
         }
 
-        entityManager.createNativeQuery("SET foreign_key_checks = 1").executeUpdate();
+        //entityManager.createNativeQuery("SET foreign_key_checks = 1").executeUpdate();
     }
 }

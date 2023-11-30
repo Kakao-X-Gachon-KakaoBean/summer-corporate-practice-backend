@@ -333,8 +333,14 @@ public class MemberServiceTest extends UnitTest {
 
         //given
         String newName = "kakoBean";
-        //일단 같은 이름으로 하려고 이렇게 했는데, 혹시 생성자를 써서 하는 다른 방법으로 바꿔야하나요?
-        Member member = MemberFactory.create();
+        Member member = Member.builder()
+                .id(1L)
+                .name("kakoBean")
+                .auth(new Auth("example@gmail.com", "1q2w3e4r!"))
+                .role(Role.ROLE_USER)
+                .authProvider(AuthProvider.local)
+                .build();
+
         given(memberRepository.findById(member.getId())).willReturn(Optional.of(member));
 
         //when

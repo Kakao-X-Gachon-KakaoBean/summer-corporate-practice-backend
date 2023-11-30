@@ -9,11 +9,10 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentRequest;
 import static com.kakaobean.docs.SpringRestDocsUtils.getDocumentResponse;
-import static com.kakaobean.unit.controller.factory.notification.FindNotificationResponseDtoFactory.create;
+import static com.kakaobean.fixture.notification.FindNotificationResponseDtoFactory.create;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
@@ -42,11 +41,12 @@ public class NotificationControllerTest extends ControllerTest {
                 getDocumentRequest(),
                 getDocumentResponse(),
                 responseFields(
-                        fieldWithPath("[].notificationId").type(NUMBER).description("알림 id"),
-                        fieldWithPath("[].createdAt").type(STRING).description("알림 생성 날짜"),
-                        fieldWithPath("[].content").type(STRING).description("알림 내용"),
-                        fieldWithPath("[].url").type(STRING).description("알림 클릭시 라우팅될 url"),
-                        fieldWithPath("[].hasRead").type(BOOLEAN).description("알림 여부")
+                        fieldWithPath("notifications").type(ARRAY).description("알림 리스트"),
+                        fieldWithPath("notifications[].notificationId").type(NUMBER).description("알림 id"),
+                        fieldWithPath("notifications[].createdAt").type(STRING).description("알림 생성 날짜"),
+                        fieldWithPath("notifications[].content").type(STRING).description("알림 내용"),
+                        fieldWithPath("notifications[].url").type(STRING).description("알림 클릭시 라우팅될 url"),
+                        fieldWithPath("notifications[].hasRead").type(BOOLEAN).description("알림 여부")
                 )
         ));
     }
@@ -74,11 +74,12 @@ public class NotificationControllerTest extends ControllerTest {
                         parameterWithName("lastNotificationId").description("마지막으로 조회된 알림 id. 만약 첫 페이지 죄회('더보기' 클릭)시 null을 주면 됨.")
                 ),
                 responseFields(
-                        fieldWithPath("[].notificationId").type(NUMBER).description("알람 id"),
-                        fieldWithPath("[].createdAt").type(STRING).description("알람 생성 날짜"),
-                        fieldWithPath("[].content").type(STRING).description("알람 내용"),
-                        fieldWithPath("[].url").type(STRING).description("알람 클릭시 라우팅될 url"),
-                        fieldWithPath("[].hasRead").type(BOOLEAN).description("열람 여부")
+                        fieldWithPath("notifications").type(ARRAY).description("알림 리스트"),
+                        fieldWithPath("notifications[].notificationId").type(NUMBER).description("알람 id"),
+                        fieldWithPath("notifications[].createdAt").type(STRING).description("알람 생성 날짜"),
+                        fieldWithPath("notifications[].content").type(STRING).description("알람 내용"),
+                        fieldWithPath("notifications[].url").type(STRING).description("알람 클릭시 라우팅될 url"),
+                        fieldWithPath("notifications[].hasRead").type(BOOLEAN).description("열람 여부")
                 )
         ));
     }

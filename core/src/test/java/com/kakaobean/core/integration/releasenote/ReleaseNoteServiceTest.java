@@ -1,6 +1,7 @@
 package com.kakaobean.core.integration.releasenote;
 
 
+import com.kakaobean.core.factory.member.MemberFactory;
 import com.kakaobean.core.factory.project.ProjectFactory;
 import com.kakaobean.core.integration.IntegrationTest;
 import com.kakaobean.core.project.domain.Project;
@@ -37,26 +38,19 @@ public class ReleaseNoteServiceTest extends IntegrationTest {
     @Autowired
     private ReleaseNoteRepository releaseNoteRepository;
 
-    @BeforeEach
-    void beforeEach() {
-        projectRepository.deleteAll();
-        projectMemberRepository.deleteAll();
-        releaseNoteRepository.deleteAll();
-    }
-
     @Test
     void 관리자가_릴리즈_노트를_등록한다(){
         //given
 
-        Project project = projectRepository.save(ProjectFactory.create());
-        ProjectMember admin = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
-        projectMemberRepository.save(createWithMemberIdAndProjectId(2L, project.getId(), MEMBER));
-        projectMemberRepository.save(createWithMemberIdAndProjectId(3L, project.getId(), MEMBER));
+        Project project = projectRepository.save(ProjectFactory.createWithoutId());
+        ProjectMember admin = projectMemberRepository.save(createWithMemberIdAndProjectId(MemberFactory.getMemberId(), project.getId(), ADMIN));
+        projectMemberRepository.save(createWithMemberIdAndProjectId(MemberFactory.getMemberId(), project.getId(), MEMBER));
+        projectMemberRepository.save(createWithMemberIdAndProjectId(MemberFactory.getMemberId(), project.getId(), MEMBER));
 
         //when
-        releaseNoteService.deployReleaseNote(createWithProjectIdAndWriterId(project.getId(), admin.getMemberId()));
+        Long releaseNoteId = releaseNoteService.deployReleaseNote(createWithProjectIdAndWriterId(project.getId(), admin.getMemberId()));
 
         //then
-        assertThat(releaseNoteRepository.findAll().size()).isEqualTo(1);
+        assertThat(releaseNoteRepository.findById(releaseNoteId).isPresent()).isTrue();
     }
 }

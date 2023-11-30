@@ -1,5 +1,6 @@
 package com.kakaobean.core.unit.application.releasenote;
 
+import com.kakaobean.core.factory.project.ProjectFactory;
 import com.kakaobean.core.factory.project.ProjectMemberFactory;
 import com.kakaobean.core.factory.releasenote.ManuscriptFactory;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
@@ -20,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.kakaobean.core.releasenote.domain.ManuscriptStatus.*;
@@ -49,9 +51,9 @@ public class ManuscriptServiceTest extends UnitTest {
 
     @Test
     void 릴리즈_노트_첫_원고를_등록한다() {
-        RegisterManuscriptRequestDto dto = new RegisterManuscriptRequestDto("3.1 코코노트 배포", "내용..", "3.1", 1L, 2L);
-        given(manuscriptRepository.findManuscriptByVersion(anyString()))
-                .willReturn(Optional.ofNullable(null));
+        RegisterManuscriptRequestDto dto = new RegisterManuscriptRequestDto("3.1 코코노트 배포", "내용..", "3.2", 1L, 2L);
+        given(manuscriptRepository.findManuscriptByProjectId(anyLong()))
+                .willReturn(List.of(ManuscriptFactory.create()));
         given(projectMemberRepository.findByMemberIdAndProjectId(anyLong(), anyLong()))
                 .willReturn(Optional.of(ProjectMemberFactory.createAdmin()));
 
@@ -75,11 +77,13 @@ public class ManuscriptServiceTest extends UnitTest {
 
     @Test
     void 중복되는_릴리즈_노트_원고_버전이_존재한다() {
-        RegisterManuscriptRequestDto dto = new RegisterManuscriptRequestDto("3.1 코코노트 배포", "내용..", "3.1", 1L, 2L);
+
+        Manuscript manuscript = ManuscriptFactory.create();
+        RegisterManuscriptRequestDto dto = new RegisterManuscriptRequestDto("3.1 코코노트 배포", "내용..", manuscript.getVersion(), 1L, 2L);
         given(projectMemberRepository.findByMemberIdAndProjectId(anyLong(), anyLong()))
                 .willReturn(Optional.of(ProjectMemberFactory.createAdmin()));
-        given(manuscriptRepository.findManuscriptByVersion(anyString()))
-                .willReturn(Optional.ofNullable(ManuscriptFactory.create()));
+        given(manuscriptRepository.findManuscriptByProjectId(anyLong()))
+                .willReturn(List.of(manuscript));
 
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
             manuscriptService.registerManuscript(dto);

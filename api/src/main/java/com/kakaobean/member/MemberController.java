@@ -42,9 +42,9 @@ public class MemberController {
     @PostMapping("/members")
     public ResponseEntity<RegisterMemberResponseDto> registerMember(@Validated @RequestBody RegisterMemberRequest request) {
         log.info("멤버 등록 api 시작");
-        memberService.registerMember(request.toServiceDto(passwordEncoder));
+        Long memberId = memberService.registerMember(request.toServiceDto(passwordEncoder));
         log.info("멤버 등록 api 종료");
-        return new ResponseEntity(CommandSuccessResponse.from("회원가입에 성공했습니다."), OK);
+        return new ResponseEntity(CommandSuccessResponse.from(memberId, "회원가입에 성공했습니다."), OK);
     }
 
     @PostMapping("/emails")

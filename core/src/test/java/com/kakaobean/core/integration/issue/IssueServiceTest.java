@@ -4,6 +4,7 @@ package com.kakaobean.core.integration.issue;
 import com.kakaobean.core.factory.issue.CommentFactory;
 import com.kakaobean.core.factory.issue.IssueFactory;
 import com.kakaobean.core.factory.issue.dto.ModifyIssueRequestDtoFactory;
+import com.kakaobean.core.factory.member.MemberFactory;
 import com.kakaobean.core.factory.project.ProjectFactory;
 import com.kakaobean.core.integration.IntegrationTest;
 import com.kakaobean.core.issue.application.CommentService;
@@ -13,6 +14,7 @@ import com.kakaobean.core.issue.domain.Issue;
 import com.kakaobean.core.issue.domain.repository.CommentRepository;
 import com.kakaobean.core.issue.domain.repository.IssueRepository;
 import com.kakaobean.core.issue.exception.IssueAccessException;
+import com.kakaobean.core.member.domain.Member;
 import com.kakaobean.core.project.domain.Project;
 import com.kakaobean.core.project.domain.ProjectMember;
 import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
@@ -50,59 +52,52 @@ public class IssueServiceTest extends IntegrationTest {
     @Autowired
     ProjectMemberRepository projectMemberRepository;
 
-    @BeforeEach
-    void beforeEach() {
-        issueRepository.deleteAll();
-        commentRepository.deleteAll();
-        projectRepository.deleteAll();
-        projectMemberRepository.deleteAll();
-    }
-
 
     @Test
     void 일반_멤버가_이슈_생성에_성공한다() {
+
         // given
         Project project = projectRepository.save(ProjectFactory.create());
-        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), MEMBER));
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(MemberFactory.getMemberId(), project.getId(), MEMBER));
 
         // when
-        issueService.registerIssue(createWithId(project.getId(), projectMember.getMemberId()));
+        Long issue = issueService.registerIssue(createWithId(project.getId(), projectMember.getMemberId()));
 
         // then
-        assertThat(issueRepository.findAll().size()).isEqualTo(1);
+        assertThat(issueRepository.findById(issue).isPresent()).isTrue();
     }
 
     @Test
     void 게스트_멤버가_이슈_생성에_성공한다(){
         // given
         Project project = projectRepository.save(ProjectFactory.create());
-        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), VIEWER));
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(MemberFactory.getMemberId(), project.getId(), VIEWER));
 
         // when
-        issueService.registerIssue(createWithId(project.getId(), projectMember.getMemberId()));
+        Long issue = issueService.registerIssue(createWithId(project.getId(), projectMember.getMemberId()));
 
         // then
-        assertThat(issueRepository.findAll().size()).isEqualTo(1);
+        assertThat(issueRepository.findById(issue).isPresent()).isTrue();
     }
 
     @Test
     void 관리자가_이슈_생성에_성공한다(){
         // given
         Project project = projectRepository.save(ProjectFactory.create());
-        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(MemberFactory.getMemberId(), project.getId(), ADMIN));
 
         // when
-        issueService.registerIssue(createWithId(project.getId(), projectMember.getMemberId()));
+        Long issue = issueService.registerIssue(createWithId(project.getId(), projectMember.getMemberId()));
 
         // then
-        assertThat(issueRepository.findAll().size()).isEqualTo(1);
+        assertThat(issueRepository.findById(issue).isPresent()).isTrue();
     }
 
     @Test
     void 프로젝트에_소속되지_않은_사용자이기에_이슈_생성에_실패한다(){
         // given
         Project project = projectRepository.save(ProjectFactory.create());
-        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, 3L, VIEWER));
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(MemberFactory.getMemberId(), 9999999L, VIEWER));
 
         // when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {
@@ -114,10 +109,11 @@ public class IssueServiceTest extends IntegrationTest {
     }
 
     @Test
-    void 작성자가_이슈를_수정한다() {
+    void  작성자가_이슈를_수정한다() {
+
         // given
         Project project = projectRepository.save(ProjectFactory.createWithoutId());
-        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), ADMIN));
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(MemberFactory.getMemberId(), project.getId(), ADMIN));
         Issue issue = issueRepository.save(IssueFactory.createIssueWithMemberIdAndProjectId(projectMember.getMemberId(), project.getId()));
 
         // when
@@ -133,7 +129,7 @@ public class IssueServiceTest extends IntegrationTest {
     void 작성자가_아닌_멤버는_이슈를_수정할_수_없다() {
         // given
         Project project = projectRepository.save(ProjectFactory.createWithoutId());
-        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), MEMBER));
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(MemberFactory.getMemberId(), project.getId(), MEMBER));
         Issue issue = issueRepository.save(IssueFactory.createIssue(project.getId()));
 
         // when
@@ -147,33 +143,35 @@ public class IssueServiceTest extends IntegrationTest {
 
     @Test
     void 이슈_작성자가_이슈_삭제에_성공한다(){
+
         //given
-        Project project = projectRepository.save(ProjectFactory.create());
-        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(3L, project.getId(), MEMBER));
+        Project project = projectRepository.save(ProjectFactory.createWithoutId());
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(MemberFactory.getMemberId(), project.getId(), MEMBER));
 
         Issue issue = IssueFactory.createIssueWithMemberIdAndProjectId(projectMember.getMemberId(), project.getId());
-        issueRepository.save(issue);
+        Issue savedIssue = issueRepository.save(issue);
 
-        Comment comment = CommentFactory.createComment(issue.getId());
-        commentRepository.save(comment);
+        Comment comment = CommentFactory.createCommentWithMemberIdAndIssueId(projectMember.getMemberId(), savedIssue.getId());
+        Comment savedComment = commentRepository.save(comment);
 
         //when
-        issueService.removeIssue(projectMember.getMemberId(), issue.getId());
+        issueService.removeIssue(projectMember.getMemberId(), savedIssue.getId());
 
         //then
-        assertThat(issueRepository.findAll().size()).isEqualTo(0);
-        assertThat(commentRepository.findAll().size()).isEqualTo(0);
+        assertThat(issueRepository.findById(savedIssue.getId()).isEmpty()).isTrue();
+        assertThat(commentRepository.findById(savedComment.getId()).isEmpty()).isTrue();
     }
 
     @Test
     void 작성자가_아니면_이슈를_삭제할_수_없다() {
+
         // given
         Project project = projectRepository.save(ProjectFactory.createWithoutId());
-        ProjectMember issueWriter = projectMemberRepository.save(createWithMemberIdAndProjectId(1L, project.getId(), MEMBER));
-        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(2L, project.getId(), MEMBER));
+        ProjectMember issueWriter = projectMemberRepository.save(createWithMemberIdAndProjectId(MemberFactory.getMemberId(), project.getId(), MEMBER));
+        ProjectMember projectMember = projectMemberRepository.save(createWithMemberIdAndProjectId(MemberFactory.getMemberId(), project.getId(), MEMBER));
         Issue issue = issueRepository.save(IssueFactory.createIssueWithMemberIdAndProjectId(issueWriter.getMemberId(), project.getId()));
-        commentRepository.save(CommentFactory.createCommentWithMemberIdAndIssueId(3L, issue.getId()));
-        commentRepository.save(CommentFactory.createCommentWithMemberIdAndIssueId(4L, issue.getId()));
+        commentRepository.save(CommentFactory.createCommentWithMemberIdAndIssueId(MemberFactory.getMemberId(), issue.getId()));
+        commentRepository.save(CommentFactory.createCommentWithMemberIdAndIssueId(MemberFactory.getMemberId(), issue.getId()));
 
         // when
         AbstractThrowableAssert<?, ? extends Throwable> result = assertThatThrownBy(() -> {

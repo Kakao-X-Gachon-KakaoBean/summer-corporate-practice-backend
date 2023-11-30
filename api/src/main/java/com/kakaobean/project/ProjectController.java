@@ -36,7 +36,7 @@ public class ProjectController {
         log.info("프로젝트 등록 api 시작");
         RegisterProjectResponseDto res = projectService.registerProject(request.toServiceDto(userPrincipal.getId()));
         log.info("프로젝트 등록 api 종료");
-        return new ResponseEntity(res, CREATED);
+        return new ResponseEntity(CommandSuccessResponse.from(res.getProjectId(), "프로젝트가 생성 되었습니다."), CREATED);
     }
 
     @GetMapping("/projects")

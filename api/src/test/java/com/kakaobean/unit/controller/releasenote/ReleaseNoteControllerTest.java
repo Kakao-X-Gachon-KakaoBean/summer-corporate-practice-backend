@@ -6,7 +6,7 @@ import com.kakaobean.core.releasenote.domain.repository.query.FindPagingReleaseN
 import com.kakaobean.core.releasenote.domain.repository.query.FindReleaseNotesResponseDto;
 import com.kakaobean.releasenote.dto.request.DeployReleaseNoteRequest;
 import com.kakaobean.unit.controller.ControllerTest;
-import com.kakaobean.unit.controller.factory.releasenote.RegisterReleaseNoteRequestFactory;
+import com.kakaobean.fixture.releasenote.RegisterReleaseNoteRequestFactory;
 import com.kakaobean.unit.controller.security.WithMockUser;
 
 import org.junit.jupiter.api.Test;
@@ -58,6 +58,7 @@ public class ReleaseNoteControllerTest extends ControllerTest {
                         fieldWithPath("projectId").type(NUMBER).description("릴리즈 노트를 포함한 프로젝트 id")
                 ),
                 responseFields(
+                        fieldWithPath("id").type(NUMBER).description("배포한 릴리즈 노트 id"),
                         fieldWithPath("message").type(STRING).description("성공 메시지")
                 )
         ));

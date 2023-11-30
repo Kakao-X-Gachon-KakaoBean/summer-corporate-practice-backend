@@ -20,11 +20,12 @@ public class ManuscriptService {
     private final ManuscriptValidator manuscriptValidator;
 
     @Transactional
-    public void registerManuscript(RegisterManuscriptRequestDto dto) {
+    public Long registerManuscript(RegisterManuscriptRequestDto dto) {
         Manuscript manuscript = dto.toEntity();
         manuscriptValidator.valid(manuscript);
         manuscriptRepository.save(manuscript);
         manuscript.registered();
+        return manuscript.getId();
     }
 
     @Transactional

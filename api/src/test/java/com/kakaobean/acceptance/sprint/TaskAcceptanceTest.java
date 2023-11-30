@@ -3,15 +3,12 @@ package com.kakaobean.acceptance.sprint;
 import com.kakaobean.acceptance.AcceptanceTest;
 import com.kakaobean.acceptance.member.MemberAcceptanceTask;
 import com.kakaobean.acceptance.project.ProjectAcceptanceTask;
-import com.kakaobean.core.notification.domain.repository.NotificationRepository;
+import com.kakaobean.common.dto.CommandSuccessResponse;
+import com.kakaobean.core.member.domain.Member;
 import com.kakaobean.core.project.domain.Project;
-import com.kakaobean.core.project.domain.repository.ProjectMemberRepository;
-import com.kakaobean.core.project.domain.repository.ProjectRepository;
-import com.kakaobean.core.sprint.domain.Sprint;
-import com.kakaobean.core.sprint.domain.Task;
 import com.kakaobean.core.sprint.domain.WorkStatus;
-import com.kakaobean.core.sprint.domain.repository.SprintRepository;
-import com.kakaobean.core.sprint.domain.repository.TaskRepository;
+import com.kakaobean.core.sprint.domain.repository.query.FindTaskResponseDto;
+import com.kakaobean.fixture.member.MemberFactory;
 import com.kakaobean.member.dto.RegisterMemberRequest;
 import com.kakaobean.project.dto.request.InviteProjectMemberRequest;
 import com.kakaobean.project.dto.request.RegisterProjectMemberRequest;
@@ -20,64 +17,44 @@ import com.kakaobean.sprint.dto.request.ChangeWorkStatusRequest;
 import com.kakaobean.sprint.dto.request.ModifyTaskRequest;
 import com.kakaobean.sprint.dto.request.RegisterSprintRequest;
 import com.kakaobean.sprint.dto.request.RegisterTaskRequest;
-import com.kakaobean.unit.controller.factory.member.RegisterMemberRequestFactory;
-import com.kakaobean.unit.controller.factory.sprint.ModifyTaskRequestFactory;
-import com.kakaobean.unit.controller.factory.sprint.RegisterSprintRequestFactory;
-import com.kakaobean.unit.controller.factory.sprint.RegisterTaskRequestFactory;
+import com.kakaobean.fixture.member.RegisterMemberRequestFactory;
+import com.kakaobean.fixture.sprint.ModifyTaskRequestFactory;
+import com.kakaobean.fixture.sprint.RegisterSprintRequestFactory;
+import com.kakaobean.fixture.sprint.RegisterTaskRequestFactory;
 import io.restassured.response.ExtractableResponse;
 import org.junit.jupiter.api.Test;
-import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.QueueInformation;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static com.kakaobean.acceptance.TestMember.ADMIN;
-import static com.kakaobean.acceptance.TestMember.MEMBER;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TaskAcceptanceTest extends AcceptanceTest {
 
-    @Autowired
-    ProjectRepository projectRepository;
-
-    @Autowired
-    ProjectMemberRepository projectMemberRepository;
-
-    @Autowired
-    SprintRepository sprintRepository;
-
-    @Autowired
-    TaskRepository taskRepository;
-
-    @Autowired
-    NotificationRepository notificationRepository;
-
-    @Autowired
-    AmqpAdmin amqpAdmin;
 
     @Test
-    void 테크스_생성(){
+    void 테스크_생성(){
 
         //프로젝트 생성
         RegisterProjectRequest projectRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
-        ProjectAcceptanceTask.registerProjectTask(projectRequest);
-        Project project = projectRepository.findAll().get(0);
+        CommandSuccessResponse.Created projectResponse = ProjectAcceptanceTask.registerProjectTask(projectRequest).as(CommandSuccessResponse.Created.class);
 
         //스프린트 생성
-        RegisterSprintRequest sprintRequest = RegisterSprintRequestFactory.createWithId(project.getId());
-        SprintAcceptanceTask.registerSprintTask(sprintRequest);
-        Sprint sprint = sprintRepository.findAll().get(0);
+        RegisterSprintRequest sprintRequest = RegisterSprintRequestFactory.createWithId(projectResponse.getId());
+        Long sprintId = SprintAcceptanceTask.registerSprintTask(sprintRequest).as(CommandSuccessResponse.Created.class).getId();
 
         //테스크 생성
-        RegisterTaskRequest taskRequest = RegisterTaskRequestFactory.createWithId(sprint.getId());
+        RegisterTaskRequest taskRequest = RegisterTaskRequestFactory.createWithId(sprintId);
 
         //when
         ExtractableResponse response = TaskAcceptanceTask.registerTaskTask(taskRequest);
 
         //then
         assertThat(response.statusCode()).isEqualTo(201);
-        assertThat(taskRepository.findAll().size()).isEqualTo(1);
+
+        Long taskId = response.as(CommandSuccessResponse.Created.class).getId();
+        FindTaskResponseDto result = TaskAcceptanceTask.findTaskTask(taskId).as(FindTaskResponseDto.class);
+        assertThat(result).isNotNull();
     }
 
     @Test
@@ -85,28 +62,27 @@ public class TaskAcceptanceTest extends AcceptanceTest {
 
         //프로젝트 생성
         RegisterProjectRequest projectRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
-        ProjectAcceptanceTask.registerProjectTask(projectRequest);
-        Project project = projectRepository.findAll().get(0);
+        CommandSuccessResponse.Created projectResponse = ProjectAcceptanceTask.registerProjectTask(projectRequest).as(CommandSuccessResponse.Created.class);
 
         //스프린트 생성
-        RegisterSprintRequest sprintRequest = RegisterSprintRequestFactory.createWithId(project.getId());
-        SprintAcceptanceTask.registerSprintTask(sprintRequest);
-        Sprint sprint = sprintRepository.findAll().get(0);
+        RegisterSprintRequest sprintRequest = RegisterSprintRequestFactory.createWithId(projectResponse.getId());
+        Long sprintId = SprintAcceptanceTask.registerSprintTask(sprintRequest).as(CommandSuccessResponse.Created.class).getId();
 
         //테스크 생성
-        RegisterTaskRequest taskRequest = RegisterTaskRequestFactory.createWithId(sprint.getId());
-        TaskAcceptanceTask.registerTaskTask(taskRequest);
-        Task task = taskRepository.findAll().get(0);
+        RegisterTaskRequest taskRequest = RegisterTaskRequestFactory.createWithId(sprintId);
+        Long taskId = TaskAcceptanceTask.registerTaskTask(taskRequest).as(CommandSuccessResponse.Created.class).getId();
 
         //테스크 수정
-        ModifyTaskRequest modifyRequest = ModifyTaskRequestFactory.createRequestWithId(sprint.getId());
+        ModifyTaskRequest modifyRequest = ModifyTaskRequestFactory.createRequestWithId(sprintId);
 
         //when
-        ExtractableResponse response = TaskAcceptanceTask.modifyTaskTask(modifyRequest, task.getId());
+        ExtractableResponse response = TaskAcceptanceTask.modifyTaskTask(modifyRequest, taskId);
 
         //then
         assertThat(response.statusCode()).isEqualTo(200);
-        assertThat(taskRepository.findById(task.getId()).get().getTitle()).isEqualTo("수정된 테스크 제목");
+
+        FindTaskResponseDto result = TaskAcceptanceTask.findTaskTask(taskId).as(FindTaskResponseDto.class);
+        assertThat(result.getTaskTitle()).isEqualTo("수정된 테스크 제목");
     }
 
     @Test
@@ -114,75 +90,72 @@ public class TaskAcceptanceTest extends AcceptanceTest {
 
         //프로젝트 생성
         RegisterProjectRequest projectRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
-        ProjectAcceptanceTask.registerProjectTask(projectRequest);
-        Project project = projectRepository.findAll().get(0);
+        CommandSuccessResponse.Created projectResponse = ProjectAcceptanceTask.registerProjectTask(projectRequest).as(CommandSuccessResponse.Created.class);
 
         //스프린트 생성
-        RegisterSprintRequest sprintRequest = RegisterSprintRequestFactory.createWithId(project.getId());
-        SprintAcceptanceTask.registerSprintTask(sprintRequest);
-        Sprint sprint = sprintRepository.findAll().get(0);
+        RegisterSprintRequest sprintRequest = RegisterSprintRequestFactory.createWithId(projectResponse.getId());
+        Long sprintId = SprintAcceptanceTask.registerSprintTask(sprintRequest).as(CommandSuccessResponse.Created.class).getId();
 
         //테스크 생성
-        RegisterTaskRequest taskRequest = RegisterTaskRequestFactory.createWithId(sprint.getId());
-        TaskAcceptanceTask.registerTaskTask(taskRequest);
-        Task task = taskRepository.findAll().get(0);
+        RegisterTaskRequest taskRequest = RegisterTaskRequestFactory.createWithId(sprintId);
+        Long taskId = TaskAcceptanceTask.registerTaskTask(taskRequest).as(CommandSuccessResponse.Created.class).getId();
 
         //테스크 삭제
         //when
-        ExtractableResponse response = TaskAcceptanceTask.removeTaskTask(task.getId());
+        ExtractableResponse response = TaskAcceptanceTask.removeTaskTask(taskId);
 
         //then
         assertThat(response.statusCode()).isEqualTo(200);
-        assertThat(taskRepository.findAll().size()).isEqualTo(0);
+        assertThat(taskRepository.findById(taskId)).isEmpty();
     }
 
     @Test
-    void 테스크_할당(){
+    void 테스크_할당() throws InterruptedException {
 
-        //직접 생성하기 위해 사전에 저장한 내용을 삭제
-        memberRepository.deleteAll();
+        //픽스쳐 멤버 삭제 및 재생성
+        MemberContext removedContext = super.deleteMemberContext();
 
-        //멤버 생성
-        RegisterMemberRequest request1 = RegisterMemberRequestFactory.createRequest();
-        RegisterMemberRequest request2 = RegisterMemberRequestFactory.createRequestV2();
+        RegisterMemberRequest admin = RegisterMemberRequestFactory.createMember(removedContext.getAdmin());
+        RegisterMemberRequest member = RegisterMemberRequestFactory.createMember(removedContext.getMember());
 
-        MemberAcceptanceTask.registerMemberTask(request1, emailRepository);
-        MemberAcceptanceTask.registerMemberTask(request2, emailRepository);
+        Long adminId = MemberAcceptanceTask.registerMemberTask(admin, emailRepository).as(CommandSuccessResponse.Created.class).getId();
+        Long memberId = MemberAcceptanceTask.registerMemberTask(member, emailRepository).as(CommandSuccessResponse.Created.class).getId();
+
+        Member newAdmin = MemberFactory.createWithId(adminId, removedContext.getAdmin());
+        Member newMember = MemberFactory.createWithId(memberId, removedContext.getMember());
+
+        super.setMemberContext(new MemberContext(newAdmin, newMember));
 
         //프로젝트 생성
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
-        ProjectAcceptanceTask.registerProjectTask(givenRequest);
-        Project project = projectRepository.findAll().get(0);
+        CommandSuccessResponse.Created projectResponse = ProjectAcceptanceTask.registerProjectTask(givenRequest).as(CommandSuccessResponse.Created.class);
+        Project project = projectRepository.findById(projectResponse.getId()).get();
 
         //프로젝트 멤버 가입
-        InviteProjectMemberRequest givenDto = new InviteProjectMemberRequest(List.of(MEMBER.getEmail()));
+        InviteProjectMemberRequest givenDto = new InviteProjectMemberRequest(List.of(newMember.getAuth().getEmail()));
         ProjectAcceptanceTask.inviteProjectMemberTask(givenDto, project.getId());
         ProjectAcceptanceTask.joinProjectMemberTask(new RegisterProjectMemberRequest(project.getSecretKey()));
 
         //스프린트 생성
         RegisterSprintRequest sprintRequest = RegisterSprintRequestFactory.createWithId(project.getId());
-        SprintAcceptanceTask.registerSprintTask(sprintRequest);
-        Sprint sprint = sprintRepository.findAll().get(0);
+        CommandSuccessResponse.Created sprintResponse = SprintAcceptanceTask.registerSprintTask(sprintRequest).as(CommandSuccessResponse.Created.class);
 
         //테스크 생성
-        RegisterTaskRequest taskRequest = RegisterTaskRequestFactory.createWithId(sprint.getId());
-        TaskAcceptanceTask.registerTaskTask(taskRequest);
-        Task task = taskRepository.findAll().get(0);
+        RegisterTaskRequest taskRequest = RegisterTaskRequestFactory.createWithId(sprintResponse.getId());
+        CommandSuccessResponse.Created taskResponse = TaskAcceptanceTask.registerTaskTask(taskRequest).as(CommandSuccessResponse.Created.class);
 
         //when
-        //테스크 할당
-        Long workerId = projectMemberRepository.findAll().get(0).getMemberId();
-        ExtractableResponse response = TaskAcceptanceTask.assignTaskTask(task.getId(), workerId);
+        //관리자 테스크 할당
+        ExtractableResponse response = TaskAcceptanceTask.assignTaskTask(taskResponse.getId(), adminId);
 
         //then
         assertThat(response.statusCode()).isEqualTo(200);
-        assertThat(notificationRepository.findAll().size()).isEqualTo(2);
 
-        Long adminId = memberRepository.findMemberByEmail(ADMIN.getEmail()).get().getId();
+        Thread.sleep(100);
+
         QueueInformation queueInfo1 = amqpAdmin.getQueueInfo("user-" + adminId);
         assertThat(queueInfo1.getMessageCount()).isEqualTo(1); //작업 할당 메시지 1개
 
-        Long memberId = memberRepository.findMemberByEmail(MEMBER.getEmail()).get().getId();
         QueueInformation queueInfo2 = amqpAdmin.getQueueInfo("user-" + memberId);
         assertThat(queueInfo2.getMessageCount()).isEqualTo(1); //프로젝트 가입으로 인한 Viewer 권한 메시지 1개
     }
@@ -190,71 +163,73 @@ public class TaskAcceptanceTest extends AcceptanceTest {
     @Test
     void 테스크_작업상태_수정(){
 
-        //직접 생성하기 위해 사전에 저장한 내용을 삭제
-        memberRepository.deleteAll();
-
         //멤버 생성
-        RegisterMemberRequest request1 = RegisterMemberRequestFactory.createRequest();
-        RegisterMemberRequest request2 = RegisterMemberRequestFactory.createRequestV2();
-
-        MemberAcceptanceTask.registerMemberTask(request1, emailRepository);
-        MemberAcceptanceTask.registerMemberTask(request2, emailRepository);
+//        RegisterMemberRequest admin = RegisterMemberRequestFactory.createAdmin();
+//        RegisterMemberRequest member = RegisterMemberRequestFactory.createMember();
+//
+//        Long adminId = MemberAcceptanceTask.registerMemberTask(admin, emailRepository).as(CommandSuccessResponse.Created.class).getId();
+//        Long memberId = MemberAcceptanceTask.registerMemberTask(member, emailRepository).as(CommandSuccessResponse.Created.class).getId();
 
         //프로젝트 생성
         RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
-        ProjectAcceptanceTask.registerProjectTask(givenRequest);
-        Project project = projectRepository.findAll().get(0);
+        CommandSuccessResponse.Created projectResponse = ProjectAcceptanceTask.registerProjectTask(givenRequest).as(CommandSuccessResponse.Created.class);
+        Project project = projectRepository.findById(projectResponse.getId()).get();
 
         //프로젝트 멤버 가입
-        InviteProjectMemberRequest givenDto = new InviteProjectMemberRequest(List.of(MEMBER.getEmail()));
+        Member member = AcceptanceTest.memberContext.get().getMember();
+        InviteProjectMemberRequest givenDto = new InviteProjectMemberRequest(List.of(member.getAuth().getEmail()));
         ProjectAcceptanceTask.inviteProjectMemberTask(givenDto, project.getId());
         ProjectAcceptanceTask.joinProjectMemberTask(new RegisterProjectMemberRequest(project.getSecretKey()));
 
         //스프린트 생성
         RegisterSprintRequest sprintRequest = RegisterSprintRequestFactory.createWithId(project.getId());
-        SprintAcceptanceTask.registerSprintTask(sprintRequest);
-        Sprint sprint = sprintRepository.findAll().get(0);
+        CommandSuccessResponse.Created sprintResponse = SprintAcceptanceTask.registerSprintTask(sprintRequest).as(CommandSuccessResponse.Created.class);
 
         //테스크 생성
-        RegisterTaskRequest taskRequest = RegisterTaskRequestFactory.createWithId(sprint.getId());
-        TaskAcceptanceTask.registerTaskTask(taskRequest);
-        Task task = taskRepository.findAll().get(0);
+        RegisterTaskRequest taskRequest = RegisterTaskRequestFactory.createWithId(sprintResponse.getId());
+        CommandSuccessResponse.Created taskResponse = TaskAcceptanceTask.registerTaskTask(taskRequest).as(CommandSuccessResponse.Created.class);
 
         //테스크 할당
-        Long workerId = projectMemberRepository.findAll().get(0).getMemberId();
-        TaskAcceptanceTask.assignTaskTask(task.getId(), workerId);
+        Member admin = AcceptanceTest.memberContext.get().getAdmin();
+        TaskAcceptanceTask.assignTaskTask(taskResponse.getId(), admin.getId());
 
         //when
         //테스크 작업 상태 변경
         ChangeWorkStatusRequest request = new ChangeWorkStatusRequest("complete");
-        ExtractableResponse response = TaskAcceptanceTask.changeWorkStatusTaskTask(task.getId(), request);
+        ExtractableResponse response = TaskAcceptanceTask.changeWorkStatusTaskTask(taskResponse.getId(), request);
 
         //then
         assertThat(response.statusCode()).isEqualTo(200);
-        assertThat(taskRepository.findById(task.getId()).get().getWorkStatus()).isEqualTo(WorkStatus.COMPLETE);
+
+        FindTaskResponseDto result = TaskAcceptanceTask.findTaskTask(taskResponse.getId()).as(FindTaskResponseDto.class);
+        assertThat(result.getWorkStatus()).isEqualTo(WorkStatus.COMPLETE);
     }
 
     @Test
     void 테스크_조회(){
 
         //프로젝트 생성
-        RegisterProjectRequest projectRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
-        ProjectAcceptanceTask.registerProjectTask(projectRequest);
-        Project project = projectRepository.findAll().get(0);
+        RegisterProjectRequest givenRequest = new RegisterProjectRequest("테스트 프로젝트", "테스트 프로젝트 설명");
+        CommandSuccessResponse.Created projectResponse = ProjectAcceptanceTask.registerProjectTask(givenRequest).as(CommandSuccessResponse.Created.class);
+        Project project = projectRepository.findById(projectResponse.getId()).get();
+
+        //프로젝트 멤버 가입
+        Member member = AcceptanceTest.memberContext.get().getMember();
+        InviteProjectMemberRequest givenDto = new InviteProjectMemberRequest(List.of(member.getAuth().getEmail()));
+        ProjectAcceptanceTask.inviteProjectMemberTask(givenDto, project.getId());
+        ProjectAcceptanceTask.joinProjectMemberTask(new RegisterProjectMemberRequest(project.getSecretKey()));
 
         //스프린트 생성
         RegisterSprintRequest sprintRequest = RegisterSprintRequestFactory.createWithId(project.getId());
-        SprintAcceptanceTask.registerSprintTask(sprintRequest);
-        Sprint sprint = sprintRepository.findAll().get(0);
+        CommandSuccessResponse.Created sprintResponse = SprintAcceptanceTask.registerSprintTask(sprintRequest).as(CommandSuccessResponse.Created.class);
 
         //테스크 생성
-        RegisterTaskRequest taskRequest = RegisterTaskRequestFactory.createWithId(sprint.getId());
-        TaskAcceptanceTask.registerTaskTask(taskRequest);
-        Task task = taskRepository.findAll().get(0);
+        RegisterTaskRequest taskRequest = RegisterTaskRequestFactory.createWithId(sprintResponse.getId());
+        CommandSuccessResponse.Created taskResponse = TaskAcceptanceTask.registerTaskTask(taskRequest).as(CommandSuccessResponse.Created.class);
 
         //테스크 조회
         //when
-        ExtractableResponse response = TaskAcceptanceTask.findTaskTask(task.getId());
+        ExtractableResponse response = TaskAcceptanceTask.findTaskTask(taskResponse.getId());
 
         //then
         assertThat(response.statusCode()).isEqualTo(200);

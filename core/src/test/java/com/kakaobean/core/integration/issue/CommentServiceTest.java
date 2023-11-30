@@ -40,6 +40,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class CommentServiceTest extends IntegrationTest {
+
     @Autowired
     CommentService commentService;
 
@@ -58,32 +59,24 @@ public class CommentServiceTest extends IntegrationTest {
     @Autowired
     MemberRepository memberRepository;
 
-    @BeforeEach
-    void beforeEach() {
-        memberRepository.deleteAll();
-        issueRepository.deleteAll();
-        commentRepository.deleteAll();
-        projectRepository.deleteAll();
-        projectMemberRepository.deleteAll();
-    }
 
     @Test
     void 댓글을_쟉성한다() {
         // given
-        Member issueWriter = memberRepository.save(MemberFactory.create());
-        Member commentWriter = memberRepository.save(MemberFactory.create());
+        Member issueWriter = memberRepository.save(MemberFactory.createWithoutId());
+        Member commentWriter = memberRepository.save(MemberFactory.createWithoutId());
 
-        Project project = projectRepository.save(ProjectFactory.create());
+        Project project = projectRepository.save(ProjectFactory.createWithoutId());
         ProjectMember projectMember1 = projectMemberRepository.save(createWithMemberIdAndProjectId(issueWriter.getId(), project.getId(), MEMBER));
         ProjectMember projectMember2 = projectMemberRepository.save(createWithMemberIdAndProjectId(commentWriter.getId(), project.getId(), MEMBER));
 
         Issue issue = issueRepository.save(createIssueWithMemberIdAndProjectId(projectMember1.getMemberId(), project.getId()));
 
         // when
-        commentService.registerComment(RegisterCommentRequestDtoFactory.createWithId(issue.getId(), projectMember2.getMemberId()));
+        Long commentId = commentService.registerComment(RegisterCommentRequestDtoFactory.createWithId(issue.getId(), projectMember2.getMemberId()));
 
         // then
-        assertThat(commentRepository.findAll().size()).isEqualTo(1);
+        assertThat(commentRepository.findById(commentId).isPresent()).isTrue();
     }
 
     @Test
@@ -139,7 +132,7 @@ public class CommentServiceTest extends IntegrationTest {
         commentService.removeComment(projectMember.getMemberId(), comment.getId());
 
         //then
-        assertThat(commentRepository.findAll().size()).isEqualTo(0);
+        assertThat(commentRepository.findById(comment.getId())).isEmpty();
     }
 
     @Test

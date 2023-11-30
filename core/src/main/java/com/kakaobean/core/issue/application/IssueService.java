@@ -23,10 +23,11 @@ public class IssueService {
 
 
     @Transactional(readOnly = false)
-    public void registerIssue(RegisterIssueRequestDto dto) {
+    public Long registerIssue(RegisterIssueRequestDto dto) {
         Issue issue = dto.toEntity();
         issueValidator.validate(issue, dto.getWriterId());
         issueRepository.save(issue);
+        return issue.getId();
     }
 
     @Transactional
@@ -43,6 +44,6 @@ public class IssueService {
     public void modifyIssue(ModifyIssueRequestDto dto) {
         Issue issue = issueRepository.findById(dto.getIssueId()).orElseThrow(NotExistsIssueException::new);
         issueValidator.validateAccess(issue, dto.getWriterId());
-        issue.modify(dto.getTitle(),dto.getContent());
+        issue.modify(dto.getTitle(), dto.getContent());
     }
 }

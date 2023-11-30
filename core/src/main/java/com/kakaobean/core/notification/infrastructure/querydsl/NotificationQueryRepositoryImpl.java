@@ -1,6 +1,7 @@
 package com.kakaobean.core.notification.infrastructure.querydsl;
 
 import com.kakaobean.core.notification.domain.repository.query.FindNotificationResponseDto;
+import com.kakaobean.core.notification.domain.repository.query.FindNotificationsResponseDto;
 import com.kakaobean.core.notification.domain.repository.query.NotificationQueryRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -22,8 +23,8 @@ public class NotificationQueryRepositoryImpl implements NotificationQueryReposit
 
     // 조회했던 마지막 notification id를 받는다
     @Override
-    public List<FindNotificationResponseDto> findByPaginationNoOffset(Long notificationId, Long memberId) {
-        return queryFactory
+    public FindNotificationsResponseDto findByPaginationNoOffset(Long notificationId, Long memberId) {
+        List<FindNotificationResponseDto> result = queryFactory
                 .select(Projections.constructor(FindNotificationResponseDto.class,
                                 notification.id,
                                 notification.createdAt,
@@ -40,6 +41,7 @@ public class NotificationQueryRepositoryImpl implements NotificationQueryReposit
                 .orderBy(notification.id.desc())
                 .limit(PAGE_SIZE)
                 .fetch();
+        return new FindNotificationsResponseDto(result);
     }
 
     private BooleanExpression ltNotificationId(Long notificationId) {
@@ -51,8 +53,8 @@ public class NotificationQueryRepositoryImpl implements NotificationQueryReposit
     }
 
     @Override
-    public List<FindNotificationResponseDto> findByMemberId(Long memberId) {
-        return queryFactory.select(
+    public FindNotificationsResponseDto findByMemberId(Long memberId) {
+        List<FindNotificationResponseDto> result = queryFactory.select(
                         Projections.constructor(
                                 FindNotificationResponseDto.class,
                                 notification.id,
@@ -68,5 +70,6 @@ public class NotificationQueryRepositoryImpl implements NotificationQueryReposit
                 .orderBy(notification.id.desc())
                 .limit(5) // 최근 알림 5개
                 .fetch();
+        return new FindNotificationsResponseDto(result);
     }
 }

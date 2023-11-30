@@ -33,9 +33,9 @@ public class ReleaseNoteController {
     public ResponseEntity deployReleaseNote(@AuthenticationPrincipal UserPrincipal userPrincipal,
                                             @Validated @RequestBody DeployReleaseNoteRequest request) {
         log.info("릴리즈 노트 배포 api 시작");
-        releaseNoteService.deployReleaseNote(request.toServiceDto(userPrincipal.getId()));
+        Long releaseNoteId = releaseNoteService.deployReleaseNote(request.toServiceDto(userPrincipal.getId()));
         log.info("릴리즈 노트 배포 api 종료");
-        return new ResponseEntity(CommandSuccessResponse.from("릴리즈 노트 등록에 성공했습니다"), CREATED);
+        return new ResponseEntity(CommandSuccessResponse.from(releaseNoteId, "릴리즈 노트 등록에 성공했습니다"), CREATED);
     }
 
     @GetMapping("/release-notes/page")

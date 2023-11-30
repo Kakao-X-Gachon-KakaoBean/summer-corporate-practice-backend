@@ -1,6 +1,7 @@
 package com.kakaobean.core.sprint.infrastructure.querydsl;
 
 import com.kakaobean.core.sprint.domain.repository.query.*;
+import com.kakaobean.core.sprint.exception.NotExistsSprintException;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -85,6 +86,10 @@ public class SprintQueryRepositoryImpl implements SprintQueryRepository {
                 .from(sprint)
                 .where(sprint.id.eq(sprintId))
                 .fetchFirst();
+
+        if(result == null) {
+            throw new NotExistsSprintException();
+        }
 
         result.getChildren().addAll(findTaskBySprintId(sprintId));
 

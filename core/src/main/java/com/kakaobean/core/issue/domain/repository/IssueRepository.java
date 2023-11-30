@@ -12,4 +12,6 @@ public interface IssueRepository extends JpaRepository<Issue, Long> {
     @Modifying
     @Query("update Issue i set i.status = 'INACTIVE' where i.projectId = :projectId and i.status='ACTIVE'")
     void deleteByProjectId(Long projectId);
+
+
 }
