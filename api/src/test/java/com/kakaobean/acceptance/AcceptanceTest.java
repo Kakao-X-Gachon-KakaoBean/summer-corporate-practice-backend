@@ -18,6 +18,7 @@ import com.kakaobean.core.sprint.domain.repository.SprintRepository;
 import com.kakaobean.core.sprint.domain.repository.TaskRepository;
 import com.kakaobean.fixture.member.MemberFactory;
 
+import com.kakaobean.independentlysystem.email.EmailSender;
 import io.restassured.RestAssured;
 import lombok.Getter;
 
@@ -94,6 +95,9 @@ public abstract class AcceptanceTest {
 
     @MockBean
     protected SendEmailNotificationService sendEmailNotificationService;
+
+    @MockBean
+    protected EmailSender emailSender;
 
     public static ThreadLocal<MemberContext> memberContext = new ThreadLocal<>();
 
