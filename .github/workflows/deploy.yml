@@ -71,8 +71,8 @@ jobs:
         run: chmod +x ./gradlew
         shell: bash
       
-      - name: BootJar
-        run: ./gradlew bootjar --info
+      - name: Build
+        run: ./gradlew build --info
         shell: bash
 
       # static 폴더 생성을 위함
