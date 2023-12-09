@@ -23,6 +23,16 @@ jobs:
           java-version: '11'
           distribution: 'zulu'
 
+      # MySQL DB를 준비한다.
+      - name: Setup MySQL
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          host port: 3306
+          container port: 3306
+          mysql database: 'testdb'
+          mysql user: 'testuser'
+          mysql password: ${{ secrets.MYSQL_PASSWORD }}
+
       # api 모듈 관련 yml 생성
       - name: Make api main yml
         run: |
