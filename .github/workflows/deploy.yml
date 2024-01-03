@@ -52,8 +52,7 @@ jobs:
 
       - name: Make core test yml
         run: |
-          cd ./core/src/test
-          mkdir resources && cd resources
+          cd ./core/src/test/resources
           touch ./application.yml
           echo "${{ secrets.CORE_TEST_APPLICATION_YML }}" | base64 --decode > ./application.yml
         shell: bash
